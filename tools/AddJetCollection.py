@@ -1,86 +1,26 @@
 import FWCore.ParameterSet.Config as cms
-
 import copy
-
 from PhysicsTools.PatAlgos.tools.helpers import *
-
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-
-
-class Action(object):
-
-    def __init__(self,label,parameters,referenceToFunctor):
-
-        self.label=label
-        self.parameters=parameters
-        self.referenceToFunctor=referenceToFunctor
-        
         
 class AddJetCollection(ConfigToolBase):
 
     """ Add a collection of PAT Jets
     """
     
-    description="class description "
-    
-    #class parameter:
-        #pass
-        
     def __init__(self):
-        self.parameters={}
+        self._parameters={}
         self._label='AddJetCollection'
         self._description=self.__doc__    
-
         
-#    def dumpPython(self):
- #       outfile=open('PATconfigfile.py','a')
-  #      outfile.write("from PhysicsTools.PatAlgos.tools.AddJetCollection import *\n addJetCollection(process, "+str(cms.InputTag('sisCone5CaloJets'))+ ", "+str(self.getvalue('label'))+', '+str(self.getvalue('doJTA'))+', '+str(self.getvalue('doBTagging'))+', '+str(self.getvalue('jetCorrLabel'))+', '+str(self.getvalue(' doType1MET'))+', '+str(self.getvalue('doL1Counters'))+', '+str(self.getvalue('genJetCollection'))+'\n')
-   #     outfile.close()
-    #    infile=open('PATconfigfile.py','r')
-     #   text=infile.read()
-     #   infile.close()
-     #   print text
-        
-        
-    def addParameter(self,parname, parvalue, description):
-        par=self.parameter()
-        par.name=parname
-        par.value=parvalue
-        par.description=description
-        par.type=type(parvalue)
-        print type(parvalue)
-        self.parameters[par.name]=par
-
-
-    def getvalue(self,name):
-        return self.parameters[name].value
-        
-    def getParameters(self):
-        print 'Inside function parameters()'
-        for key in self.parameters.keys():
-            print key
-            print 'par name = '+self.parameters[key].name
-            print 'par value = '+str(self.parameters[key].value)
-            print 'par type = '+str(self.parameters[key].type)
-        return self.parameters
-
-    def setParameter(self, name, value):
-        print 'Inside function setParameters()'
-        #avoid the loop, use assert as check
-        assert(self.parameters.has_key(name))
-        self.parameters[name].value=value
-        print 'New parameter value ('+name + ') '+str(self.parameters[name].value) 
-
-    def setComment(self, comment):
+    def dumpPython(self):
         outfile=open('PATconfigfile.py','a')
-        outfile.write(comment+'\n')
+        outfile.write("from PhysicsTools.PatAlgos.tools.AddJetCollection import *\naddJetCollection(process, "+str(self.getvalue('jetCollection'))+ ", "+str(self.getvalue('postfixLabel'))+', '+str(self.getvalue('doJTA'))+', '+str(self.getvalue('doBTagging'))+', '+str(self.getvalue('jetCorrLabel'))+', '+str(self.getvalue('doType1MET'))+', '+str(self.getvalue('doL1Counters'))+', '+str(self.getvalue('genJetCollection'))+'\n')
         outfile.close()
         infile=open('PATconfigfile.py','r')
         text=infile.read()
         infile.close()
-        print text
-                                                
-        
+
     def switchJECParameters(self,jetCorrFactors,newalgo,newtype="Calo",oldalgo="IC5",oldtype="Calo"):
         """Replace input tags in the JetCorrFactorsProducer -- L5Flavor is taken out as it is said not to be dependend on the specific jet algorithm"""
         for k in ['L1Offset', 'L2Relative', 'L3Absolute', 'L4EMF', 'L6UE', 'L7Parton']:
@@ -176,8 +116,7 @@ class AddJetCollection(ConfigToolBase):
         self.addParameter('doL1Cleaning',doL1Cleaning, 'description: doL1Cleaning')
         self.addParameter('doL1Counters',doL1Counters, 'description: doL1Counters')
         self.addParameter('genJetCollection',genJetCollection, 'description: genJetCollection')
-        par=copy.copy(self)
-        action = Action("AddJetCollection",copy.copy(self.parameters),self) 
+        action = Action("AddJetCollection",copy.copy(self._parameters),self) 
         self.getvalue('process').addAction(action)
         
         #def addJetCollection(process,jetCollection,postfixLabel,
