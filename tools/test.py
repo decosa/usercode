@@ -55,7 +55,7 @@ addJetCollection(process,cms.InputTag('sisCone7CaloJets'),'SC7',
                         doJTA=True,doBTagging=False,jetCorrLabel=None,doType1MET=True,doL1Counters=False,
                         genJetCollection=cms.InputTag("sisCone5GenJets"))
 
-#addJetCollection.dumpPython()
+addJetCollection.dumpPython()
 addJetCollection.setComment("This is a comment")
 
 #process.addAction(addJetCollection)
