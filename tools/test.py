@@ -30,6 +30,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 #from PhysicsTools.PatAlgos.tools.jetTools import *
 
 from PhysicsTools.PatAlgos.tools.AddJetCollection import  *
+from PhysicsTools.PatAlgos.tools.SwitchJetCollection import  *
 
 # Taking away BasicJets because RecoJets/JetProducers/python/BasicJetIcone5_cfi.py in 2.2.X is wrong
 ## FIXME ### make also some basic jets for testing
@@ -43,20 +44,42 @@ from PhysicsTools.PatAlgos.tools.AddJetCollection import  *
 #addJetCollection.getParameters()
 
 #addJetCollection= AddJetCollection()
-addJetCollection(process,cms.InputTag('sisCone5CaloJets'),'SC5',
-                        doJTA=True,doBTagging=True,jetCorrLabel=('SC5','Calo'),doType1MET=True,doL1Counters=False,
-                        genJetCollection=cms.InputTag("sisCone5GenJets"))
+addJetCollection(process,
+                 cms.InputTag('sisCone5CaloJets'),
+                 'SC5',
+                 doJTA            = True,
+                 doBTagging       = True,
+                 jetCorrLabel     = ('SC5','Calo'),
+                 doType1MET       = True,
+                 doL1Counters     = False,
+                 genJetCollection = cms.InputTag("sisCone5GenJets"))
 
 #addJetCollection.getParameters()
 #process.addAction(addJetCollection)
 #print process.history
 
-addJetCollection(process,cms.InputTag('sisCone7CaloJets'),'SC7',
-                        doJTA=True,doBTagging=False,jetCorrLabel=None,doType1MET=True,doL1Counters=False,
-                        genJetCollection=cms.InputTag("sisCone5GenJets"))
+addJetCollection(process,
+                 cms.InputTag('sisCone7CaloJets'),
+                 'SC7',
+                 doJTA            = True,
+                 doBTagging       = False,
+                 jetCorrLabel     = None,
+                 doType1MET       = True,
+                 doL1Counters     = False,
+                 genJetCollection = cms.InputTag("sisCone5GenJets"))
+
+switchJetCollection(process,
+                    cms.InputTag('sisCone5CaloJets'),
+                    doJTA            = True,
+                    doBTagging       = True,
+                    jetCorrLabel     = ('SCS','Calo'),
+                    doType1MET       = True,
+                    genJetCollection = cms.InputTag("sisCone5GenJets"))
+
 
 addJetCollection.dumpPython()
 addJetCollection.setComment("This is a comment")
+switchJetCollection.dumpPython()
 
 #process.addAction(addJetCollection)
 #print process.history
@@ -64,6 +87,9 @@ addJetCollection.setComment("This is a comment")
 print 'VALUE '
 print process.__dict__['_Process__history'][0].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][1].parameters['doBTagging'].value
+print process.__dict__['_Process__history'][2].parameters['doBTagging'].value
+print process.__dict__['_Process__history'][2].parameters['jetCollection'].value
+print process.__dict__['_Process__history'][2].parameters['process'].value.jetPartonMatch.src
 #print process.history[1].getvalue('doBTagging')
 
 ##addJetCollection(process,cms.InputTag('kt4CaloJets'),'KT4',
