@@ -15,11 +15,11 @@ class AddJetCollection(ConfigToolBase):
         
     def dumpPython(self):
         outfile=open('PATconfigfile.py','a')
-        outfile.write("from PhysicsTools.PatAlgos.tools.AddJetCollection import *\naddJetCollection(process, "+str(self.getvalue('jetCollection'))+ ", "+str(self.getvalue('postfixLabel'))+', '+str(self.getvalue('doJTA'))+', '+str(self.getvalue('doBTagging'))+', '+str(self.getvalue('jetCorrLabel'))+', '+str(self.getvalue('doType1MET'))+', '+str(self.getvalue('doL1Counters'))+', '+str(self.getvalue('genJetCollection'))+'\n')
+        outfile.write("\nfrom PhysicsTools.PatAlgos.tools.AddJetCollection import *\n\naddJetCollection(process, "+str(self.getvalue('jetCollection'))+ ", "+str(self.getvalue('postfixLabel'))+', '+str(self.getvalue('doJTA'))+', '+str(self.getvalue('doBTagging'))+', '+str(self.getvalue('jetCorrLabel'))+', '+str(self.getvalue('doType1MET'))+', '+str(self.getvalue('doL1Counters'))+', '+str(self.getvalue('genJetCollection'))+'\n')
         outfile.close()
-        infile=open('PATconfigfile.py','r')
-        text=infile.read()
-        infile.close()
+        #infile=open('PATconfigfile.py','r')
+        #text=infile.read()
+        #infile.close()
 
     def switchJECParameters(self,jetCorrFactors,newalgo,newtype="Calo",oldalgo="IC5",oldtype="Calo"):
         """Replace input tags in the JetCorrFactorsProducer -- L5Flavor is taken out as it is said not to be dependend on the specific jet algorithm"""
@@ -29,7 +29,7 @@ class AddJetCollection(ConfigToolBase):
                 setattr(jetCorrFactors, k, vv.replace(oldalgo+oldtype,newalgo+newtype).replace(oldalgo,newalgo) )
                 # the first replace is good for L2, L3; the last for L7 (which don't have type dependency, at least not in the name)
                                                                                                       
-    def runBTagging(self,label):
+    def runBTagging(self, process, jetCollection,label):
         """Define a sequence to run BTagging on AOD on top of jet collection 'jetCollection', appending 'label' to module labels.
         The sequence will be called "btaggingAOD" + 'label', and will already be added to the process (but not to any Path)
         The sequence will include a JetTracksAssociatorAtVertex with name "jetTracksAssociatorAtVertex" + 'label'
@@ -103,11 +103,20 @@ class AddJetCollection(ConfigToolBase):
         return (seq, labels)
 
 
-    def __call__(self, process,InputTag=cms.InputTag('sisCone5CaloJets'),label='SCS', doJTA=True, doBTagging=True, jetCorrLabel=None, doType1MET=True,doL1Cleaning=True, doL1Counters=False, genJetCollection=cms.InputTag('sisCone5CaloJets')): 
+    def __call__(self, process,
+                 jetCollection=cms.InputTag('sisCone5CaloJets'),
+                 label='SCS',
+                 doJTA=True,
+                 doBTagging=True,
+                 jetCorrLabel=None,
+                 doType1MET=True,
+                 doL1Cleaning = True,
+                 doL1Counters = False,
+                 genJetCollection = cms.InputTag('sisCone5CaloJets')): 
 
 
         self.addParameter('process',process, 'description: process')
-        self.addParameter('jetCollection',InputTag, 'description: InputTag')
+        self.addParameter('jetCollection',jetCollection, 'description: InputTag')
         self.addParameter('postfixLabel',label, 'description: label')
         self.addParameter('doJTA',doJTA, 'description: doJTA')
         self.addParameter('doBTagging',doBTagging, 'description: doBTagging')
@@ -116,6 +125,9 @@ class AddJetCollection(ConfigToolBase):
         self.addParameter('doL1Cleaning',doL1Cleaning, 'description: doL1Cleaning')
         self.addParameter('doL1Counters',doL1Counters, 'description: doL1Counters')
         self.addParameter('genJetCollection',genJetCollection, 'description: genJetCollection')
+
+        process=self._parameters['process'].value
+        
         action = Action("AddJetCollection",copy.copy(self._parameters),self) 
         self.getvalue('process').addAction(action)
         
@@ -139,14 +151,14 @@ class AddJetCollection(ConfigToolBase):
                   replaces before calling addJetCollection then they will affect also the new jets
         """
         def addAlso (label,value):
-            existing = getattr(self.getvalue('process'), label)
-            setattr( self.getvalue('process'), label + self.getvalue('postfixLabel'), value)
-            self.getvalue('process').patDefaultSequence.replace( existing, existing * value )
+            existing = getattr(process, label)
+            setattr( process, label + self.getvalue('postfixLabel'), value)
+            process.patDefaultSequence.replace( existing, existing * value )
         def addClone(label,**replaceStatements):
-            new      = getattr(self.getvalue('process'), label).clone(**replaceStatements)
+            new      = getattr(process, label).clone(**replaceStatements)
             addAlso(label, new)
         addClone('allLayer1Jets', jetSource = self.getvalue('jetCollection'))
-        l1Jets = getattr(self.getvalue('process'), 'allLayer1Jets'+self.getvalue('postfixLabel'))
+        l1Jets = getattr(process, 'allLayer1Jets'+self.getvalue('postfixLabel'))
         addClone('selectedLayer1Jets', src=cms.InputTag('allLayer1Jets'+self.getvalue('postfixLabel')))
         addClone('cleanLayer1Jets', src=cms.InputTag('selectedLayer1Jets'+self.getvalue('postfixLabel')))
         if self.getvalue('doL1Counters'):
@@ -162,8 +174,8 @@ class AddJetCollection(ConfigToolBase):
         fixInputTag(l1Jets.genPartonMatch)
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
         if self.getvalue('doBTagging') :
-            (btagSeq, btagLabels) = self.runBTagging(self.getvalue('postfixLabel')) 
-            self.getvalue('process').patAODCoreReco += btagSeq  # must add to Core, as it's needed by Extra
+            (btagSeq, btagLabels) = self.runBTagging(process,self.getvalue('jetCollection'),self.getvalue('postfixLabel')) 
+            process.patAODCoreReco += btagSeq  # must add to Core, as it's needed by Extra
             addClone('patJetCharge', src=cms.InputTag(btagLabels['jta']))
             l1Jets.trackAssociationSource = cms.InputTag(btagLabels['jta'])
             l1Jets.tagInfoSources         = cms.VInputTag( *[ cms.InputTag(x) for x in btagLabels['tagInfos'] ] )
@@ -173,11 +185,11 @@ class AddJetCollection(ConfigToolBase):
             l1Jets.addBTagInfo = False 
         if self.getvalue('doJTA') or self.getvalue('doBTagging'):
             if not self.getvalue('doBTagging'):
-                self.getvalue('process').load("RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi")
+                process.load("RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi")
                 from RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi import ic5JetTracksAssociatorAtVertex
                 jtaLabel = 'jetTracksAssociatorAtVertex' + self.getvalue('postfixLabel')
-                setattr( self.getvalue('process'), jtaLabel, ic5JetTracksAssociatorAtVertex.clone(jets = self.getvalue('jetCollection')) )
-                self.getvalue('process').patAODReco.replace(self.getvalue('process').patJetTracksCharge, getattr(self.getvalue('process'),jtaLabel) + self.getvalue('process').patJetTracksCharge)
+                setattr( process, jtaLabel, ic5JetTracksAssociatorAtVertex.clone(jets = self.getvalue('jetCollection')) )
+                process.patAODReco.replace(process.patJetTracksCharge, getattr(process,jtaLabel) + process.patJetTracksCharge)
                 l1Jets.trackAssociationSource = cms.InputTag(jtaLabel)
                 addClone('patJetCharge', src=cms.InputTag(jtaLabel)),
                 fixInputTag(l1Jets.jetChargeSource)
@@ -189,8 +201,8 @@ class AddJetCollection(ConfigToolBase):
             if self.getvalue('jetCorrLabel') == "None": raise ValueError, "In addJetCollection 'jetCorrLabel' must be set to None (without quotes), not 'None'"
             if type(self.getvalue('jetCorrLabel')) != type(('IC5','Calo')): 
                 raise ValueError, "In switchJetCollection 'jetCorrLabel' must be None, or a tuple ('Algo', 'Type')"
-            if not hasattr( self.getvalue('process'), 'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel') ):
-                setattr( self.getvalue('process'), 
+            if not hasattr( process, 'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel') ):
+                setattr( process, 
                          'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel'), 
                          cms.ESSource("JetCorrectionServiceChain",
                                       correctors = cms.vstring('L2RelativeJetCorrector%s%s' % self.getvalue('jetCorrLabel'),
@@ -200,22 +212,22 @@ class AddJetCollection(ConfigToolBase):
                                       )
                          )
             addClone('jetCorrFactors',       jetSource           = self.getvalue('jetCollection')) 
-            self.switchJECParameters( getattr(self.getvalue('process'),'jetCorrFactors'+self.getvalue('postfixLabel')), self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo' )
+            self.switchJECParameters( getattr(process,'jetCorrFactors'+self.getvalue('postfixLabel')), self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo' )
             fixVInputTag(l1Jets.jetCorrFactorsSource)
             if self.getvalue('doType1MET'):
                 addClone('metJESCorIC5CaloJet', inputUncorJetsLabel = self.getvalue('jetCollection').value(),
                          corrector = cms.string('L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel')))
                 addClone('metJESCorIC5CaloJetMuons', uncorMETInputTag = cms.InputTag("metJESCorIC5CaloJet"+self.getvalue('postfixLabel')))
                 addClone('layer1METs',              metSource = cms.InputTag("metJESCorIC5CaloJetMuons"+self.getvalue('postfixLabel')))
-                l1MET = getattr(self.getvalue('process'), 'layer1METs'+self.getvalue('postfixLabel'))
-                self.getvalue('process').allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+self.getvalue('postfixLabel')) ]
+                l1MET = getattr(process, 'layer1METs'+self.getvalue('postfixLabel'))
+                process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+self.getvalue('postfixLabel')) ]
         else:
             l1Jets.addJetCorrFactors = False
         ## Add this to the summary tables (not strictly needed, but useful)
-        if self.getvalue('jetCollection') not in self.getvalue('process').aodSummary.candidates: 
-            self.getvalue('process').aodSummary.candidates += [ self.getvalue('jetCollection') ]
-        self.getvalue('process').allLayer1Summary.candidates      += [ cms.InputTag('allLayer1Jets'+self.getvalue('postfixLabel')) ]
-        self.getvalue('process').selectedLayer1Summary.candidates += [ cms.InputTag('selectedLayer1Jets'+self.getvalue('postfixLabel')) ]
+        if self.getvalue('jetCollection') not in process.aodSummary.candidates: 
+            process.aodSummary.candidates += [ self.getvalue('jetCollection') ]
+        process.allLayer1Summary.candidates      += [ cms.InputTag('allLayer1Jets'+self.getvalue('postfixLabel')) ]
+        process.selectedLayer1Summary.candidates += [ cms.InputTag('selectedLayer1Jets'+self.getvalue('postfixLabel')) ]
 
 
 
