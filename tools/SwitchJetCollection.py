@@ -3,6 +3,7 @@ import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.AddJetCollection import *
+from PhysicsTools.PatAlgos.tools.RunBTagging import *
         
 class SwitchJetCollection(ConfigToolBase):
 
@@ -31,7 +32,7 @@ class SwitchJetCollection(ConfigToolBase):
         #text=infile.read()
         #infile.close()
         #print text
-    #def __call__(self, process,InputTag=cms.InputTag('sisCone5CaloJets'),label='SCS', doJTA=True, doBTagging=True, jetCorrLabel=None, doType1MET=True,doL1Cleaning=True, doL1Counters=False, genJetCollection=cms.InputTag('sisCone5CaloJets')): 
+
 
     def __call__(self, process,
                  jetCollection,
@@ -43,16 +44,12 @@ class SwitchJetCollection(ConfigToolBase):
 
         self.addParameter('process',process, 'description: process')
         self.addParameter('jetCollection',jetCollection, 'description: InputTag')
-        #self.addParameter('postfixLabel',label, 'description: label')
         self.addParameter('doJTA',doJTA, 'description: doJTA')
         self.addParameter('doBTagging',doBTagging, 'description: doBTagging')
         self.addParameter('jetCorrLabel',jetCorrLabel, 'description: jetCorrLabel')
         self.addParameter('doType1MET',doType1MET, 'description: doType1MET')
-        #self.addParameter('doL1Cleaning',doL1Cleaning, 'description: doL1Cleaning')
-        #self.addParameter('doL1Counters',doL1Counters, 'description: doL1Counters')
         self.addParameter('genJetCollection',genJetCollection, 'description: genJetCollection')
-        #action = Action("AddJetCollection",copy.copy(self._parameters),self)
-        #self.getvalue('process').addAction(action)
+
 
         process=self._parameters['process'].value
         oldLabel = process.allLayer1Jets.jetSource;
@@ -65,7 +62,7 @@ class SwitchJetCollection(ConfigToolBase):
         # quickly make VInputTag from strings
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
         if self.getvalue('doBTagging') :
-            (btagSeq, btagLabels) = addJetCollection.runBTagging(process, self.getvalue('jetCollection'), 'AOD')
+            (btagSeq, btagLabels) = runBTagging(process, self.getvalue('jetCollection'), 'AOD')
             process.patAODCoreReco += btagSeq # must add to Core, as it's needed by ExtraReco
             process.patJetCharge.src                     = btagLabels['jta']
             process.allLayer1Jets.trackAssociationSource = btagLabels['jta']
@@ -100,7 +97,7 @@ class SwitchJetCollection(ConfigToolBase):
                                       label      = cms.string('L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel'))
                                       )
                          )
-            addJetCollection.switchJECParameters(process.jetCorrFactors, self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo')
+            switchJECParameters(process.jetCorrFactors, self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo')
             process.jetCorrFactors.jetSource = self.getvalue('jetCollection')
             if self.getvalue('doType1MET'):
                 process.metJESCorIC5CaloJet.inputUncorJetsLabel = self.getvalue('jetCollection').value() # FIXME it's metJESCorIC5CaloJet that's broken

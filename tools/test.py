@@ -77,9 +77,22 @@ switchJetCollection(process,
                     genJetCollection = cms.InputTag("sisCone5GenJets"))
 
 
-addJetCollection.dumpPython()
+
+
+switchJetCollection(process,
+                    cms.InputTag('sisCone7CaloJets'),
+                    doJTA            = True,
+                    doBTagging       = True,
+                    jetCorrLabel     = ('SCS','Calo'),
+                    doType1MET       = True,
+                    genJetCollection = cms.InputTag("sisCone7GenJets"))
+
+
+
+
+#addJetCollection.dumpPython()
 addJetCollection.setComment("This is a comment")
-switchJetCollection.dumpPython()
+#switchJetCollection.dumpPython()
 
 #process.addAction(addJetCollection)
 #print process.history
@@ -88,8 +101,9 @@ print 'VALUE '
 print process.__dict__['_Process__history'][0].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][1].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][2].parameters['doBTagging'].value
-print process.__dict__['_Process__history'][2].parameters['jetCollection'].value
-print process.__dict__['_Process__history'][2].parameters['process'].value.jetPartonMatch.src
+print process.__dict__['_Process__history'][3].parameters['doBTagging'].value
+#print process.__dict__['_Process__history'][2].parameters['jetCollection'].value
+#print process.__dict__['_Process__history'][2].parameters['process'].value.jetPartonMatch.src
 #print process.history[1].getvalue('doBTagging')
 
 ##addJetCollection(process,cms.InputTag('kt4CaloJets'),'KT4',

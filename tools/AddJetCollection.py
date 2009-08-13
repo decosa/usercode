@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from PhysicsTools.PatAlgos.tools.RunBTagging import *
         
 class AddJetCollection(ConfigToolBase):
 
@@ -20,87 +21,6 @@ class AddJetCollection(ConfigToolBase):
         #infile=open('PATconfigfile.py','r')
         #text=infile.read()
         #infile.close()
-
-    def switchJECParameters(self,jetCorrFactors,newalgo,newtype="Calo",oldalgo="IC5",oldtype="Calo"):
-        """Replace input tags in the JetCorrFactorsProducer -- L5Flavor is taken out as it is said not to be dependend on the specific jet algorithm"""
-        for k in ['L1Offset', 'L2Relative', 'L3Absolute', 'L4EMF', 'L6UE', 'L7Parton']:
-            vv = getattr(jetCorrFactors, k).value();
-            if (vv != "none"):
-                setattr(jetCorrFactors, k, vv.replace(oldalgo+oldtype,newalgo+newtype).replace(oldalgo,newalgo) )
-                # the first replace is good for L2, L3; the last for L7 (which don't have type dependency, at least not in the name)
-                                                                                                      
-    def runBTagging(self, process, jetCollection,label):
-        """Define a sequence to run BTagging on AOD on top of jet collection 'jetCollection', appending 'label' to module labels.
-        The sequence will be called "btaggingAOD" + 'label', and will already be added to the process (but not to any Path)
-        The sequence will include a JetTracksAssociatorAtVertex with name "jetTracksAssociatorAtVertex" + 'label'
-        The method will return a pair (sequence, labels) where 'sequence' is the cms.Sequence object, and 'labels' contains
-        labels["jta"]      = the name of the JetTrackAssociator module
-        labels["tagInfos"] = list of names of TagInfo modules
-        labels["jetTags "] = list of names of JetTag modules
-        these labels are meant to be used for PAT BTagging tools
-        NOTE: 'label' MUST NOT BE EMPTY
-        """
-        if (label == ''):
-            raise ValueError, "Label for re-running BTagging can't be empty, it will crash CRAB."
-        self.getvalue('process').load("RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi")
-        self.getvalue('process').load("RecoBTag.Configuration.RecoBTag_cff")
-        from RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi import ic5JetTracksAssociatorAtVertex
-        import RecoBTag.Configuration.RecoBTag_cff as btag
-        # quickly make VInputTag from strings
-        def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
-        
-        # define labels
-        jtaLabel =  'jetTracksAssociatorAtVertex' + label
-        ipTILabel = 'impactParameterTagInfos'     + label
-        svTILabel = 'secondaryVertexTagInfos'     + label
-        seTILabel = 'softElectronTagInfos'        + label
-        smTILabel = 'softMuonTagInfos'            + label
-        
-        # make JTA and TagInfos
-        setattr( self.getvalue('process'), jtaLabel,  ic5JetTracksAssociatorAtVertex.clone(jets = self.getvalue('jetCollection')))
-        setattr( self.getvalue('process'), ipTILabel, btag.impactParameterTagInfos.clone(jetTracks = cms.InputTag(jtaLabel)) )
-        setattr( self.getvalue('process'), svTILabel, btag.secondaryVertexTagInfos.clone(trackIPTagInfos = cms.InputTag(ipTILabel)) )
-        setattr( self.getvalue('process'), seTILabel, btag.softElectronTagInfos.clone(jets = self.getvalue('jetCollection')) )
-        setattr( self.getvalue('process'), smTILabel, btag.softMuonTagInfos.clone(jets = self.getvalue('jetCollection')) )
-        setattr( self.getvalue('process'), 'jetBProbabilityBJetTags'+label, btag.jetBProbabilityBJetTags.clone(tagInfos = vit(ipTILabel)) )
-        setattr( self.getvalue('process'), 'jetProbabilityBJetTags' +label,  btag.jetProbabilityBJetTags.clone(tagInfos = vit(ipTILabel)) )
-        setattr( self.getvalue('process'), 'trackCountingHighPurBJetTags'+label, btag.trackCountingHighPurBJetTags.clone(tagInfos = vit(ipTILabel)) )
-        setattr( self.getvalue('process'), 'trackCountingHighEffBJetTags'+label, btag.trackCountingHighEffBJetTags.clone(tagInfos = vit(ipTILabel)) )
-        setattr( self.getvalue('process'), 'simpleSecondaryVertexBJetTags'+label, btag.simpleSecondaryVertexBJetTags.clone(tagInfos = vit(svTILabel)) )
-        setattr( self.getvalue('process'), 'combinedSecondaryVertexBJetTags'+label, btag.combinedSecondaryVertexBJetTags.clone(tagInfos = vit(ipTILabel, svTILabel)) )
-        setattr( self.getvalue('process'), 'combinedSecondaryVertexMVABJetTags'+label, btag.combinedSecondaryVertexMVABJetTags.clone(tagInfos = vit(ipTILabel, svTILabel)) )
-        setattr( self.getvalue('process'), 'softMuonBJetTags'+label, btag.softMuonBJetTags.clone(tagInfos = vit(smTILabel)) )
-        setattr( self.getvalue('process'), 'softMuonByPtBJetTags'+label, btag.softMuonByPtBJetTags.clone(tagInfos = vit(smTILabel)) )
-        setattr( self.getvalue('process'), 'softMuonByIP3dBJetTags'+label, btag.softMuonByIP3dBJetTags.clone(tagInfos = vit(smTILabel)) )
-        setattr( self.getvalue('process'), 'softElectronByPtBJetTags'+label, btag.softElectronByPtBJetTags.clone(tagInfos = vit(smTILabel)) )
-        setattr( self.getvalue('process'), 'softElectronByIP3dBJetTags'+label, btag.softElectronByIP3dBJetTags.clone(tagInfos = vit(smTILabel)) )
-        
-        def mkseq(process, firstlabel, *otherlabels):
-            seq = getattr(self.getvalue('process'), firstlabel)
-            for x in otherlabels: seq += getattr(self.getvalue('process'), x)
-            return cms.Sequence(seq)
-        
-        labels = { 'jta' : jtaLabel,
-                   'tagInfos' : (ipTILabel,svTILabel,seTILabel,smTILabel),
-                   'jetTags'  : [ (x + label) for x in ('jetBProbabilityBJetTags',
-                                                        'jetProbabilityBJetTags',
-                                                        'trackCountingHighPurBJetTags',
-                                                        'trackCountingHighEffBJetTags',
-                                                        'simpleSecondaryVertexBJetTags',
-                                                        'combinedSecondaryVertexBJetTags',
-                                                        'combinedSecondaryVertexMVABJetTags',
-                                                        'softElectronByPtBJetTags',
-                                                        'softElectronByIP3dBJetTags',
-                                                        'softMuonBJetTags',
-                                                        'softMuonByPtBJetTags',
-                                                        'softMuonByIP3dBJetTags') ]
-        }
-
-        setattr( self.getvalue('process'), 'btaggingTagInfos' + label, mkseq(self.getvalue('process'), *(labels['tagInfos']) ) )
-        setattr( self.getvalue('process'), 'btaggingJetTags' + label,  mkseq(self.getvalue('process'), *(labels['jetTags'])  ) )
-        seq = mkseq(self.getvalue('process'), jtaLabel, 'btaggingTagInfos' + label, 'btaggingJetTags' + label)
-        setattr( self.getvalue('process'), 'btagging' + label, seq )
-        return (seq, labels)
 
 
     def __call__(self, process,
@@ -174,7 +94,7 @@ class AddJetCollection(ConfigToolBase):
         fixInputTag(l1Jets.genPartonMatch)
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
         if self.getvalue('doBTagging') :
-            (btagSeq, btagLabels) = self.runBTagging(process,self.getvalue('jetCollection'),self.getvalue('postfixLabel')) 
+            (btagSeq, btagLabels) = runBTagging(process,self.getvalue('jetCollection'),self.getvalue('postfixLabel')) 
             process.patAODCoreReco += btagSeq  # must add to Core, as it's needed by Extra
             addClone('patJetCharge', src=cms.InputTag(btagLabels['jta']))
             l1Jets.trackAssociationSource = cms.InputTag(btagLabels['jta'])
@@ -212,7 +132,7 @@ class AddJetCollection(ConfigToolBase):
                                       )
                          )
             addClone('jetCorrFactors',       jetSource           = self.getvalue('jetCollection')) 
-            self.switchJECParameters( getattr(process,'jetCorrFactors'+self.getvalue('postfixLabel')), self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo' )
+            switchJECParameters( getattr(process,'jetCorrFactors'+self.getvalue('postfixLabel')), self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo' )
             fixVInputTag(l1Jets.jetCorrFactorsSource)
             if self.getvalue('doType1MET'):
                 addClone('metJESCorIC5CaloJet', inputUncorJetsLabel = self.getvalue('jetCollection').value(),
