@@ -1,4 +1,4 @@
-import FWCore.ParameterSet.Config as cms
+
 import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
@@ -18,16 +18,19 @@ class SwitchJetCollection(ConfigToolBase):
                      NOTE: at the moment it must be False for non-CaloJets otherwise the JetMET POG module crashes.
        genJetCollection : GenJet collection to match to."""
     
+    _label='SwitchJetCollection'
     
-    def __init__(self):
-        self._parameters={}
-        self._label='SwitchJetCollection'
-        self._description=self.__doc__    
-        
+            
     def dumpPython(self):
-        outfile=open('PATconfigfile.py','a')
-        outfile.write("\nfrom PhysicsTools.PatAlgos.tools.SwitchJetCollection import *\n\nswitchJetCollection(process, "+str(self.getvalue('jetCollection'))+', '+str(self.getvalue('doJTA'))+', '+str(self.getvalue('doBTagging'))+', '+str(self.getvalue('jetCorrLabel'))+', '+str(self.getvalue('doType1MET'))+', '+str(self.getvalue('genJetCollection'))+'\n')
-        outfile.close()
+
+        dumpPython= "\nfrom PhysicsTools.PatAlgos.tools.SwitchJetCollection import *\n\nswitchJetCollection(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+', '
+        dumpPython += str(self.getvalue('doJTA'))+', '
+        dumpPython += str(self.getvalue('doBTagging'))+', '
+        dumpPython += str(self.getvalue('jetCorrLabel'))+', '
+        dumpPython += str(self.getvalue('doType1MET'))+', '
+        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        return dumpPython
         #infile=open('PATconfigfile.py','r')
         #text=infile.read()
         #infile.close()
@@ -53,16 +56,23 @@ class SwitchJetCollection(ConfigToolBase):
 
         process=self._parameters['process'].value
         oldLabel = process.allLayer1Jets.jetSource;
-        process.jetPartonMatch.src        = self.getvalue('jetCollection')
-        process.jetGenJetMatch.src        = self.getvalue('jetCollection')
-        process.jetGenJetMatch.match      = self.getvalue('genJetCollection')
-        process.jetPartonAssociation.jets = self.getvalue('jetCollection')
-        process.allLayer1Jets.jetSource = self.getvalue('jetCollection')
+        jetCollection = self._parameters['jetCollection'].value
+        doJTA = self._parameters['doJTA'].value
+        doBTagging =self._parameters['doBTagging'].value
+        jetCorrLabel = self._parameters['jetCorrLabel'].value
+        doType1MET = self._parameters['doType1MET'].value
+        genJetCollection = self._parameters['genJetCollection'].value
+        process.jetPartonMatch.src        = jetCollection
+        process.jetGenJetMatch.src        = jetCollection
+        process.jetGenJetMatch.match      = genJetCollection
+        process.jetPartonAssociation.jets = jetCollection
+        process.allLayer1Jets.jetSource = jetCollection
+
 
         # quickly make VInputTag from strings
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
-        if self.getvalue('doBTagging') :
-            (btagSeq, btagLabels) = runBTagging(process, self.getvalue('jetCollection'), 'AOD')
+        if doBTagging :
+            (btagSeq, btagLabels) = runBTagging(process, jetCollection, 'AOD')
             process.patAODCoreReco += btagSeq # must add to Core, as it's needed by ExtraReco
             process.patJetCharge.src                     = btagLabels['jta']
             process.allLayer1Jets.trackAssociationSource = btagLabels['jta']
@@ -71,11 +81,11 @@ class SwitchJetCollection(ConfigToolBase):
         else:
             process.patAODReco.remove(process.patBTagging)
             process.allLayer1Jets.addBTagInfo = False
-        if self.getvalue('doJTA') or self.getvalue('doBTagging'):
-            if not self.getvalue('doBTagging'):
+        if doJTA or doBTagging:
+            if not doBTagging:
                 process.load("RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi")
                 from RecoJets.JetAssociationProducers.ic5JetTracksAssociatorAtVertex_cfi import ic5JetTracksAssociatorAtVertex
-                process.jetTracksAssociatorAtVertex = ic5JetTracksAssociatorAtVertex.clone(jets = self.getvalue('jetCollection'))
+                process.jetTracksAssociatorAtVertex = ic5JetTracksAssociatorAtVertex.clone(jets = jetCollection)
                 process.patAODReco.replace(process.patJetTracksCharge, process.jetTracksAssociatorAtVertex + process.patJetTracksCharge)
                 process.patJetCharge.src                     = 'jetTracksAssociatorAtVertex'
                 process.allLayer1Jets.trackAssociationSource = 'jetTracksAssociatorAtVertex'
@@ -83,33 +93,33 @@ class SwitchJetCollection(ConfigToolBase):
             process.patAODReco.remove(process.patJetTracksCharge)
             process.allLayer1Jets.addAssociatedTracks = False
             process.allLayer1Jets.addJetCharge = False
-        if self.getvalue('jetCorrLabel') != None:
-            if self.getvalue('jetCorrLabel') == False : raise ValueError, "In switchJetCollection 'jetCorrLabel' must be set to None, not False"
-            if self.getvalue('jetCorrLabel') == "None": raise ValueError, "In switchJetCollection 'jetCorrLabel' must be set to None (without quotes), not 'None'"
-            if type(self.getvalue('jetCorrLabel')) != type(('IC5','Calo')):
+        if jetCorrLabel != None:
+            if jetCorrLabel == False : raise ValueError, "In switchJetCollection 'jetCorrLabel' must be set to None, not False"
+            if jetCorrLabel == "None": raise ValueError, "In switchJetCollection 'jetCorrLabel' must be set to None (without quotes), not 'None'"
+            if type(jetCorrLabel) != type(('IC5','Calo')):
                 raise ValueError, "In switchJetCollection 'jetCorrLabel' must be None, or a tuple ('Algo', 'Type')"
-            if not hasattr( process, 'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel') ):
+            if not hasattr( process, 'L2L3JetCorrector%s%s' % jetCorrLabel ):
                 setattr( process,
-                         'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel'),
+                         'L2L3JetCorrector%s%s' % jetCorrLabel,
                          cms.ESSource("JetCorrectionServiceChain",
-                                      correctors = cms.vstring('L2RelativeJetCorrector%s%s' % self.getvalue('jetCorrLabel'),
-                                                               'L3AbsoluteJetCorrector%s%s' % self.getvalue('jetCorrLabel')),
-                                      label      = cms.string('L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel'))
+                                      correctors = cms.vstring('L2RelativeJetCorrector%s%s' % jetCorrLabel,
+                                                               'L3AbsoluteJetCorrector%s%s' % jetCorrLabel),
+                                      label      = cms.string('L2L3JetCorrector%s%s' % jetCorrLabel)
                                       )
                          )
-            switchJECParameters(process.jetCorrFactors, self.getvalue('jetCorrLabel')[0], self.getvalue('jetCorrLabel')[1], oldalgo='IC5',oldtype='Calo')
-            process.jetCorrFactors.jetSource = self.getvalue('jetCollection')
-            if self.getvalue('doType1MET'):
-                process.metJESCorIC5CaloJet.inputUncorJetsLabel = self.getvalue('jetCollection').value() # FIXME it's metJESCorIC5CaloJet that's broken
-                process.metJESCorIC5CaloJet.corrector           = 'L2L3JetCorrector%s%s' % self.getvalue('jetCorrLabel')
+            switchJECParameters(process.jetCorrFactors, jetCorrLabel[0], jetCorrLabel[1], oldalgo='IC5',oldtype='Calo')
+            process.jetCorrFactors.jetSource = jetCollection
+            if doType1MET:
+                process.metJESCorIC5CaloJet.inputUncorJetsLabel = jetCollection.value() # FIXME it's metJESCorIC5CaloJet that's broken
+                process.metJESCorIC5CaloJet.corrector           = 'L2L3JetCorrector%s%s' % jetCorrLabel
         else:
             process.patJetMETCorrections.remove(process.jetCorrFactors)
             process.allLayer1Jets.addJetCorrFactors = False
             ## Add this to the summary tables (not strictly needed, but useful)
         if oldLabel in process.aodSummary.candidates:
-            process.aodSummary.candidates[process.aodSummary.candidates.index(oldLabel)] = self.getvalue('jetCollection')
+            process.aodSummary.candidates[process.aodSummary.candidates.index(oldLabel)] = jetCollection
         else:
-            process.aodSummary.candidates += [self.getvalue('jetCollection')]
+            process.aodSummary.candidates += [jetCollection]
                                                                                 
         action = Action("switchJetCollection",copy.copy(self._parameters),self)
         process.addAction(action)
