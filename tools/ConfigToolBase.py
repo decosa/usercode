@@ -1,21 +1,22 @@
-
+import FWCore.ParameterSet.Config as cms  
 class Action(object):
 
-    def __init__(self,label,parameters,referenceToFunctor):
+    def __init__(self,label,parameters=[],referenceToFunctor=None, bool=True):
 
         self.label=label
         self.parameters=parameters
         self.referenceToFunctor=referenceToFunctor
+        ### The boolean refers to the type of action, if the tool is added bool=True,
+        ### if it is deleted the bool is set to False
+        self.bool=bool
         
+class parameter:
+    pass
 
-class ConfigToolBase :
+class ConfigToolBase(object) :
 
     """ Base class for PAT tools
     """
-
-    class parameter:
-        pass
-
     def __init__(self):
         self._label = "ConfigToolBase"
         self._parameters={}
@@ -35,7 +36,7 @@ class ConfigToolBase :
     def addParameter(self,parname, parvalue, description):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
-        par=self.parameter()
+        par=parameter()
         par.name=parname
         par.value=parvalue
         par.description=description
@@ -63,10 +64,13 @@ class ConfigToolBase :
         """ Change parameter 'name' to a new value
         """
         #print 'Inside function setParameters()'
-        assert(self._parameters.has_key(name))
         self._parameters[name].value=value
         #print 'New parameter value ('+name + ') '+str(self._parameters[name].value)
         #raise NotImplementedError
+
+    def setParameters(self, parameters):
+        self._parameters=parameters
+        
     def dumpPython(self):
         """ Return the python code to perform the action
         """
@@ -74,11 +78,6 @@ class ConfigToolBase :
     def setComment(self, comment):
         """ Write a comment in the configuration file
         """
-        outfile=open('PATconfigfile.py','a')
-        outfile.write(comment+'\n')
-        outfile.close()
-        infile=open('PATconfigfile.py','r')
-        text=infile.read()
-        infile.close()
-        print text
-                                                        
+        dumpPython='#'+comment+'\n'
+        return dumpPython
+                                                                

@@ -54,6 +54,10 @@ addJetCollection(process,
                  doL1Counters     = False,
                  genJetCollection = cms.InputTag("sisCone5GenJets"))
 
+
+print 'doBTagging - first value'
+print addJetCollection.getvalue('doBTagging')
+
 #addJetCollection.getParameters()
 #process.addAction(addJetCollection)
 #print process.history
@@ -67,6 +71,10 @@ addJetCollection(process,
                  doType1MET       = True,
                  doL1Counters     = False,
                  genJetCollection = cms.InputTag("sisCone5GenJets"))
+
+
+print 'doBTagging - second value'
+print addJetCollection.getvalue('doBTagging')
 
 switchJetCollection(process,
                     cms.InputTag('sisCone5CaloJets'),
@@ -102,6 +110,44 @@ print process.__dict__['_Process__history'][0].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][1].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][2].parameters['doBTagging'].value
 print process.__dict__['_Process__history'][3].parameters['doBTagging'].value
+
+
+addJetCollection.setParameters(process.__dict__['_Process__history'][0].parameters)
+
+print 'new value for doBTagging'
+print addJetCollection.getvalue('doBTagging')
+
+print process.dumpHistory() 
+
+print process.undo()
+action=Action("AddJetCollection")
+print process.deleteAction(action) 
+print process.undo()
+print process.undo()
+print process.undo()
+print process.redo()
+print process.redo()
+print process.redo()
+print process.redo()
+print process.redo()
+
+#action=Action("AddJetCollection")
+#print process.deleteAction(action)
+
+
+#print process.__dict__['_Process__history'][4].bool
+
+#print process.dumpHistory()
+#print process.redo()
+#print process.redo()
+#print process.dumpHistory()
+
+#action=Action("AddJetCollection")
+#print process.deleteAction(action)
+#print process.dumpHistory()
+#print process.undo()
+#print process.redo()
+#print process.dumpHistory()
 #print process.__dict__['_Process__history'][2].parameters['jetCollection'].value
 #print process.__dict__['_Process__history'][2].parameters['process'].value.jetPartonMatch.src
 #print process.history[1].getvalue('doBTagging')

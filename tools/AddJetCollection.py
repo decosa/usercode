@@ -25,7 +25,7 @@ class AddJetCollection(ConfigToolBase):
         dumpPython += str(self.getvalue('doJTA'))+', '
         dumpPython += str(self.getvalue('doBTagging'))+', '
         dumpPython += str(self.getvalue('jetCorrLabel'))+', '
-        dumpPhyton += str(self.getvalue('doType1MET'))+', '
+        dumpPython += str(self.getvalue('doType1MET'))+', '
         dumpPython += str(self.getvalue('doL1Counters'))+', '
         dumpPython += str(self.getvalue('genJetCollection'))+'\n'
         return dumpPython
