@@ -119,17 +119,9 @@ print addJetCollection.getvalue('doBTagging')
 
 print process.dumpHistory() 
 
-print process.undo()
+
 action=Action("AddJetCollection")
 print process.deleteAction(action) 
-print process.undo()
-print process.undo()
-print process.undo()
-print process.redo()
-print process.redo()
-print process.redo()
-print process.redo()
-print process.redo()
 
 #action=Action("AddJetCollection")
 #print process.deleteAction(action)

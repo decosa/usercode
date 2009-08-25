@@ -137,61 +137,67 @@ class Process(object):
         self.__dict__['_Process__index'] = len(self.__dict__['_Process__history'])-1
         print 'DELETE ACTION'
         print   self.__dict__['_Process__index'] 
-        dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
+        dumpHistory=self.dumpHistory()
         return dumpHistory 
 
-    def deleteElements(self, historycopy, item):
-        if item.bool==False:
-            historycopy.reverse()
-            for i in historycopy[historycopy.index(item):]:
-                if i.label==item.label:
-                    historycopy.remove(i)
-            historycopy.reverse()
+    #def deleteElements(self, historycopy, item):
+     #   if item.bool==False:
+      #      historycopy.reverse()
+      #      for i in historycopy[historycopy.index(item):]:
+      #          if i.label==item.label:
+      #              historycopy.remove(i)
+      #      historycopy.reverse()
 
 
-    def _dumpHistory(self,index):
+    def dumpHistory(self):
         dumpHistory=[]
         historycopy=copy.copy(self.__dict__['_Process__history'])
         ### implement a function to do this and export the functions in ConfigToolBase class
-        if index==-1:
+        #if index==-1:
 
-            for item in historycopy:
-                self.deleteElements(historycopy, item)
+        for item in historycopy:
+            if item.bool==False:
+                historycopy.reverse()
+                for i in historycopy[historycopy.index(item):]:
+                    if i.label==item.label:
+                        historycopy.remove(i)
+                historycopy.reverse()
+
                 
-            for item in historycopy:
-                item.referenceToFunctor.setParameters(item.parameters)
-                dumpHistory.append(item.referenceToFunctor.dumpPython())
-        else:
-            for item in historycopy[:index+1]:
-                self.deleteElements(historycopy, item)
+        for item in historycopy:
+            item.referenceToFunctor.setParameters(item.parameters)
+            dumpHistory.append(item.referenceToFunctor.dumpPython())
+        #else:
+         #   for item in historycopy[:index+1]:
+          #      self.deleteElements(historycopy, item)
 
-            for item in historycopy[:index+1]:
-                item.referenceToFunctor.setParameters(item.parameters)
-                dumpHistory.append(item.referenceToFunctor.dumpPython())
+           # for item in historycopy[:index+1]:
+           #     item.referenceToFunctor.setParameters(item.parameters)
+           #     dumpHistory.append(item.referenceToFunctor.dumpPython())
 
         return ''.join(dumpHistory)   
 
-    def dumpHistory(self):
-        return self._dumpHistory(-1)
+  #  def dumpHistory(self):
+   #     return self._dumpHistory(-1)
         
 
-    def undo(self):
-        dumpHistory=''
-        if self.__dict__['_Process__index']!=0:
-            self.__dict__['_Process__index'] -=1
-        print self.__dict__['_Process__index']
-        print 'UNDO'
-        dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
-        return dumpHistory
+#    def undo(self):
+ #       dumpHistory=''
+  #      if self.__dict__['_Process__index']!=0:
+   #         self.__dict__['_Process__index'] -=1
+   #     print self.__dict__['_Process__index']
+   #     print 'UNDO'
+   #     dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
+   #     return dumpHistory
 
-    def redo(self):
-        dumpHistory=''
-        if self.__dict__['_Process__index']!=len(self.__dict__['_Process__history'])-1:
-            self.__dict__['_Process__index'] +=1
-        print self.__dict__['_Process__index']
-        print 'REDO'
-        dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
-        return dumpHistory
+ #   def redo(self):
+ #       dumpHistory=''
+ #       if self.__dict__['_Process__index']!=len(self.__dict__['_Process__history'])-1:
+ #           self.__dict__['_Process__index'] +=1
+ #       print self.__dict__['_Process__index']
+ #       print 'REDO'
+ #       dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
+ #       return dumpHistory
     
     
     def setStrict(self, value):
