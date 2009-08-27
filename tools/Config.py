@@ -96,7 +96,6 @@ class Process(object):
     """Root class for a CMS configuration process"""
     def __init__(self,name):
         self.__dict__['_Process__history'] = []
-        self.__dict__['_Process__index'] = 0
         self.__dict__['_Process__name'] = name
         self.__dict__['_Process__filters'] = {}
         self.__dict__['_Process__producers'] = {}
@@ -123,20 +122,29 @@ class Process(object):
         
     def addAction(self,tool):
 
-        del self.__dict__['_Process__history'][self.__dict__['_Process__index']+1:]
         self.__dict__['_Process__history'].append(tool)
-        self.__dict__['_Process__index'] = len(self.__dict__['_Process__history'])-1
         print 'ADD ACTION'
-        print   self.__dict__['_Process__index'] 
-
-    def deleteAction(self,tool):
+        
+    def deleteAction(self,i):
         ### understand why it prints out NONE
-        tool.bool=False
-        del self.__dict__['_Process__history'][self.__dict__['_Process__index']+1:]
-        self.__dict__['_Process__history'].append(tool)
-        self.__dict__['_Process__index'] = len(self.__dict__['_Process__history'])-1
-        print 'DELETE ACTION'
-        print   self.__dict__['_Process__index'] 
+        #tool.bool=False
+        #del self.__dict__['_Process__history'][self.__dict__['_Process__index']+1:]
+        #self.__dict__['_Process__history'].append(tool)
+        #self.__dict__['_Process__index'] = len(self.__dict__['_Process__history'])-1
+        #print 'DELETE ACTION'
+        #print   self.__dict__['_Process__index'] 
+
+
+
+
+
+        #self.__dict__['_Process__history'].reverse()
+        #for i in self.__dict__['_Process__history']:
+         #   if (i.label==tool.label) and (i.parameters==tool.parameters) :
+          #      self.__dict__['_Process__history'].remove(i)
+        #self.__dict__['_Process__history'].reverse()
+                                               
+        del self.__dict__['_Process__history'][i]
         dumpHistory=self.dumpHistory()
         return dumpHistory 
 
@@ -155,15 +163,6 @@ class Process(object):
         ### implement a function to do this and export the functions in ConfigToolBase class
         #if index==-1:
 
-        for item in historycopy:
-            if item.bool==False:
-                historycopy.reverse()
-                for i in historycopy[historycopy.index(item):]:
-                    if i.label==item.label:
-                        historycopy.remove(i)
-                historycopy.reverse()
-
-                
         for item in historycopy:
             item.referenceToFunctor.setParameters(item.parameters)
             dumpHistory.append(item.referenceToFunctor.dumpPython())

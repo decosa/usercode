@@ -113,15 +113,15 @@ print process.__dict__['_Process__history'][3].parameters['doBTagging'].value
 
 
 addJetCollection.setParameters(process.__dict__['_Process__history'][0].parameters)
-
+#parameters=addJetCollection.getParameters(process.__dict__['_Process__history'][0].parameters)
 print 'new value for doBTagging'
 print addJetCollection.getvalue('doBTagging')
 
 print process.dumpHistory() 
 
 
-action=Action("AddJetCollection")
-print process.deleteAction(action) 
+action=Action("AddJetCollection",process.__dict__['_Process__history'][0].parameters)
+print process.deleteAction(1) 
 
 #action=Action("AddJetCollection")
 #print process.deleteAction(action)
