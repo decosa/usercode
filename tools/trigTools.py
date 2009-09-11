@@ -4,6 +4,13 @@ from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from PhysicsTools.PatAlgos.patEventContent_cff import *
 
 class SwitchOnTrigger(ConfigToolBase):
+
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTrigger(proces) \n "
+        return dumpPython
+    
     
     def __call__(self, process ):
         """ Enables trigger information in PAT  """
@@ -31,6 +38,11 @@ switchOnTrigger=SwitchOnTrigger()
 
 class SwitchOnTriggerStandAlone(ConfigToolBase):
 
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerStandAlone(proces) \n "
+        return dumpPython
+
     def __call__(self, process ):
     ## add trigger modules to path
 
@@ -52,6 +64,12 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
 switchOnTriggerStandAlone=SwitchOnTriggerStandAlone()
 
 class SwitchOnTriggerAll(ConfigToolBase):
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerAll(proces) \n "
+        return dumpPython
+
     def __call__( process ):
 
         self.addParameter('process',process, 'description: process')
@@ -66,6 +84,12 @@ class SwitchOnTriggerAll(ConfigToolBase):
 switchOnTriggerAll=SwitchOnTriggerAll()
 
 class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerMatchEmbedding(proces) \n "
+        return dumpPython
+    
     def __call__(self,process ):
         self.addParameter('process',process, 'description: process')
         process=self._parameters['process'].value

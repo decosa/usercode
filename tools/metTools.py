@@ -9,6 +9,14 @@ class AddTcMET(ConfigToolBase):
 
     _label='AddTcMET'
     
+  
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n\naddTcMET(process, "
+        dumpPython += str(self.getvalue('postfixLabel'))+'\n'
+        return dumpPython
+    
+
     def __call__(self,process,
                  postfixLabel = 'TC'):
         """
@@ -56,8 +64,13 @@ addTcMET=AddTcMET()
 class AddPfMET(ConfigToolBase):
 
     _label='AddPfMET'
- 
-
+    
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n\naddPfMET(process, "
+        dumpPython += str(self.getvalue('postfixLabel'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,
                  postfixLabel = 'PF'):
         """

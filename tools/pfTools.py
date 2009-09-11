@@ -14,6 +14,12 @@ def warningIsolation():
 
 class AdaptPFMuons(ConfigToolBase):
     
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFMuons(process, "
+        dumpPython += str(self.getvalue('module'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,module):
 
         self.addParameter('process',process, 'description: process')
@@ -54,7 +60,13 @@ class AdaptPFMuons(ConfigToolBase):
 adaptPFMuons=AdaptPFMuons()
 
 
-class adaptPFElectrons(ConfigToolBase):
+class AdaptPFElectrons(ConfigToolBase):
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFElectrons(process, "
+        dumpPython += str(self.getvalue('module'))+'\n'
+        return dumpPython
     
     def __call__(self,process,module):
         # module.useParticleFlow = True
@@ -126,6 +138,12 @@ def adaptPFJets(process,module):
 
 class AdaptPFTaus(ConfigToolBase):
     
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFTaus(process, "
+        dumpPython += str(self.getvalue('tauType'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,tauType = 'fixedConePFTau' ):
         
         self.addParameter('process',process, 'description: process')
@@ -163,17 +181,26 @@ adaptPFTaus=AdaptPFTaus()
 
 
 class AddPFCandidates(ConfigToolBase):
+
+        
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\naddPFCandidates(process, "
+        dumpPython += str(self.getvalue('src'))+", "
+        dumpPython += str(self.getvalue('patLabel'))+", "
+        dumpPython += str(self.getvalue('cut'))+'\n'
+        return dumpPython
     
     def __call__(self,process,src,patLabel='PFParticles',cut=""):
 
         self.addParameter('process',process, 'description: process')
         self.addParameter('src',src, 'description: InputTag')
-        self.addParameter('ptLabel',ptLabel, 'description: InputTag')
+        self.addParameter('patLabel',patLabel, 'description: InputTag')
         self.addParameter('cut',cut, 'description: InputTag')
         
         process=self._parameters['process'].value
         src=self._parameters['src'].value
-        ptLabel=self._parameters['ptLabel'].value
+        patLabel=self._parameters['patLabel'].value
         cut=self._parameters['cut'].value
                                       
         from PhysicsTools.PatAlgos.producersLayer1.pfParticleProducer_cfi import allLayer1PFParticles
@@ -204,6 +231,12 @@ class AddPFCandidates(ConfigToolBase):
 addPFCandidates=AddPFCandidates()
 
 class SwitchToPFMET(ConfigToolBase):
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFMET(process, "
+        dumpPython += str(self.getvalue('input'))+'\n'
+        return dumpPython
     
     def __call__(self,process,input=cms.InputTag('pfMET')):
 
@@ -226,6 +259,12 @@ class SwitchToPFMET(ConfigToolBase):
 switchToPFMET=SwitchToPFMET()
 
 class SwitchToPFJets(ConfigToolBase):
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFJets(process, "
+        dumpPython += str(self.getvalue('input'))+'\n'
+        return dumpPython
     
     def __call__(self,process,input=cms.InputTag('pfNoTau')):
         self.addParameter('process',process, 'description: process')
@@ -248,7 +287,13 @@ class SwitchToPFJets(ConfigToolBase):
 
 switchToPFJets=SwitchToPFJets()
 
-class  usePF2PAT(ConfigToolBase):
+class  UsePF2PAT(ConfigToolBase):
+    
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nusePF2PAT(process, "
+        dumpPython += str(self.getvalue('runPF2PAT'))+'\n'
+        return dumpPython
     
     def __call__(self,process,runPF2PAT=True):
 
@@ -305,4 +350,4 @@ class  usePF2PAT(ConfigToolBase):
         action = Action("UsePF2PAT",copy.copy(self._parameters),self)
         process.addAction(action)
 
- usePF2PAT=UsePF2PAT()
+usePF2PAT=UsePF2PAT()

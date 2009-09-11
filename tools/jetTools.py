@@ -83,6 +83,14 @@ def switchJECParameters(jetCorrFactors,
 class RunBTagging(ConfigToolBase):
 
     _label='RunBTagging'
+
+    
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nrunBTagging(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+ ", "
+        dumpPython += str(self.getvalue('label'))+'\n'
+        return dumpPython
     
     def __call__(self,process,
                     jetCollection,
@@ -202,6 +210,17 @@ runBTagging=RunBTagging()
 class SwitchJetCollection(ConfigToolBase):
 
     _label='SwitchJetCollection'
+
+    def dumpPython(self):
+        
+        dumpPython= "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchJetCollection(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+', '
+        dumpPython += str(self.getvalue('doJTA'))+', '
+        dumpPython += str(self.getvalue('doBTagging'))+', '
+        dumpPython += str(self.getvalue('jetCorrLabel'))+', '
+        dumpPython += str(self.getvalue('doType1MET'))+', '
+        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        return dumpPython
 
     def __call__(self,process,
                  jetCollection,
@@ -351,6 +370,20 @@ class AddJetCollection(ConfigToolBase):
 
     _label='AddJetCollection'
     
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\naddJetCollection(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+ ", "
+        dumpPython += str(self.getvalue('postfixLabel'))+', '
+        dumpPython += str(self.getvalue('doJTA'))+', '
+        dumpPython += str(self.getvalue('doBTagging'))+', '
+        dumpPython += str(self.getvalue('jetCorrLabel'))+', '
+        dumpPython += str(self.getvalue('doType1MET'))+', '
+        dumpPython += str(self.getvalue('doL1Counters'))+', '
+        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        return dumpPython
+
     def __call__(self,process,
                  jetCollection,
                  postfixLabel,

@@ -9,6 +9,14 @@ from PhysicsTools.PatAlgos.tools.coreTools import *
 
 class RedoPFTauDiscriminators(ConfigToolBase):
 
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nredoPFTauDiscriminators(process, "
+        dumpPython += str(self.getvalue('oldPFTauLabel'))+ ", "
+        dumpPython += str(self.getvalue('newPFTauLabel'))+", "
+        dumpPython += str(self.getvalue('tauType'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,
                  oldPFTauLabel = cms.InputTag('pfRecoTauProducer'),
                  newPFTauLabel = cms.InputTag('pfRecoTauProducer'),
@@ -50,6 +58,13 @@ redoPFTauDiscriminators=RedoPFTauDiscriminators()
 # switch to CaloTau collection
 
 class SwitchToCaloTau(ConfigToolBase):
+    
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToCaloTau(process, "
+        dumpPython += str(self.getvalue('pfTauLabel'))+ ", "
+        dumpPython += str(self.getvalue('caloTauLabel'))+'\n'
+        return dumpPython
     
     def __call__(self,process,
                  pfTauLabel = cms.InputTag('fixedConePFTauProducer'),
@@ -127,6 +142,13 @@ def _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, pfTauType):
 class SwitchToPFTauFixedCone(ConfigToolBase):
     # switch to PFTau collection produced for fixed dR = 0.07 signal cone size
 
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedCone(process, "
+        dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
                  pfTauLabelNew = cms.InputTag('fixedConePFTauProducer')):
@@ -154,7 +176,16 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
 switchToPFTauFixedCone=SwitchToPFTauFixedCone()
 
 class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
+
+    
     # switch to PFTau collection produced for fixed dR = 0.15 signal cone size
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedConeHighEff(process, "
+        dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        return dumpPython
+ 
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
                  pfTauLabelNew = cms.InputTag('fixedConeHighEffPFTauProducer')):
@@ -182,7 +213,14 @@ switchToPFTauFixedConeHighEff=SwitchToPFTauFixedConeHighEff()
 
 
 class SwitchToPFTauShrinkingCone(ConfigToolBase):
-    
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauShrinkingCone(process, "
+        dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        return dumpPython
+ 
     # switch to PFTau collection produced for shrinking signal cone of size dR = 5.0/Et(PFTau)
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
@@ -227,6 +265,14 @@ switchToPFTauShrinkingCone=SwitchToPFTauShrinkingCone()
 # It is just to make internal function accessible externally
 class SwitchToAnyPFTau(ConfigToolBase):
 
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToAnyPFTau(process, "
+        dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+ ", "
+        dumpPython += str(self.getvalue('pfTauType'))+'\n'
+        return dumpPython
+ 
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
                  pfTauLabelNew = cms.InputTag('fixedConePFTauProducer'),
