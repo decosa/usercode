@@ -122,6 +122,16 @@ class RunBTagging(ConfigToolBase):
         
         process=self._parameters['process'].value
 
+        print 'calling tag before'
+        print self._callingFlag
+        if not self._callingFlag:
+            print 'add the action to the history'
+            action = Action("RunBTagging",copy.copy(self._parameters),self)
+            process.addAction(action)
+            self._callingFlag=True
+            print 'calling tag after'
+            print self._callingFlag
+            
         if (label == ''):
         ## label is not allowed to be empty
             raise ValueError, "label for re-running b tagging is not allowed to be empty"        
@@ -203,8 +213,14 @@ class RunBTagging(ConfigToolBase):
         seq = mkseq(process, 'btaggingTagInfos'+label, 'btaggingJetTags' + label) 
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
+        self._callingFlag=False
+        print 'set calling Flag to False'    
+        print self._callingFlag
+        
         return (seq, labels)
 
+
+    
 runBTagging=RunBTagging()
 
 class SwitchJetCollection(ConfigToolBase):
@@ -283,7 +299,16 @@ class SwitchJetCollection(ConfigToolBase):
         
         ## replace input jet collection for pat jet production
         process.allLayer1Jets.jetSource = jetCollection
-        
+
+        print 'calling tag before'
+        print self._callingFlag
+        if not self._callingFlag:
+            action = Action("SwitchJetCollection",copy.copy(self._parameters),self)
+            process.addAction(action)
+            self._callingFlag=True
+            print 'calling tag after'
+            print self._callingFlag
+
         ## make VInputTag from strings
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
 
@@ -359,10 +384,10 @@ class SwitchJetCollection(ConfigToolBase):
             ## switch embedding of jetCorrFactors off
             ## for pat jet production
             process.allLayer1Jets.addJetCorrFactors = False
-        action = Action("switchJetCollection",copy.copy(self._parameters),self)
-        process.addAction(action)
-
-                                                                                                                                                                             
+        #action = Action("switchJetCollection",copy.copy(self._parameters),self)
+        #process.addAction(action)
+        self._callingFlag=False
+        
 
 switchJetCollection=SwitchJetCollection()
 
@@ -446,9 +471,16 @@ class AddJetCollection(ConfigToolBase):
         doL1Cleaning = self._parameters['doL1Cleaning'].value
         doL1Counters = self._parameters['doL1Counters'].value
         genJetCollection = self._parameters['genJetCollection'].value
-
-        action = Action("AddJetCollection",copy.copy(self._parameters),self)
-        process.addAction(action)
+        print 'calling tag before AddJetColl'
+        print self._callingFlag
+        if not self._callingFlag:
+            action = Action("AddJetCollection",copy.copy(self._parameters),self)
+            process.addAction(action)
+            self._callingFlag=True
+            print 'calling tag after AddJetColl'
+            print self._callingFlag
+        #action = Action("AddJetCollection",copy.copy(self._parameters),self)
+        #process.addAction(action)
 
 
 
@@ -527,6 +559,8 @@ class AddJetCollection(ConfigToolBase):
     
         if (doBTagging):
             ## add b tagging sequence
+            print 'before run Btagging'
+            print self._callingFlag
             (btagSeq, btagLabels) = runBTagging(process, jetCollection, postfixLabel)
             ## add b tagging sequence before running the allLayer1Jets modules
             process.makeAllLayer1Jets.replace(getattr(process,jtaLabel), getattr(process,jtaLabel)+btagSeq)
@@ -595,4 +629,9 @@ class AddJetCollection(ConfigToolBase):
             ## switch jetCorrFactors off
             l1Jets.addJetCorrFactors = False
 
+        print 'set calling Flag to False'    
+        self._callingFlag=False
+        print self._callingFlag
+
+            
 addJetCollection=AddJetCollection()
