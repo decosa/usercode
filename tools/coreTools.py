@@ -6,7 +6,16 @@ from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 
 class RestrictInputToAOD(ConfigToolBase):
     
-
+    """
+        ------------------------------------------------------------------
+        remove pat object production steps which rely on RECO event
+        content:
+        
+        process : process
+        name    : list of collection names; supported are 'Photons', 
+        'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'
+        ------------------------------------------------------------------    
+        """
 
     def dumpPython(self):
         
@@ -18,19 +27,9 @@ class RestrictInputToAOD(ConfigToolBase):
     def __call__(self,process,
                            names
                            ):
-        """
-        ------------------------------------------------------------------
-        remove pat object production steps which rely on RECO event
-        content:
-        
-        process : process
-        name    : list of collection names; supported are 'Photons', 
-        'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'
-        ------------------------------------------------------------------    
-        """
-
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('names',names, 'description: InputTag')
+      
+        self.addParameter('process',process, 'The process')
+        self.addParameter('names',names, 'list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'')
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
@@ -95,6 +94,18 @@ restrictInputToAOD=RestrictInputToAOD()
 
 class RemoveMCMatching(ConfigToolBase):
     
+    """
+    ------------------------------------------------------------------
+    remove monte carlo matching from a given collection or all PAT
+    candidate collections:
+    
+    process : process
+    name    : collection name; supported are 'Photons', 'Electrons',
+    'Muons', 'Taus', 'Jets', 'METs', 'All'
+    ------------------------------------------------------------------    
+    """
+
+
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveMCMatching(process, "
@@ -104,19 +115,8 @@ class RemoveMCMatching(ConfigToolBase):
     def __call__(self,process,
                          name
                          ):
-        """
-        ------------------------------------------------------------------
-        remove monte carlo matching from a given collection or all PAT
-        candidate collections:
-        
-        process : process
-        name    : collection name; supported are 'Photons', 'Electrons',
-        'Muons', 'Taus', 'Jets', 'METs', 'All'
-        ------------------------------------------------------------------    
-        """
-
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('name',name, 'description: InputTag')
+        self.addParameter('process',process, 'The process')
+        self.addParameter('name',name, 'name    : collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'')
                 
         process=self._parameters['process'].value
         name=self._parameters['name'].value
@@ -165,9 +165,9 @@ class _RemoveMCMatchingForPATObject(ConfigToolBase):
 
       def __call__(self,process, matcherName, producerName):
         
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('matcherName',matcherName, 'description: InputTag')
-        self.addParameter('producerName',producerName, 'description: InputTag')
+        self.addParameter('process',process, 'the process')
+        self.addParameter('matcherName',matcherName, 'name of matcher')
+        self.addParameter('producerName',producerName, 'name of producer')
         
         process=self._parameters['process'].value
         matcherName=self._parameters['matcherName'].value
@@ -188,28 +188,28 @@ _removeMCMatchingForPATObject=_RemoveMCMatchingForPATObject()
 
 class RemoveAllPATObjectsBut(ConfigToolBase):
 
+    """
+    ------------------------------------------------------------------
+    remove all PAT objects from the default sequence but a specific
+    one:
+    
+    process : process
+    name    : list of collection names; supported are 'Photons',
+    'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
+    ------------------------------------------------------------------    
+    """
+
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nRemoveAllPATObjectsBut(process, "
         dumpPython += str(self.getvalue('names'))+'\n'
         return dumpPython 
    
     def __call__(self,process,
-                               names
-                               ):
-        """
-        ------------------------------------------------------------------
-        remove all PAT objects from the default sequence but a specific
-        one:
-        
-        process : process
-        name    : list of collection names; supported are 'Photons',
-        'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
-        ------------------------------------------------------------------    
-        """
-        
-        
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('names',names, 'description: InputTag')
+                 names
+                 ):
+          
+        self.addParameter('process',process, 'the progess')
+        self.addParameter('names',names, 'name    : list of collection names; supported are 'Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs'')
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
@@ -226,6 +226,16 @@ removeAllPATObjectsBut= RemoveAllPATObjectsBut()
 
 class RemoveSpecificPATObjects(ConfigToolBase):
 
+    """
+    ------------------------------------------------------------------
+    remove a specific PAT object from the default sequence:
+    
+    process : process
+    names   : listr of collection names; supported are 'Photons',
+    'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
+    ------------------------------------------------------------------    
+    """
+
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveSpecificPATObjects(process, "
         dumpPython += str(self.getvalue('names'))+'\n'
@@ -234,18 +244,9 @@ class RemoveSpecificPATObjects(ConfigToolBase):
     def __call__(process,
                  names
                  ):
-        """
-        ------------------------------------------------------------------
-        remove a specific PAT object from the default sequence:
         
-        process : process
-        names   : listr of collection names; supported are 'Photons',
-        'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
-        ------------------------------------------------------------------    
-        """
-
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('names',names, 'description: InputTag')
+        self.addParameter('process',process, 'the process')
+        self.addParameter('names',names, 'names   : listr of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'')
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
@@ -312,6 +313,13 @@ removeSpecificPATObjects=RemoveSpecificPATObjects()
 
 
 class RemoveCleaning(ConfigToolBase):
+    """
+    ------------------------------------------------------------------
+    remove PAT cleaning from the default sequence:
+    
+    process : process
+    ------------------------------------------------------------------    
+    """
     
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveCleaning(process) \n "
@@ -319,15 +327,8 @@ class RemoveCleaning(ConfigToolBase):
     
     
     def removeCleaning(process):
-        """
-        ------------------------------------------------------------------
-        remove PAT cleaning from the default sequence:
-        
-        process : process
-        ------------------------------------------------------------------    
-        """
-
-        self.addParameter('process',process, 'description: process')
+    
+        self.addParameter('process',process, 'the process')
                 
         process=self._parameters['process'].value
                                         
@@ -350,20 +351,22 @@ class RemoveCleaning(ConfigToolBase):
 removeCleaning=RemoveCleaning()                
 
 class AddCleaning(ConfigToolBase):
-     
+
+    """
+    ------------------------------------------------------------------
+    add PAT cleaning from the default sequence:
+    
+    process : process
+    ------------------------------------------------------------------    
+    """
+
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\naddCleaning(process) \n "
         return dumpPython 
        
     def __call__(self,process):
-        """
-        ------------------------------------------------------------------
-        add PAT cleaning from the default sequence:
-        
-        process : process
-        ------------------------------------------------------------------    
-        """
-        self.addParameter('process',process, 'description: process')
+    
+        self.addParameter('process',process, 'the process')
 
         process=self._parameters['process'].value
              
