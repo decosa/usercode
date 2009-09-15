@@ -84,19 +84,7 @@ class RunBTagging(ConfigToolBase):
 
     _label='RunBTagging'
 
-    
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nrunBTagging(process, "
-        dumpPython += str(self.getvalue('jetCollection'))+ ", "
-        dumpPython += str(self.getvalue('label'))+'\n'
-        return dumpPython
-    
-    def __call__(self,process,
-                    jetCollection,
-                    label
-                    ) :
-        """
+    """
         ------------------------------------------------------------------        
         define sequence to run b tagging on AOD input for a given jet
         collection including a JetTracksAssociatorAtVertex with name
@@ -114,23 +102,35 @@ class RunBTagging(ConfigToolBase):
         * labels['tagInfos'] = a list of names of the TagInfo modules
         * labels['jetTags '] = a list of names of the JetTag modules
         ------------------------------------------------------------------        
-        """    
+        """      
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nrunBTagging(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+ ", "
+        dumpPython += str(self.getvalue('label'))+'\n'
+        return dumpPython
+    
+    def __call__(self,process,
+                    jetCollection,
+                    label
+                    ) :
+       
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('jetCollection',jetCollection, 'description: InputTag')
-        self.addParameter('label',label, 'description: label')
+        self.addParameter('process',process, 'The process')
+        self.addParameter('jetCollection',jetCollection, ' Input jet collection')
+        self.addParameter('label',label, 'Postfix label to identify new sequence/modules')
         
         process=self._parameters['process'].value
 
         print 'calling tag before'
-        print self._callingFlag
-        if not self._callingFlag:
+        print ConfigToolBase._callingFlag
+        if not ConfigToolBase._callingFlag:
             print 'add the action to the history'
             action = Action("RunBTagging",copy.copy(self._parameters),self)
             process.addAction(action)
-            self._callingFlag=True
+            ConfigToolBase._callingFlag=True
             print 'calling tag after'
-            print self._callingFlag
+            print ConfigToolBase._callingFlag
             
         if (label == ''):
         ## label is not allowed to be empty
@@ -213,9 +213,9 @@ class RunBTagging(ConfigToolBase):
         seq = mkseq(process, 'btaggingTagInfos'+label, 'btaggingJetTags' + label) 
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
-        self._callingFlag=False
+        ConfigToolBase._callingFlag=False
         print 'set calling Flag to False'    
-        print self._callingFlag
+        print ConfigToolBase._callingFlag
         
         return (seq, labels)
 
@@ -227,6 +227,30 @@ class SwitchJetCollection(ConfigToolBase):
 
     _label='SwitchJetCollection'
 
+    
+    """
+        ------------------------------------------------------------------        
+        switch the collection of jets in PAT from the default value to a
+        new jet collection
+        
+        process          : process
+        jetCollection    : input jet collection
+        doBTagging       : run b tagging sequence for new jet collection
+                            and add it to the new pat jet collection
+        doJTA            : run JetTracksAssociation and JetCharge and add
+                           it to the new pat jet collection (will autom.
+                           be true if doBTagging is set to true)
+        jetCorrLabel     : algorithm and type of JEC; use 'None' for no
+                           JEC; examples are ('IC5','Calo'), ('SC7',
+                           'Calo'), ('KT4','PF')
+        doType1MET       : if jetCorrLabel is not 'None', set this to
+                           'True' to redo the Type1 MET correction for
+                            the new jet colllection; at the moment it must
+                            be 'False' for non CaloJets otherwise the
+                            JetMET POG module crashes.
+        genJetCollection : GenJet collection to match to
+        ------------------------------------------------------------------        
+        """
     def dumpPython(self):
         
         dumpPython= "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchJetCollection(process, "
@@ -246,38 +270,17 @@ class SwitchJetCollection(ConfigToolBase):
                  doType1MET       = True,
                  genJetCollection = cms.InputTag("iterativeCone5GenJets")
                  ):
-        """
-        ------------------------------------------------------------------        
-        switch the collection of jets in PAT from the default value to a
-        new jet collection
-        
-        process          : process
-        jetCollection    : input jet collection
-        doBTagging       : run b tagging sequence for new jet collection
-        and add it to the new pat jet collection
-        doJTA            : run JetTracksAssociation and JetCharge and add
-        it to the new pat jet collection (will autom.
-        be true if doBTagging is set to true)
-        jetCorrLabel     : algorithm and type of JEC; use 'None' for no
-        JEC; examples are ('IC5','Calo'), ('SC7',
-        'Calo'), ('KT4','PF')
-        doType1MET       : if jetCorrLabel is not 'None', set this to
-        'True' to redo the Type1 MET correction for
-        the new jet colllection; at the moment it must
-        be 'False' for non CaloJets otherwise the
-        JetMET POG module crashes.
-        genJetCollection : GenJet collection to match to
-        ------------------------------------------------------------------        
-        """
+   
         ## save label of old jet collection
         
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('jetCollection',jetCollection, 'description: InputTag')
-        self.addParameter('doJTA',doJTA, 'description: doJTA')
-        self.addParameter('doBTagging',doBTagging, 'description: doBTagging')
-        self.addParameter('jetCorrLabel',jetCorrLabel, 'description: jetCorrLabel')
-        self.addParameter('doType1MET',doType1MET, 'description: doType1MET')
-        self.addParameter('genJetCollection',genJetCollection, 'description: genJetCollection')
+        self.addParameter('process',process, 'The process')
+        self.addParameter('jetCollection',jetCollection, ' Input jet collection')
+        self.addParameter('doJTA',doJTA, 'Run JetTracksAssociation and JetCharge and add it to the new pat jet collection (will autom.be true if doBTagging is set to true)')
+        self.addParameter('doBTagging',doBTagging, 'Run b tagging sequence for new jet collection
+        and add it to the new pat jet collection')
+        self.addParameter('jetCorrLabel',jetCorrLabel, 'Algorithm and type of JEC; use 'None' for no JEC; examples are ('IC5','Calo'), ('SC7','Calo'), ('KT4','PF')')
+        self.addParameter('doType1MET',doType1MET, 'If jetCorrLabel is not 'None', set this to 'True' to redo the Type1 MET correction for the new jet colllection; at the moment it must be 'False' for non CaloJets otherwise the JetMET POG module crashes.')
+        self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
         
         
         process=self._parameters['process'].value
@@ -301,13 +304,13 @@ class SwitchJetCollection(ConfigToolBase):
         process.allLayer1Jets.jetSource = jetCollection
 
         print 'calling tag before'
-        print self._callingFlag
-        if not self._callingFlag:
+        print ConfigToolBase._callingFlag
+        if not ConfigToolBase._callingFlag:
             action = Action("SwitchJetCollection",copy.copy(self._parameters),self)
             process.addAction(action)
-            self._callingFlag=True
+            ConfigToolBase._callingFlag=True
             print 'calling tag after'
-            print self._callingFlag
+            print ConfigToolBase._callingFlag
 
         ## make VInputTag from strings
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
@@ -386,7 +389,7 @@ class SwitchJetCollection(ConfigToolBase):
             process.allLayer1Jets.addJetCorrFactors = False
         #action = Action("switchJetCollection",copy.copy(self._parameters),self)
         #process.addAction(action)
-        self._callingFlag=False
+        ConfigToolBase._callingFlag=False
         
 
 switchJetCollection=SwitchJetCollection()
@@ -395,32 +398,7 @@ class AddJetCollection(ConfigToolBase):
 
     _label='AddJetCollection'
     
-
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\naddJetCollection(process, "
-        dumpPython += str(self.getvalue('jetCollection'))+ ", "
-        dumpPython += str(self.getvalue('postfixLabel'))+', '
-        dumpPython += str(self.getvalue('doJTA'))+', '
-        dumpPython += str(self.getvalue('doBTagging'))+', '
-        dumpPython += str(self.getvalue('jetCorrLabel'))+', '
-        dumpPython += str(self.getvalue('doType1MET'))+', '
-        dumpPython += str(self.getvalue('doL1Counters'))+', '
-        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
-        return dumpPython
-
-    def __call__(self,process,
-                 jetCollection,
-                 postfixLabel,
-                 doJTA        = True,
-                 doBTagging   = True,
-                 jetCorrLabel = None,
-                 doType1MET   = True,
-                 doL1Cleaning = True,                     
-                 doL1Counters = False,
-                 genJetCollection=cms.InputTag("iterativeCone5GenJets")
-                 ):
-        """
+    """
         ------------------------------------------------------------------        
         add a new collection of jets in PAT
         
@@ -450,16 +428,41 @@ class AddJetCollection(ConfigToolBase):
              affect also the new jets
         ------------------------------------------------------------------                     
         """
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('jetCollection',jetCollection, 'description: InputTag')
-        self.addParameter('postfixLabel',postfixLabel, 'description: label')
-        self.addParameter('doJTA',doJTA, 'description: doJTA')
-        self.addParameter('doBTagging',doBTagging, 'description: doBTagging')
-        self.addParameter('jetCorrLabel',jetCorrLabel, 'description: jetCorrLabel')
-        self.addParameter('doType1MET',doType1MET, 'description: doType1MET')
-        self.addParameter('doL1Cleaning',doL1Cleaning, 'description: doL1Cleaning')
-        self.addParameter('doL1Counters',doL1Counters, 'description: doL1Counters')
-        self.addParameter('genJetCollection',genJetCollection, 'description: genJetCollection')
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\naddJetCollection(process, "
+        dumpPython += str(self.getvalue('jetCollection'))+ ", "
+        dumpPython += str(self.getvalue('postfixLabel'))+', '
+        dumpPython += str(self.getvalue('doJTA'))+', '
+        dumpPython += str(self.getvalue('doBTagging'))+', '
+        dumpPython += str(self.getvalue('jetCorrLabel'))+', '
+        dumpPython += str(self.getvalue('doType1MET'))+', '
+        dumpPython += str(self.getvalue('doL1Counters'))+', '
+        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        return dumpPython
+
+    def __call__(self,process,
+                 jetCollection,
+                 postfixLabel,
+                 doJTA        = True,
+                 doBTagging   = True,
+                 jetCorrLabel = None,
+                 doType1MET   = True,
+                 doL1Cleaning = True,                     
+                 doL1Counters = False,
+                 genJetCollection=cms.InputTag("iterativeCone5GenJets")
+                 ):
+
+        self.addParameter('process',process, 'The  process')
+        self.addParameter('jetCollection',jetCollection, 'Input jet Collection')
+        self.addParameter('postfixLabel',postfixLabel, 'Label to identify all modules that work with this jet collection')
+        self.addParameter('doJTA',doJTA, 'run JetTracksAssociation and JetCharge and add it to the new pat jet collection (will autom. be true if doBTagging is set to true)')
+        self.addParameter('doBTagging',doBTagging, 'Run b tagging sequence for new jet collection and add it to the new pat jet collection')
+        self.addParameter('jetCorrLabel',jetCorrLabel, 'algorithm and type of JEC; use 'None' for no JEC; examples are ('IC5','Calo'), ('SC7', 'Calo'), ('KT4','PF')')
+        self.addParameter('doType1MET',doType1MET, 'Make also a new MET collection (not yet implemented?')
+        self.addParameter('doL1Cleaning',doL1Cleaning, 'copy also the producer modules for cleanLayer1 will be set to 'True' automatically when doL1Counters is 'True'')
+        self.addParameter('doL1Counters',doL1Counters, 'copy also the filter modules that accept/reject the event looking at the number of jets')
+        self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
         
         process = self._parameters['process'].value
         jetCollection = self._parameters['jetCollection'].value
@@ -472,13 +475,13 @@ class AddJetCollection(ConfigToolBase):
         doL1Counters = self._parameters['doL1Counters'].value
         genJetCollection = self._parameters['genJetCollection'].value
         print 'calling tag before AddJetColl'
-        print self._callingFlag
-        if not self._callingFlag:
+        print ConfigToolBase._callingFlag
+        if not ConfigToolBase._callingFlag:
             action = Action("AddJetCollection",copy.copy(self._parameters),self)
             process.addAction(action)
-            self._callingFlag=True
+            ConfigToolBase._callingFlag=True
             print 'calling tag after AddJetColl'
-            print self._callingFlag
+            print ConfigToolBase._callingFlag
         #action = Action("AddJetCollection",copy.copy(self._parameters),self)
         #process.addAction(action)
 
@@ -560,7 +563,7 @@ class AddJetCollection(ConfigToolBase):
         if (doBTagging):
             ## add b tagging sequence
             print 'before run Btagging'
-            print self._callingFlag
+            print ConfigToolBase._callingFlag
             (btagSeq, btagLabels) = runBTagging(process, jetCollection, postfixLabel)
             ## add b tagging sequence before running the allLayer1Jets modules
             process.makeAllLayer1Jets.replace(getattr(process,jtaLabel), getattr(process,jtaLabel)+btagSeq)
@@ -630,8 +633,8 @@ class AddJetCollection(ConfigToolBase):
             l1Jets.addJetCorrFactors = False
 
         print 'set calling Flag to False'    
-        self._callingFlag=False
-        print self._callingFlag
+        ConfigToolBase._callingFlag=False
+        print ConfigToolBase._callingFlag
 
             
 addJetCollection=AddJetCollection()
