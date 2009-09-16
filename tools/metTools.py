@@ -9,6 +9,14 @@ class AddTcMET(ConfigToolBase):
 
     _label='AddTcMET'
     
+    """
+    ------------------------------------------------------------------
+    add track corrected MET collection to patEventContent:
+    
+    process : process
+    ------------------------------------------------------------------
+    """
+
   
     def dumpPython(self):
         
@@ -19,21 +27,15 @@ class AddTcMET(ConfigToolBase):
 
     def __call__(self,process,
                  postfixLabel = 'TC'):
-        """
-        ------------------------------------------------------------------
-        add track corrected MET collection to patEventContent:
-        
-        process : process
-        ------------------------------------------------------------------
-        """
 
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('postfixlabel',postfixlabel, 'description: InputTag')
+
+        self.addParameter('process',process, 'The  process')
+        self.addParameter('postfixLabel',postfixLabel, '')
 
         
         process=self._parameters['process'].value
-        postfixlabel=self._parameters['postfixlabel'].value
+        postfixlabel=self._parameters['postfixLabel'].value
 
     ## add module as process to the default sequence
         def addAlso (label,value):
@@ -65,6 +67,15 @@ class AddPfMET(ConfigToolBase):
 
     _label='AddPfMET'
     
+
+    """
+    ------------------------------------------------------------------
+    add pflow MET collection to patEventContent:
+    
+    process : process
+    ------------------------------------------------------------------
+    """
+    
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n\naddPfMET(process, "
@@ -73,20 +84,13 @@ class AddPfMET(ConfigToolBase):
     
     def __call__(self,process,
                  postfixLabel = 'PF'):
-        """
-        ------------------------------------------------------------------
-        add pflow MET collection to patEventContent:
-        
-        process : process
-        ------------------------------------------------------------------
-        """
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('postfixlabel',postfixlabel, 'description: InputTag')
+        self.addParameter('process',process, 'The process')
+        self.addParameter('postfixLabel',postfixLabel, '')
         
         
         process=self._parameters['process'].value
-        postfixlabel=self._parameters['postfixlabel'].value
+        postfixLabel=self._parameters['postfixLabel'].value
                                         
     ## add module as process to the default sequence
         def addAlso (label,value):
