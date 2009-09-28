@@ -17,6 +17,13 @@ class AdaptPFMuons(ConfigToolBase):
     """
     """
     _label='AdaptPFMuons'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFMuons(process, "
+        dumpPython += str(self.getvalue('module'))+'\n'
+        return dumpPython
+ 
     
     def __call__(self,process,module):
 
@@ -64,6 +71,13 @@ class AdaptPFElectrons(ConfigToolBase):
     """
     """
     _label='AdaptPFElectrons'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFElectrons(process, "
+        dumpPython += str(self.getvalue('module'))+'\n'
+        return dumpPython
+ 
     def __call__(self,process,module):
         # module.useParticleFlow = True
 
@@ -136,6 +150,13 @@ class AdaptPFTaus(ConfigToolBase):
     """
     """
     _label='AdaptPFTaus'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFTaus(process, "
+        dumpPython += str(self.getvalue('tauType'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,tauType = 'fixedConePFTau' ):
         
         self.addParameter('process',process, 'the Process')
@@ -177,6 +198,13 @@ class AddPFCandidates(ConfigToolBase):
         and a corresponding count filter will be added to the patDefaultSequence.
     """
     _label='AdaptPFCandidates'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFCandidates(process, "
+        dumpPython += str(self.getvalue('src'))+ ", "
+        dumpPython += str(self.getvalue('patLabel'))+'\n'
+        return dumpPython
     def __call__(self,process,src,patLabel='PFParticles',cut=""):
 
         self.addParameter('process',process, 'the Process')
@@ -222,6 +250,12 @@ class SwitchToPFMET(ConfigToolBase):
         Type1MET and MuonMET corrections are removed from the patDefaultSequence.
     """
     _label='SwitchToPFMET'
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nswitchToPFMET(process, "
+        dumpPython += str(self.getvalue('input'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,input=cms.InputTag('pfMET')):
 
         self.addParameter('process',process, 'the  process')
@@ -247,6 +281,13 @@ class SwitchToPFJets(ConfigToolBase):
         The jet collection stays the same. No residual jet or MET corrections are applied
     """
     _label='SwitchToPFJets'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nswitchToPFJets(process, "
+        dumpPython += str(self.getvalue('input'))+'\n'
+        return dumpPython
+
     def __call__(self,process,input=cms.InputTag('pfNoTau')):
         self.addParameter('process',process, 'the process')
         self.addParameter('input',input, "input collection label to the pat::Jet producer as an edm::Module (default is 'pfNoTau')")
@@ -270,9 +311,17 @@ class SwitchToPFJets(ConfigToolBase):
 switchToPFJets=SwitchToPFJets()
 
 class  UsePF2PAT(ConfigToolBase):
-       """ Switch PAT to use PF2PAT instead of AOD sources. if 'runPF2PAT' is true, we'll also add PF2PAT in front of the PAT sequence
-       """
-     _label='UsePF2PAT'
+    """ Switch PAT to use PF2PAT instead of AOD sources. if 'runPF2PAT' is true, we'll also add PF2PAT in front of the PAT sequence
+    """
+    _label='UsePF2PAT'
+
+    def dumpPython(self):
+        
+        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nusePF2PAT(process, "
+        dumpPython += str(self.getvalue('process'))+ ", "
+        dumpPython += str(self.getvalue('runPF2PAT'))+'\n'
+        return dumpPython
+    
     def __call__(self,process,runPF2PAT=True):
 
         self.addParameter('process',process, 'the  process')

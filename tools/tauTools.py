@@ -297,7 +297,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
-         self.addParameter('pfTauType',pfTauType, "")
+        self.addParameter('pfTauType',pfTauType, "")
          
         process=self._parameters['process'].value
         pfTauLabelOld=self._parameters['pfTauLabelOld'].value

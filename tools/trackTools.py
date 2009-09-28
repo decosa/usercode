@@ -34,10 +34,10 @@ class MakeAODTrackCandidates(ConfigToolBase):
                                ):
     
         self.addParameter('process',process, 'the process')
-        self.addParameter('label',label, "output collection will be <'patAOD'+label>"}
-        self.addParameter('tracks',tracks, 'input tracks'}
-        self.addParameter('particleType',particleType, 'particle type (for mass)'}
-        self.addParameter('candSelection',candSelection, 'preselection cut on the candidates'}
+        self.addParameter('label',label, "output collection will be <'patAOD'+label>")
+        self.addParameter('tracks',tracks, 'input tracks')
+        self.addParameter('particleType',particleType, 'particle type (for mass)')
+        self.addParameter('candSelection',candSelection, 'preselection cut on the candidates')
         
         process=self._parameters['process'].value
         tracks=self._parameters['tracks'].value
@@ -107,12 +107,9 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter('label',label, "output will be 'all/selectedLayer1'+label")
         self.addParameter('input',input, ' name of the input collection')
         self.addParameter('selection',selection, 'selection on PAT Layer 1 objects')
-        self.addParameter('isolation',isolation, 'isolation to use (as 'source': value of dR)')
+        self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, 'iso deposits')
-        self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT
-       on this AOD collection (None=no mc match);
-       chosse 'photon', 'electron', 'muon', 'tau',
-       'jet', 'met' as input string")
+        self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string")
         
         process=self._parameters['process'].value
         label=self._parameters['label'].value
@@ -288,14 +285,10 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter('tracks',tracks, "input tracks")
         self.addParameter('particleType',particleType, "particle type (for mass)")
         self.addParameter('preselection',preselection, "preselection cut on the AOD candidates")
-        self.addParameter('selection',selection, "selection cut on the PAT candidates (for the
-       selectedLayer1Candidate collection)")
+        self.addParameter('selection',selection, "selection cut on the PAT candidates (for the selectedLayer1Candidate collection)")
         self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, " iso deposits")
-        self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT
-        on this AOD collection (None=no mc match);
-        chosse 'photon', 'electron', 'muon', 'tau',
-        'jet', 'met' as input string")
+        self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau', 'jet', 'met' as input string")
         
         process=self._parameters['process'].value
         label=self._parameters['label'].value
