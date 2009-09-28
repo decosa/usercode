@@ -249,7 +249,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         dumpPython += str(self.getvalue('names'))+'\n'
         return dumpPython 
     
-    def __call__(process,
+    def __call__(self,process,
                  names
                  ):
         
@@ -336,7 +336,7 @@ class RemoveCleaning(ConfigToolBase):
         return dumpPython 
     
     
-    def removeCleaning(process):
+    def __call__(self,process):
     
         self.addParameter('process',process, 'the process')
                 
