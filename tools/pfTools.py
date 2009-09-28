@@ -13,21 +13,19 @@ def warningIsolation():
     print "WARNING: particle based isolation must be studied"
 
 class AdaptPFMuons(ConfigToolBase):
-    
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFMuons(process, "
-        dumpPython += str(self.getvalue('module'))+'\n'
-        return dumpPython
+
+    """
+    """
+    _label='AdaptPFMuons'
     
     def __call__(self,process,module):
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('module',module, 'description: InputTag')
+        self.addParameter('process',process, 'the Process')
+        self.addParameter('module',module, '')
         
         process=self._parameters['process'].value
         module=self._parameters['module'].value
-
+        process.disableRecording()
 
         print "Adapting PF Muons "
         print "***************** "
@@ -53,7 +51,8 @@ class AdaptPFMuons(ConfigToolBase):
         print module.isolationValues
         print " isodeposits: "
         print module.isoDeposits
-        print 
+        print
+        process.enableRecording()
         action = Action("AdaptPFMuons",copy.copy(self._parameters),self)
         process.addAction(action)
 
@@ -62,21 +61,18 @@ adaptPFMuons=AdaptPFMuons()
 
 class AdaptPFElectrons(ConfigToolBase):
 
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFElectrons(process, "
-        dumpPython += str(self.getvalue('module'))+'\n'
-        return dumpPython
-    
+    """
+    """
+    _label='AdaptPFElectrons'
     def __call__(self,process,module):
         # module.useParticleFlow = True
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('module',module, 'description: InputTag')
+        self.addParameter('process',process, 'the Process')
+        self.addParameter('module',module, '')
         
         process=self._parameters['process'].value
         module=self._parameters['module'].value
-                                       
+        process.disableRecording()                                
         print "Adapting PF Electrons "
         print "********************* "
         warningIsolation()
@@ -106,7 +102,7 @@ class AdaptPFElectrons(ConfigToolBase):
         print " isodeposits: "
         print module.isoDeposits
         print 
-    
+        process.enableRecording()
         action = Action("AdaptPFMuons",copy.copy(self._parameters),self)
         process.addAction(action)
 
@@ -137,21 +133,17 @@ def adaptPFJets(process,module):
     module.embedCaloTowers   = False
 
 class AdaptPFTaus(ConfigToolBase):
-    
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nadaptPFTaus(process, "
-        dumpPython += str(self.getvalue('tauType'))+'\n'
-        return dumpPython
-    
+    """
+    """
+    _label='AdaptPFTaus'
     def __call__(self,process,tauType = 'fixedConePFTau' ):
         
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('tauType',tauType, 'description: InputTag')
+        self.addParameter('process',process, 'the Process')
+        self.addParameter('tauType',tauType, '')
         
         process=self._parameters['process'].value
         tauType=self._parameters['tauType'].value
-                                
+        process.disableRecording() 
 
         # MICHAL: tauType can be changed only to shrinkig cone one, otherwise request is igonred
         oldTaus = process.allLayer1Taus.tauSource
@@ -172,7 +164,7 @@ class AdaptPFTaus(ConfigToolBase):
                                 process.allLayer1Taus.tauSource,
                                 tauType)
         switchToAnyPFTau(process, oldTaus, process.allLayer1Taus.tauSource, tauType)
-
+        process.enableRecording()
         action = Action("AdaptPFTaus",copy.copy(self._parameters),self)
         process.addAction(action)
 
@@ -181,28 +173,22 @@ adaptPFTaus=AdaptPFTaus()
 
 
 class AddPFCandidates(ConfigToolBase):
-
-        
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\naddPFCandidates(process, "
-        dumpPython += str(self.getvalue('src'))+", "
-        dumpPython += str(self.getvalue('patLabel'))+", "
-        dumpPython += str(self.getvalue('cut'))+'\n'
-        return dumpPython
-    
+    """ Tool to add particle flow candidates to the event content. An allLayer1PFCandidate, selectedLayer1PFCandidate,
+        and a corresponding count filter will be added to the patDefaultSequence.
+    """
+    _label='AdaptPFCandidates'
     def __call__(self,process,src,patLabel='PFParticles',cut=""):
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('src',src, 'description: InputTag')
-        self.addParameter('patLabel',patLabel, 'description: InputTag')
-        self.addParameter('cut',cut, 'description: InputTag')
+        self.addParameter('process',process, 'the Process')
+        self.addParameter('src',src, 'source of particle flow candidates as an edm::Module')
+        self.addParameter('patLabel',patLabel, "collection label for PAT (default is 'PFParticles')")
+        self.addParameter('cut',cut, 'cut string for the selectedLayer1PFCandidate collection (default is "")')
         
         process=self._parameters['process'].value
         src=self._parameters['src'].value
         patLabel=self._parameters['patLabel'].value
         cut=self._parameters['cut'].value
-                                      
+        process.disableRecording()                              
         from PhysicsTools.PatAlgos.producersLayer1.pfParticleProducer_cfi import allLayer1PFParticles
         # make modules
         producer = allLayer1PFParticles.clone(pfCandidateSource = src)
@@ -224,6 +210,7 @@ class AddPFCandidates(ConfigToolBase):
         # summary tables
         process.allLayer1Summary.candidates.append(cms.InputTag('allLayer1' + patLabel))
         process.selectedLayer1Summary.candidates.append(cms.InputTag('selectedLayer1' + patLabel))
+        process.enableRecording()
         action = Action("AdaptPFCandidates",copy.copy(self._parameters),self)
         process.addAction(action)
            
@@ -231,48 +218,42 @@ class AddPFCandidates(ConfigToolBase):
 addPFCandidates=AddPFCandidates()
 
 class SwitchToPFMET(ConfigToolBase):
-
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFMET(process, "
-        dumpPython += str(self.getvalue('input'))+'\n'
-        return dumpPython
-    
+    """ Tool to switch the input of the pat::MET collection from calo MET to particle flow MET.
+        Type1MET and MuonMET corrections are removed from the patDefaultSequence.
+    """
+    _label='SwitchToPFMET'
     def __call__(self,process,input=cms.InputTag('pfMET')):
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('input',input, 'description: InputTag')
+        self.addParameter('process',process, 'the  process')
+        self.addParameter('input',input, "input collection label to the pat::MET producer (default is 'pfMET')")
         
         process=self._parameters['process'].value
         input=self._parameters['input'].value
-
+        process.disableRecording()
                                                      
         print 'MET: using ', input
         oldMETSource = process.layer1METs.metSource
         process.layer1METs.metSource = input
         process.layer1METs.addMuonCorrections = False
         process.patDefaultSequence.remove(process.patMETCorrections)
-
+        process.enableRecording()
         action = Action("SwitchToPFMET",copy.copy(self._parameters),self)
         process.addAction(action)
        
 switchToPFMET=SwitchToPFMET()
 
 class SwitchToPFJets(ConfigToolBase):
-
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFJets(process, "
-        dumpPython += str(self.getvalue('input'))+'\n'
-        return dumpPython
-    
+    """ Tool to switch the input of the pat::Jet collection from calo jets to particle flow jets.
+        The jet collection stays the same. No residual jet or MET corrections are applied
+    """
+    _label='SwitchToPFJets'
     def __call__(self,process,input=cms.InputTag('pfNoTau')):
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('input',input, 'description: InputTag')
+        self.addParameter('process',process, 'the process')
+        self.addParameter('input',input, "input collection label to the pat::Jet producer as an edm::Module (default is 'pfNoTau')")
         
         process=self._parameters['process'].value
         input=self._parameters['input'].value
-
+        process.disableRecording()
                          
         print 'Jets: using ', input
         switchJetCollection(process,
@@ -282,32 +263,26 @@ class SwitchToPFJets(ConfigToolBase):
                             jetCorrLabel=None, 
                             doType1MET=False)  
         adaptPFJets(process, process.allLayer1Jets)
+        process.enableRecording()
         action = Action("SwitchToPFJets",copy.copy(self._parameters),self)
         process.addAction(action)
 
 switchToPFJets=SwitchToPFJets()
 
 class  UsePF2PAT(ConfigToolBase):
-    
-    def dumpPython(self):
-        
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nusePF2PAT(process, "
-        dumpPython += str(self.getvalue('runPF2PAT'))+'\n'
-        return dumpPython
-    
+       """ Switch PAT to use PF2PAT instead of AOD sources. if 'runPF2PAT' is true, we'll also add PF2PAT in front of the PAT sequence
+       """
+     _label='UsePF2PAT'
     def __call__(self,process,runPF2PAT=True):
 
-        self.addParameter('process',process, 'description: process')
-        self.addParameter('runPF2PAT',runPF2PAT, 'description: InputTag')
+        self.addParameter('process',process, 'the  process')
+        self.addParameter('runPF2PAT',runPF2PAT, 'Run the PF2PAT sequence before pat::Candidate production (default is True)')
         
         process=self._parameters['process'].value
         runPF2PAT=self._parameters['runPF2PAT'].value
-                                 
+        process.disableRecording()                         
         # PLEASE DO NOT CLOBBER THIS FUNCTION WITH CODE SPECIFIC TO A GIVEN PHYSICS OBJECT.
         # CREATE ADDITIONAL FUNCTIONS IF NEEDED. 
-        
-        
-        """Switch PAT to use PF2PAT instead of AOD sources. if 'runPF2PAT' is true, we'll also add PF2PAT in front of the PAT sequence"""
         
         # -------- CORE ---------------
         if runPF2PAT:
@@ -346,7 +321,7 @@ class  UsePF2PAT(ConfigToolBase):
         
         # Unmasked PFCandidates
         addPFCandidates(process,cms.InputTag('pfNoJet'),patLabel='PFParticles',cut="")
-        
+        process.enableRecording()
         action = Action("UsePF2PAT",copy.copy(self._parameters),self)
         process.addAction(action)
 

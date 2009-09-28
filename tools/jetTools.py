@@ -122,7 +122,7 @@ class RunBTagging(ConfigToolBase):
         
         process=self._parameters['process'].value
 
-        process.enableRecording()
+        process.disableRecording()
         
         if (label == ''):
         ## label is not allowed to be empty
@@ -205,7 +205,8 @@ class RunBTagging(ConfigToolBase):
         seq = mkseq(process, 'btaggingTagInfos'+label, 'btaggingJetTags' + label) 
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
-        process.disableRecording()
+        #process.disableRecording()
+        process.enableRecording()
         #process.__dict__['_Process__enableRecording'] -=1
         action = Action("RunBTagging",copy.copy(self._parameters),self)
         process.addAction(action)
@@ -293,7 +294,7 @@ class SwitchJetCollection(ConfigToolBase):
         
         ## replace input jet collection for pat jet production
         process.allLayer1Jets.jetSource = jetCollection
-
+        process.disableRecording()
         print 'calling tag before'
         print ConfigToolBase._callingFlag
         if not ConfigToolBase._callingFlag:
@@ -378,8 +379,10 @@ class SwitchJetCollection(ConfigToolBase):
             ## switch embedding of jetCorrFactors off
             ## for pat jet production
             process.allLayer1Jets.addJetCorrFactors = False
-        #action = Action("switchJetCollection",copy.copy(self._parameters),self)
-        #process.addAction(action)
+
+        process.enableRecording()
+        action = Action("switchJetCollection",copy.copy(self._parameters),self)
+        process.addAction(action)
         ConfigToolBase._callingFlag=False
         
 
@@ -466,7 +469,7 @@ class AddJetCollection(ConfigToolBase):
         doL1Counters = self._parameters['doL1Counters'].value
         genJetCollection = self._parameters['genJetCollection'].value
 
-        process.enableRecording()
+        process.disableRecording()
                 #process.__dict__['_Process__enableRecording'] +=1
         
         
@@ -621,8 +624,7 @@ class AddJetCollection(ConfigToolBase):
             ## switch jetCorrFactors off
             l1Jets.addJetCorrFactors = False
         #process.__dict__['_Process__enableRecording'] -=1
-        process.disableRecording()
-        print process.__dict__['_Process__enableRecording'] 
+        process.enableRecording()
         action = Action("AddJetCollection",copy.copy(self._parameters),self)
         process.addAction(action)
             

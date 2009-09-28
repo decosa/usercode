@@ -17,6 +17,9 @@ class RestrictInputToAOD(ConfigToolBase):
         ------------------------------------------------------------------    
         """
 
+    
+    _label='RestrictInputToAOD'
+    
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nrestrictInputToAOD(process, "
@@ -29,11 +32,11 @@ class RestrictInputToAOD(ConfigToolBase):
                            ):
       
         self.addParameter('process',process, 'The process')
-        self.addParameter('names',names, 'list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'')
+        self.addParameter('names',names, "list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'")
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
-                                             
+        process.disableRecording()                                     
         for obj in range(len(names)):
             print "-----------------------------------------------------------------------------"
             print "WARNING: the following additional information can only be used on RECO format"
@@ -86,7 +89,7 @@ class RestrictInputToAOD(ConfigToolBase):
                 jetProducer.jetID = cms.PSet()
         print "-----------------------------------------------------------------------------"
 
-
+        process.enableRecording()
         action = Action("RestrictInputToAOD",copy.copy(self._parameters),self)
         process.addAction(action)
         
@@ -105,7 +108,8 @@ class RemoveMCMatching(ConfigToolBase):
     ------------------------------------------------------------------    
     """
 
-
+    _label='RemoveMCMatching'
+    
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveMCMatching(process, "
@@ -116,11 +120,11 @@ class RemoveMCMatching(ConfigToolBase):
                          name
                          ):
         self.addParameter('process',process, 'The process')
-        self.addParameter('name',name, 'name    : collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'')
+        self.addParameter('name',name, "name    : collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'")
                 
         process=self._parameters['process'].value
         name=self._parameters['name'].value
-
+        process.disableRecording()
         if( name == 'Photons'   or name == 'All' ):
             _removeMCMatchingForPATObject(process, 'photonMatch', 'allLayer1Photons') 
         if( name == 'Electrons' or name == 'All' ):
@@ -156,6 +160,7 @@ class RemoveMCMatching(ConfigToolBase):
             metProducer = getattr(process, 'layer1METs')        
             metProducer.addGenMET           = False
             metProducer.genMETSource        = ''       
+        process.enableRecording()
         action = Action("removeMCMatching",copy.copy(self._parameters),self)
         process.addAction(action)
 
@@ -172,7 +177,7 @@ class _RemoveMCMatchingForPATObject(ConfigToolBase):
         process=self._parameters['process'].value
         matcherName=self._parameters['matcherName'].value
         producerName=self._parameters['producerName'].value
-        
+        process.disableRecording()
 
     ## remove mcMatcher from the default sequence
         objectMatcher = getattr(process, matcherName)
@@ -198,7 +203,8 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
     'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
     ------------------------------------------------------------------    
     """
-
+    _label='RemoveAllPATObjectsBut'
+    
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nRemoveAllPATObjectsBut(process, "
         dumpPython += str(self.getvalue('names'))+'\n'
@@ -209,15 +215,16 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
                  ):
           
         self.addParameter('process',process, 'the progess')
-        self.addParameter('names',names, 'name    : list of collection names; supported are 'Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs'')
+        self.addParameter('names',names, "name    : list of collection names; supported are 'Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
-                                         
+        process.disableRecording()                                
         removeTheseObjectCollections = ['Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs']
         for obj in range(len(names)):
             removeTheseObjectCollections.remove(names[obj])
         removeSpecificPATObjects(process, removeTheseObjectCollections)
+        process.enableRecording()
         action = Action("RemoveAllPATObjectsBut",copy.copy(self._parameters),self)
         process.addAction(action)
                 
@@ -235,7 +242,8 @@ class RemoveSpecificPATObjects(ConfigToolBase):
     'Electrons', 'Muons', 'Taus', 'Jets', 'METs'
     ------------------------------------------------------------------    
     """
-
+    _label='RemoveSpecificPATObjects'
+    
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveSpecificPATObjects(process, "
         dumpPython += str(self.getvalue('names'))+'\n'
@@ -246,11 +254,11 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                  ):
         
         self.addParameter('process',process, 'the process')
-        self.addParameter('names',names, 'names   : listr of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'')
+        self.addParameter('names',names, "names   : listr of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
-                                   
+        process.disableRecording()                          
     ## remove pre object production steps from the default sequence
         for obj in range(len(names)):
             if( names[obj] == 'Photons' ):
@@ -304,6 +312,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                 process.allLayer1Summary.candidates.remove( cms.InputTag('allLayer1'+names[obj]) )
                 process.selectedLayer1Summary.candidates.remove( cms.InputTag('selectedLayer1'+names[obj]) )
                 process.cleanLayer1Summary.candidates.remove( cms.InputTag('cleanLayer1'+names[obj]) )
+        process.enableRecording()
         action = Action("RemoveSpecificPATObjects",copy.copy(self._parameters),self)
         process.addAction(action)
                 
@@ -320,6 +329,7 @@ class RemoveCleaning(ConfigToolBase):
     process : process
     ------------------------------------------------------------------    
     """
+    _label='RemoveCleaning'
     
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveCleaning(process) \n "
@@ -331,7 +341,7 @@ class RemoveCleaning(ConfigToolBase):
         self.addParameter('process',process, 'the process')
                 
         process=self._parameters['process'].value
-                                        
+        process.disableRecording()                               
     ## adapt single object counters
         for m in listModules(process.countLayer1Objects):
             if hasattr(m, 'src'): m.src = m.src.value().replace('cleanLayer1','selectedLayer1')
@@ -344,7 +354,7 @@ class RemoveCleaning(ConfigToolBase):
     ## add selected layer1 objects to the pat output
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoLayer1Cleaning
         process.out.outputCommands = patEventContentNoLayer1Cleaning
-
+        process.enableRecording()
         action = Action("RemoveCleaning",copy.copy(self._parameters),self)
         process.addAction(action)
 
@@ -359,7 +369,8 @@ class AddCleaning(ConfigToolBase):
     process : process
     ------------------------------------------------------------------    
     """
-
+    _label='AddCleaning'
+    
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\naddCleaning(process) \n "
         return dumpPython 
@@ -369,7 +380,7 @@ class AddCleaning(ConfigToolBase):
         self.addParameter('process',process, 'the process')
 
         process=self._parameters['process'].value
-             
+        process.disableRecording()    
 
     ## adapt single object counters
         process.patDefaultSequence.replace(process.countLayer1Objects, process.cleanLayer1Objects * process.countLayer1Objects)
@@ -383,6 +394,7 @@ class AddCleaning(ConfigToolBase):
     ## add clean layer1 objects to the pat output
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
         process.out.outputCommands = patEventContent               
+        process.enableRecording()
         action = Action("AddCleaning",copy.copy(self._parameters),self)
         process.addAction(action)
          
