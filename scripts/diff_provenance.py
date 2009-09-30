@@ -6,19 +6,24 @@ class difference :
        
     def list_diff(self,aList1, aList2, string1, string2):
         "Searches for differences between two modules of the same kind"
+        differences=[]
         for i in range(2,len(aList1)):
             for j in range(2,len(aList2)):
                 if (i==j) and (aList1[i]!=aList2[j]):
                     if aList1[i][:(aList1[i].index('=')+1)] == aList2[j][:(aList2[j].index('=')+1)]:
+                        print self.verbose==str(2)
                         if self.verbose==str(2) or self.verbose==str(1):
-                            print  aList1[i][2:aList1[i].index('=')+1] + aList1[i][aList1[i].index('=')+1:]+'  ['+ string1+']'
-                            print  len(aList1[i][2:aList1[i].index('=')+1])*' '+aList2[j][aList2[j].index('=')+1:]+'  ['+string2+']'
-                            print ''
-                        
-                        
+                            str1 = aList1[i][2:aList1[i].index('=')+1] + aList1[i][aList1[i].index('=')+1:]+'  ['+ string1+']'
+                            str2 = len(aList1[i][2:aList1[i].index('=')+1])*' '+aList2[j][aList2[j].index('=')+1:]+'  ['+string2+']'
+                            differences.append(str1)
+                            differences.append(str2)
+                   
+        return differences 
+                                                    
     def module_diff(self,module1,module2, string1, string2):
         "Searches for modules which are in both the files but whose parameters are setted at different values"
-        modulesfile1=[]
+        ### verificare se queste liste sono utilizzate
+        modulesfile1=[]  
         modulesfile2=[]
         print '\nList of modules present in both the files with different parameter values\n'
         for i in module1.keys():
