@@ -28,7 +28,15 @@ class difference :
         print '\nList of modules present in both the files with different parameter values\n'
         for i in module1.keys():
             for j in module2.keys():
-                if (i==j):
+                if (i==j) and (i=='Processing'):
+                    list= module1[i]
+                    print list
+                    for k in range(len(list)):
+                        if module1[i][k]!= module2[i][k]:
+                            print "Different processes "
+                            print module1[i][k]+'  ['+string1+']'
+                            print module2[i][k]+'  ['+string2+']'
+                if (i==j) and (i!='Processing'):
                     #print i
                     #print module1[i]
                     for name1,value1 in module1[i]:
@@ -60,7 +68,7 @@ class difference :
             labelList=[]
             if i not in module2.keys():
                 print '\n Process '+i+' not run on edmfile '+string +'\n'
-            else:
+            elif i!='Processing':
                 labelList2=[module[0] for module in module2[i]]
                 labelList1=[module[0] for module in module1[i]]
                 #print labelList1

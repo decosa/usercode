@@ -25,10 +25,25 @@ class filereader:
         module=[]
         value=[]
         file_modules = {}
+        processing=False
         insideModuleBlock = False
         insideParameterBlock = False
         for line in aFile.readlines():
-            if self.startswith(line):
+            if line.startswith("Processing History:"):
+                print "Processing"
+                value=[]
+                processing=True
+            elif (not line.startswith('---------Event')) and processing:
+                value.append(line)
+            elif line.startswith('---------Event') and processing:
+                file_modules['Processing']=value
+                print value
+                processing=False
+                print "end processing block"
+                #print module
+            ###if line.startswith("---------Event"):
+                #print "Stop processing"
+            elif self.startswith(line):
                 if  insideParameterBlock:
                     module.append(tuple(value))
                     #print 'VALUE end ', value
@@ -74,6 +89,8 @@ class filereader:
             elif (insideParameterBlock):
                 value.append(line[:-1])
                 #print line[:-1]
+         
+                
 
         
         return file_modules 
