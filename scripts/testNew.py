@@ -12,7 +12,7 @@ if __name__=="__main__":
             self._d=difference(str(2))
 
         def testStartswith(self):
-            """ Check the function startswith() of class filereader
+            """ Check the method startswith() of class filereader
             """
             r='Module: modulename'
             a=self._r.startswith(r)
@@ -30,26 +30,25 @@ if __name__=="__main__":
 
         ### Modificare questo test! Non serve l'ordine ma solo il contenuto    
         def testKeys(self):
-            """ Check the modules names stored in the dictionary by the readfile function
-                of the filereader class, and thei order.
+            """ Check modules names stored by the method readfile() 
+                of class filereader 
             """
-            print 'start key test'
             moduleblock1={}
             moduleblock2={}
             moduleblock1=self._r.readfile('newfile')
             moduleblock2=self._r.readfile('newfile2')
             keys1=moduleblock1.keys()
+            keys1.sort()
             keys2=moduleblock2.keys()
-
-            self.assertEqual(keys1,['Processing','HLT2'])
-            self.assertEqual(keys2,['Processing','HLT'])
-            print 'end key test'
-
+            keys2.sort()
+            self.assertEqual(keys1,['HLT2','Processing'])
+            self.assertEqual(keys2,['HLT','Processing'])
+            
         def testValueModule(self):
-            """ Check the modules stored in the dictionary by the readfile function
-                of the filereader class.
+            """ Check modules stored by the method readfile()
+                of class filereader
             """
-            print 'start testValueModule'
+            #print 'start testValueModule'
             moduleblock={}
             file='newfile'
             moduleblock=self._r.readfile(file)
@@ -66,11 +65,11 @@ if __name__=="__main__":
             value=moduleblock[key][0][1]
             block=('Module: genCandidatesForMET HLT2', ' parameters: {', '  excludeResonances: bool tracked  = false', '  partonicFinalState: bool tracked  = false') 
             self.assertEqual(block,value)
-            print 'end testValueModule'
+            #print 'end testValueModule'
             
         def testListDifferences(self):
             """ Check the differences between the parameters of a same module
-                ran on two different edm files with different parameter values
+                run on two different edm files with different parameter values
             """
             moduleblock1={}
             moduleblock2={}
@@ -80,8 +79,8 @@ if __name__=="__main__":
             key2='HLT'
             module1=moduleblock1[key1][0][1]
             module2=moduleblock2[key2][0][1]
-            print module1
-            print module2
+            #print module1
+            #print module2
             file1= 'first file'
             file2= 'second file'
             result=['excludeResonances: bool tracked  = false  [first file]','                                   true  [second file]', 'partonicFinalState: bool tracked  = false  [first file]','                                    true  [second file]']
