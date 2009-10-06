@@ -71,10 +71,12 @@ class difference :
             if (i not in module2.keys())and (i not in self._sameprocess):
                 print '\n Process '+i+' not run on edmfile '+string +'\n'
             elif i!='Processing':
-                if i==self._sameprocess[0]:
-                    k= self._sameprocess[1]
-                elif i==self._sameprocess[1]:
-                    k= self._sameprocess[0]
+                k=i
+                if i in self._sameprocess:
+                    if i==self._sameprocess[0]:
+                        k= self._sameprocess[1]
+                    elif i==self._sameprocess[1]:
+                        k= self._sameprocess[0]
                 labelList2=[module[0] for module in module2[k]]
                 labelList1=[module[0] for module in module1[i]]
                 for name, value in module1[i] :
