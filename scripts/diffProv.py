@@ -3,7 +3,8 @@ class difference :
     
     def __init__(self,v):
         self.verbose = v
-       
+        self._diffprocess=[]
+        self._sameprocess=()
     def list_diff(self,aList1, aList2, string1, string2):
         "Searches for differences between two modules of the same kind"
         differences=[]
@@ -22,59 +23,62 @@ class difference :
                                                     
     def module_diff(self,module1,module2, string1, string2):
         "Searches for modules which are in both the files but whose parameters are setted at different values"
-        ### verificare se queste liste sono utilizzate
-        modulesfile1=[]  
-        modulesfile2=[]
         print '\nList of modules present in both the files with different parameter values\n'
         for i in module1.keys():
             for j in module2.keys():
                 if (i==j) and (i=='Processing'):
                     list= module1[i]
-                    print list
                     for k in range(len(list)):
-                        if module1[i][k]!= module2[i][k]:
-                            print "Different processes "
-                            print module1[i][k]+'  ['+string1+']'
-                            print module2[i][k]+'  ['+string2+']'
-                if (i==j) and (i!='Processing'):
-                    #print i
-                    #print module1[i]
+                        process1=module1[i][k].split()
+                        process2=module2[i][k].split()
+                        if process1[0]!= process2[0]:
+                            key1=process1[0]
+                            key2=process2[0]
+                            self._diffprocess.append( (key1,key2) )
+                            
+                    if len(self._diffprocess)>1:
+                        print 'Differences in the processing history'
+                        for i,j in self._diffprocess:         
+                            print i+'  ['+string1+']'
+                            print j+'  ['+string2+']'
+                            print ''
+                    if len(self._diffprocess)==1:
+                        self._sameprocess=self._diffprocess[0]
+                        for i,j in self._diffprocess:         
+                            print i+'  ['+string1+']'
+                            print j+'  ['+string2+']'
+                            print ''
+                                      
+                if ( (i==j)or (i,j)==self._sameprocess ) and (i!='Processing'):
                     for name1,value1 in module1[i]:
                         for name2,value2 in module2[j]:
-                            #print item1.label
-                            #print item1.value
-                            if (name1==name2) and (value1!=value2): 
-                                    print 'Process: '+'"'+i+'"'+'\n'+'Module: '+'"'+name1+'"'+'\n'
-                                    d=difference(self.verbose) ###questo non ha senso
-                                    d.process=i
-                                    d.moduleLabel=name1 ###non mi interessano in questo francente il processo e la label
-                                    d.firstvalue=value1
-                                    d.secondvalue=value2
-                                    self.list_diff(d.firstvalue,d.secondvalue, string1, string2)
-                                #else: pass
-
+                            if  (name1==name2) and (value1!=value2):
+                                print 'Process: '+'"'+i+'"'+'\n'+'Module: '+'"'+name1+'"'+'\n'
+                                d=difference(self.verbose) 
+                                d.firstvalue=value1
+                                d.secondvalue=value2
+                                self.list_diff(d.firstvalue,d.secondvalue, string1, string2)
+                                
         self.onefilemodules(module1,module2,'first')
         self.onefilemodules(module2,module1,'second')
     
 
-
-### capire perche' e' stato utilizzato  il bool onlyonefile
     def onefilemodules(self,module1,module2,string):
         "Searches for modules present only in one of the two files"
-        #onlyonefile=False
         print '\nModules run only on the '+string+ ' edmfile:'+'\n'
         for i in module1.keys():
-            #print 'KEY: ',i
             labelList=[]
-            if i not in module2.keys():
+            if (i not in module2.keys())and (i not in self._sameprocess):
                 print '\n Process '+i+' not run on edmfile '+string +'\n'
             elif i!='Processing':
-                labelList2=[module[0] for module in module2[i]]
+                if i==self._sameprocess[0]:
+                    k= self._sameprocess[1]
+                elif i==self._sameprocess[1]:
+                    k= self._sameprocess[0]
+                labelList2=[module[0] for module in module2[k]]
                 labelList1=[module[0] for module in module1[i]]
-                #print labelList1
                 for name, value in module1[i] :
-                    #print 'NAME',name
-                    if name not in labelList2:
+                    if (name not in labelList2):
                         print 'Process: '+'"'+i+'"'+'\n'+'Module: '+'"'+name+'"'
                         if  self.verbose==str(2):
                             for k in value:

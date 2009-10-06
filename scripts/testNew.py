@@ -41,8 +41,8 @@ if __name__=="__main__":
             keys1=moduleblock1.keys()
             keys2=moduleblock2.keys()
 
-            self.assertEqual(keys1,['HLT'])
-            self.assertEqual(keys2,['HLT'])
+            self.assertEqual(keys1,['Processing','HLT2'])
+            self.assertEqual(keys2,['Processing','HLT'])
             print 'end key test'
 
         def testValueModule(self):
@@ -53,7 +53,7 @@ if __name__=="__main__":
             moduleblock={}
             file='newfile'
             moduleblock=self._r.readfile(file)
-            key='HLT'
+            key='HLT2'
             try:
                 moduleblock[key]
             except KeyError:
@@ -64,7 +64,7 @@ if __name__=="__main__":
                 print "No module "+label +" in the process "+ key + ' in the file '+ file
 
             value=moduleblock[key][0][1]
-            block=('Module: genCandidatesForMET HLT', ' parameters: {', '  excludeResonances: bool tracked  = false', '  partonicFinalState: bool tracked  = false') 
+            block=('Module: genCandidatesForMET HLT2', ' parameters: {', '  excludeResonances: bool tracked  = false', '  partonicFinalState: bool tracked  = false') 
             self.assertEqual(block,value)
             print 'end testValueModule'
             
@@ -76,9 +76,10 @@ if __name__=="__main__":
             moduleblock2={}
             moduleblock1=self._r.readfile('newfile')
             moduleblock2=self._r.readfile('newfile2')
-            key='HLT'
-            module1=moduleblock1[key][0][1]
-            module2=moduleblock2[key][0][1]
+            key1='HLT2'
+            key2='HLT'
+            module1=moduleblock1[key1][0][1]
+            module2=moduleblock2[key2][0][1]
             print module1
             print module2
             file1= 'first file'
