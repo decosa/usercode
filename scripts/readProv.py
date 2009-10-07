@@ -29,6 +29,7 @@ class filereader:
         insideModuleBlock = False
         insideParameterBlock = False
         nprocess=-1
+        key=''
         for line in aFile.readlines():
             if line.startswith("Processing History:"):
                 value=[]
@@ -68,16 +69,19 @@ class filereader:
                 file_modules[key].append(module)
                 insideParameterBlock = False
                 insideModuleBlock = False
-            elif line.startswith('}') and insideParameterBlock:
-                module.append(tuple(value))
-                file_modules[key].append(module)
-                insideParameterBlock = False
-                insideModuleBlock = False
+            #elif line=='}' and insideParameterBlock:
+                #module.append(tuple(value))
+                #file_modules[key].append(module)
+                #insideParameterBlock = False
+                #insideModuleBlock = False
             elif (insideParameterBlock):
                 value.append(line[:-1])
-                
-         
-                
+            
+        if   insideParameterBlock:
+            module.append(tuple(value))
+            file_modules[key].append(module)
+            insideParameterBlock = False
+            insideModuleBlock = False 
 
         
         return file_modules 

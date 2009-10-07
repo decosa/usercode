@@ -38,27 +38,23 @@ class difference :
                             
                     if len(self._diffprocess)>1:
                         print 'Differences in the processing history'
-                        for i,j in self._diffprocess:         
-                            print i+'  ['+string1+']'
-                            print j+'  ['+string2+']'
+                        for l,m in self._diffprocess:         
+                            print l+'  ['+string1+']'
+                            print m+'  ['+string2+']'
                             print ''
                     if len(self._diffprocess)==1:
                         self._sameprocess=self._diffprocess[0]
-                        for i,j in self._diffprocess:         
-                            print i+'  ['+string1+']'
-                            print j+'  ['+string2+']'
-                            print ''
-                                      
-                if ( (i==j)or (i,j)==self._sameprocess ) and (i!='Processing'):
+                                                             
+                elif ( (i==j)or (i,j)==self._sameprocess ) and (i!='Processing'):
                     for name1,value1 in module1[i]:
                         for name2,value2 in module2[j]:
-                            if  (name1==name2) and (value1!=value2):
+                            if  (name1==name2) and (value1[1:]!=value2[1:]):
                                 print 'Process: '+'"'+i+'"'+'\n'+'Module: '+'"'+name1+'"'+'\n'
                                 d=difference(self.verbose) 
                                 d.firstvalue=value1
                                 d.secondvalue=value2
                                 self.list_diff(d.firstvalue,d.secondvalue, string1, string2)
-                                
+                    
         self.onefilemodules(module1,module2,'first')
         self.onefilemodules(module2,module1,'second')
     
@@ -83,7 +79,7 @@ class difference :
                     if (name not in labelList2):
                         print 'Process: '+'"'+i+'"'+'\n'+'Module: '+'"'+name+'"'
                         if  self.verbose==str(2):
-                            for k in value:
+                            for k in value[1:]:
                                 print k
                                 
 

@@ -28,7 +28,6 @@ if __name__=="__main__":
             self.assertEqual(d, False)
 
 
-        ### Modificare questo test! Non serve l'ordine ma solo il contenuto    
         def testKeys(self):
             """ Check modules names stored by the method readfile() 
                 of class filereader 
@@ -48,7 +47,6 @@ if __name__=="__main__":
             """ Check modules stored by the method readfile()
                 of class filereader
             """
-            #print 'start testValueModule'
             moduleblock={}
             file='newfile'
             moduleblock=self._r.readfile(file)
@@ -63,10 +61,10 @@ if __name__=="__main__":
                 print "No module "+label +" in the process "+ key + ' in the file '+ file
 
             value=moduleblock[key][0][1]
-            block=('Module: genCandidatesForMET HLT2', ' parameters: {', '  excludeResonances: bool tracked  = false', '  partonicFinalState: bool tracked  = false') 
+            block=('Module: genCandidatesForMET HLT2', ' parameters: {', '  excludeResonances: bool tracked  = false', '  partonicFinalState: bool tracked  = false','}{', '}{', '}', '')
+ 
             self.assertEqual(block,value)
-            #print 'end testValueModule'
-            
+                        
         def testListDifferences(self):
             """ Check the differences between the parameters of a same module
                 run on two different edm files with different parameter values
@@ -79,8 +77,6 @@ if __name__=="__main__":
             key2='HLT'
             module1=moduleblock1[key1][0][1]
             module2=moduleblock2[key2][0][1]
-            #print module1
-            #print module2
             file1= 'first file'
             file2= 'second file'
             result=['excludeResonances: bool tracked  = false  [first file]','                                   true  [second file]', 'partonicFinalState: bool tracked  = false  [first file]','                                    true  [second file]']
