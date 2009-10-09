@@ -96,6 +96,7 @@ class Process(object):
     """Root class for a CMS configuration process"""
     def __init__(self,name):
         self.__dict__['_Process__history'] = []
+        self.__dict__['_Process__enableRecording'] = 0
         self.__dict__['_Process__name'] = name
         self.__dict__['_Process__filters'] = {}
         self.__dict__['_Process__producers'] = {}
@@ -118,87 +119,32 @@ class Process(object):
         self.__dict__['_Process__InExtendCall'] = False
         self.__dict__['_Process__partialschedules'] = {}
         self.__isStrict = False
-        
-        
-    def addAction(self,tool):
 
-        self.__dict__['_Process__history'].append(tool)
-        print 'ADD ACTION'
+     
+    def addAction(self,tool):
+        if self.__dict__['_Process__enableRecording'] == 0:
+            self.__dict__['_Process__history'].append(tool)
+            print 'ADD ACTION'
         
     def deleteAction(self,i):
-        ### understand why it prints out NONE
-        #tool.bool=False
-        #del self.__dict__['_Process__history'][self.__dict__['_Process__index']+1:]
-        #self.__dict__['_Process__history'].append(tool)
-        #self.__dict__['_Process__index'] = len(self.__dict__['_Process__history'])-1
-        #print 'DELETE ACTION'
-        #print   self.__dict__['_Process__index'] 
-
-
-
-
-
-        #self.__dict__['_Process__history'].reverse()
-        #for i in self.__dict__['_Process__history']:
-         #   if (i.label==tool.label) and (i.parameters==tool.parameters) :
-          #      self.__dict__['_Process__history'].remove(i)
-        #self.__dict__['_Process__history'].reverse()
-                                               
         del self.__dict__['_Process__history'][i]
         dumpHistory=self.dumpHistory()
-        return dumpHistory 
+        return dumpHistory
 
-    #def deleteElements(self, historycopy, item):
-     #   if item.bool==False:
-      #      historycopy.reverse()
-      #      for i in historycopy[historycopy.index(item):]:
-      #          if i.label==item.label:
-      #              historycopy.remove(i)
-      #      historycopy.reverse()
+    def disableRecording(self):
+        self.__dict__['_Process__enableRecording'] += 1
 
+    def enableRecording(self):
+        self.__dict__['_Process__enableRecording'] -= 1
 
     def dumpHistory(self):
         dumpHistory=[]
         historycopy=copy.copy(self.__dict__['_Process__history'])
-        ### implement a function to do this and export the functions in ConfigToolBase class
-        #if index==-1:
-
         for item in historycopy:
             item.referenceToFunctor.setParameters(item.parameters)
             dumpHistory.append(item.referenceToFunctor.dumpPython())
-        #else:
-         #   for item in historycopy[:index+1]:
-          #      self.deleteElements(historycopy, item)
+        return ''.join(dumpHistory)
 
-           # for item in historycopy[:index+1]:
-           #     item.referenceToFunctor.setParameters(item.parameters)
-           #     dumpHistory.append(item.referenceToFunctor.dumpPython())
-
-        return ''.join(dumpHistory)   
-
-  #  def dumpHistory(self):
-   #     return self._dumpHistory(-1)
-        
-
-#    def undo(self):
- #       dumpHistory=''
-  #      if self.__dict__['_Process__index']!=0:
-   #         self.__dict__['_Process__index'] -=1
-   #     print self.__dict__['_Process__index']
-   #     print 'UNDO'
-   #     dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
-   #     return dumpHistory
-
- #   def redo(self):
- #       dumpHistory=''
- #       if self.__dict__['_Process__index']!=len(self.__dict__['_Process__history'])-1:
- #           self.__dict__['_Process__index'] +=1
- #       print self.__dict__['_Process__index']
- #       print 'REDO'
- #       dumpHistory=self._dumpHistory(self.__dict__['_Process__index'])
- #       return dumpHistory
-    
-    
     def setStrict(self, value):
         self.__isStrict = value
         _Module.__isStrict__ = True
