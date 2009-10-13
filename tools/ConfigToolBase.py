@@ -6,9 +6,11 @@ class Action(object):
         self.label=label
         self.parameters=parameters
         self.referenceToFunctor=referenceToFunctor
-        ### The boolean refers to the type of action, if the tool is added bool=True,
-        ### if it is deleted the bool is set to False
-        self.bool=bool
+  
+    def dumpPython(self):
+        self.referenceToFunctor.setParameters(self.parameters)
+        return self.referenceToFunctor.dumpPython()
+        
         
 class parameter:
     pass
@@ -83,4 +85,9 @@ class ConfigToolBase(object) :
         """
         dumpPython='#'+comment+'\n'
         return dumpPython
-                                                                
+
+    def typeError(self,name,type):
+        return "The type for parameter "+'"'+str(name)+'"'+" is not "+'"'+type+'"'
+
+    def instanceError(self,name,obj):
+        return "Parameter "+'"'+str(name)+'"'+" is not an instance of object "+'"'+obj+'"'                                                 

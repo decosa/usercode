@@ -140,9 +140,10 @@ class Process(object):
     def dumpHistory(self):
         dumpHistory=[]
         historycopy=copy.copy(self.__dict__['_Process__history'])
+
         for item in historycopy:
-            item.referenceToFunctor.setParameters(item.parameters)
-            dumpHistory.append(item.referenceToFunctor.dumpPython())
+            dumpHistory.append(item.dumpPython())
+                       
         return ''.join(dumpHistory)
 
     def setStrict(self, value):
