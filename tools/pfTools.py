@@ -6,8 +6,9 @@ from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.coreTools import *
 from PhysicsTools.PatAlgos.tools.jetTools import *
 from PhysicsTools.PatAlgos.tools.tauTools import *
-
-
+from FWCore.ParameterSet.Modules  import EDProducer
+from FWCore.ParameterSet.Types  import InputTag 
+from FWCore.ParameterSet.Config  import Process
 
 def warningIsolation():
     print "WARNING: particle based isolation must be studied"
@@ -21,7 +22,7 @@ class AdaptPFMuons(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFMuons(process, "
-        dumpPython += str(self.getvalue('module'))+'\n'
+        dumpPython += str(self.getvalue('module'))+')'+'\n'
         return dumpPython
  
     
@@ -29,6 +30,11 @@ class AdaptPFMuons(ConfigToolBase):
 
         self.addParameter('process',process, 'the Process')
         self.addParameter('module',module, '')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(module,EDProducer), self.instanceError(module,'EDProducer')
+        self.doCall()
+
+    def doCall(self):
         
         process=self._parameters['process'].value
         module=self._parameters['module'].value
@@ -60,7 +66,7 @@ class AdaptPFMuons(ConfigToolBase):
         print module.isoDeposits
         print
         process.enableRecording()
-        action = Action("AdaptPFMuons",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 adaptPFMuons=AdaptPFMuons()
@@ -75,7 +81,7 @@ class AdaptPFElectrons(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFElectrons(process, "
-        dumpPython += str(self.getvalue('module'))+'\n'
+        dumpPython += str(self.getvalue('module'))+')'+'\n'
         return dumpPython
  
     def __call__(self,process,module):
@@ -83,6 +89,11 @@ class AdaptPFElectrons(ConfigToolBase):
 
         self.addParameter('process',process, 'the Process')
         self.addParameter('module',module, '')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(module,EDProducer), self.instanceError(module,'EDProducer')
+        self.doCall()
+
+    def doCall(self):
         
         process=self._parameters['process'].value
         module=self._parameters['module'].value
@@ -117,7 +128,7 @@ class AdaptPFElectrons(ConfigToolBase):
         print module.isoDeposits
         print 
         process.enableRecording()
-        action = Action("AdaptPFMuons",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 adaptPFElectrons=AdaptPFElectrons()
@@ -154,14 +165,18 @@ class AdaptPFTaus(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFTaus(process, "
-        dumpPython += str(self.getvalue('tauType'))+'\n'
+        dumpPython += str(self.getvalue('tauType'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,tauType = 'fixedConePFTau' ):
         
         self.addParameter('process',process, 'the Process')
         self.addParameter('tauType',tauType, '')
-        
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(tauType,str), self.typeError(tauType,'string')
+        self.doCall()
+
+    def doCall(self):        
         process=self._parameters['process'].value
         tauType=self._parameters['tauType'].value
         process.disableRecording() 
@@ -186,7 +201,7 @@ class AdaptPFTaus(ConfigToolBase):
                                 tauType)
         switchToAnyPFTau(process, oldTaus, process.allLayer1Taus.tauSource, tauType)
         process.enableRecording()
-        action = Action("AdaptPFTaus",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 
@@ -203,7 +218,7 @@ class AddPFCandidates(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nadaptPFCandidates(process, "
         dumpPython += str(self.getvalue('src'))+ ", "
-        dumpPython += str(self.getvalue('patLabel'))+'\n'
+        dumpPython += str(self.getvalue('patLabel'))+')'+'\n'
         return dumpPython
     def __call__(self,process,src,patLabel='PFParticles',cut=""):
 
@@ -211,7 +226,13 @@ class AddPFCandidates(ConfigToolBase):
         self.addParameter('src',src, 'source of particle flow candidates as an edm::Module')
         self.addParameter('patLabel',patLabel, "collection label for PAT (default is 'PFParticles')")
         self.addParameter('cut',cut, 'cut string for the selectedLayer1PFCandidate collection (default is "")')
-        
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(src,InputTag), self.instanceError(src,'InputTag')
+        assert isinstance(patLabel,str), self.typeError(patLabel,'string')
+        assert isinstance(cut,str), self.typeError(cut,'string')
+        self.doCall()
+
+    def doCall(self):        
         process=self._parameters['process'].value
         src=self._parameters['src'].value
         patLabel=self._parameters['patLabel'].value
@@ -239,7 +260,7 @@ class AddPFCandidates(ConfigToolBase):
         process.allLayer1Summary.candidates.append(cms.InputTag('allLayer1' + patLabel))
         process.selectedLayer1Summary.candidates.append(cms.InputTag('selectedLayer1' + patLabel))
         process.enableRecording()
-        action = Action("AdaptPFCandidates",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
            
 
@@ -253,14 +274,18 @@ class SwitchToPFMET(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nswitchToPFMET(process, "
-        dumpPython += str(self.getvalue('input'))+'\n'
+        dumpPython += str(self.getvalue('input'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,input=cms.InputTag('pfMET')):
 
         self.addParameter('process',process, 'the  process')
         self.addParameter('input',input, "input collection label to the pat::MET producer (default is 'pfMET')")
-        
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
+        self.doCall()
+
+    def doCall(self):        
         process=self._parameters['process'].value
         input=self._parameters['input'].value
         process.disableRecording()
@@ -271,7 +296,7 @@ class SwitchToPFMET(ConfigToolBase):
         process.layer1METs.addMuonCorrections = False
         process.patDefaultSequence.remove(process.patMETCorrections)
         process.enableRecording()
-        action = Action("SwitchToPFMET",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
        
 switchToPFMET=SwitchToPFMET()
@@ -285,13 +310,18 @@ class SwitchToPFJets(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nswitchToPFJets(process, "
-        dumpPython += str(self.getvalue('input'))+'\n'
+        dumpPython += str(self.getvalue('input'))+')'+'\n'
         return dumpPython
 
     def __call__(self,process,input=cms.InputTag('pfNoTau')):
         self.addParameter('process',process, 'the process')
         self.addParameter('input',input, "input collection label to the pat::Jet producer as an edm::Module (default is 'pfNoTau')")
-        
+        print type(input)
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
+        self.doCall()
+
+    def doCall(self):        
         process=self._parameters['process'].value
         input=self._parameters['input'].value
         process.disableRecording()
@@ -305,7 +335,7 @@ class SwitchToPFJets(ConfigToolBase):
                             doType1MET=False)  
         adaptPFJets(process, process.allLayer1Jets)
         process.enableRecording()
-        action = Action("SwitchToPFJets",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 switchToPFJets=SwitchToPFJets()
@@ -319,14 +349,18 @@ class  UsePF2PAT(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n\nusePF2PAT(process, "
         dumpPython += str(self.getvalue('process'))+ ", "
-        dumpPython += str(self.getvalue('runPF2PAT'))+'\n'
+        dumpPython += str(self.getvalue('runPF2PAT'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,runPF2PAT=True):
 
         self.addParameter('process',process, 'the  process')
         self.addParameter('runPF2PAT',runPF2PAT, 'Run the PF2PAT sequence before pat::Candidate production (default is True)')
-        
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(runPF2PAT,bool), self.typeError(runPF2PAT,'bool')
+        self.doCall()
+
+    def doCall(self):       
         process=self._parameters['process'].value
         runPF2PAT=self._parameters['runPF2PAT'].value
         process.disableRecording()                         
@@ -371,7 +405,7 @@ class  UsePF2PAT(ConfigToolBase):
         # Unmasked PFCandidates
         addPFCandidates(process,cms.InputTag('pfNoJet'),patLabel='PFParticles',cut="")
         process.enableRecording()
-        action = Action("UsePF2PAT",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 usePF2PAT=UsePF2PAT()

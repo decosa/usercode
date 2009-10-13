@@ -3,7 +3,8 @@
 import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-        
+from FWCore.ParameterSet.Types  import InputTag    
+from FWCore.ParameterSet.Config  import Process  
 
 def switchJECSet(process,
                  newName,
@@ -107,7 +108,7 @@ class RunBTagging(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nrunBTagging(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
-        dumpPython += str(self.getvalue('label'))+'\n'
+        dumpPython += str(self.getvalue('label'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -119,9 +120,18 @@ class RunBTagging(ConfigToolBase):
         self.addParameter('process',process, 'The process')
         self.addParameter('jetCollection',jetCollection, ' Input jet collection')
         self.addParameter('label',label, 'Postfix label to identify new sequence/modules')
-        
-        process=self._parameters['process'].value
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(jetCollection,InputTag),self.instanceError(jetCollection,'InputTag')
+        assert isinstance(label,str), self.typeError(label,'string')
 
+        return self.doCall() 
+        
+    def doCall(self):
+                
+        process=self._parameters['process'].value
+        jetCollection=self._parameters['jetCollection'].value
+        label=self._parameters['label'].value
+        
         process.disableRecording()
         
         if (label == ''):
@@ -196,19 +206,17 @@ class RunBTagging(ConfigToolBase):
             seq = getattr(process, firstlabel)
             for x in otherlabels: seq += getattr(process, x)
             return cms.Sequence(seq)
-
+        
         ## add tag infos to the process
         setattr( process, 'btaggingTagInfos'+label, mkseq(process, *(labels['tagInfos']) ) )
         ## add b tags to the process
         setattr( process, 'btaggingJetTags'+label,  mkseq(process, *(labels['jetTags'])  ) )
         ## add a combined sequence to the process
-        seq = mkseq(process, 'btaggingTagInfos'+label, 'btaggingJetTags' + label) 
+        seq = mkseq(process, 'btaggingTagInfos'+label, 'btaggingJetTags' + label)
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
-        #process.disableRecording()
         process.enableRecording()
-        #process.__dict__['_Process__enableRecording'] -=1
-        action = Action("RunBTagging",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
         return (seq, labels)
 
@@ -252,7 +260,7 @@ class SwitchJetCollection(ConfigToolBase):
         dumpPython += str(self.getvalue('doBTagging'))+', '
         dumpPython += str(self.getvalue('jetCorrLabel'))+', '
         dumpPython += str(self.getvalue('doType1MET'))+', '
-        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        dumpPython += str(self.getvalue('genJetCollection'))+')'+'\n'
         return dumpPython
 
     def __call__(self,process,
@@ -273,8 +281,18 @@ class SwitchJetCollection(ConfigToolBase):
         self.addParameter('jetCorrLabel',jetCorrLabel, 'Algorithm and type of JEC; use "None" for no JEC; examples are ("IC5","Calo"), ("SC7","Calo"), ("KT4","PF")')
         self.addParameter('doType1MET',doType1MET, 'If jetCorrLabel is not "None", set this to "True" to redo the Type1 MET correction for the new jet colllection; at the moment it must be "False" for non CaloJets otherwise the JetMET POG module crashes.')
         self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(jetCollection,InputTag), self.instanceError(jetCollection,'InputTag')
+        assert isinstance(doJTA,bool),self.typeError(doJTA,'bool')
+        assert isinstance(doBTagging,bool),self.typeError(doBTagging,'bool')
+        assert (isinstance(jetCorrLabel,list) or jetCorrLabel is None ),self.typeError(jetCorrLabel,'tuple')
+        assert isinstance(doType1MET,bool), self.typeError(doType1MET,'bool')
+        assert isinstance(genJetCollection,InputTag),self.instanceError(genJetCollection,'InputTag')
         
+        self.doCall() 
         
+    def doCall(self):
+
         process=self._parameters['process'].value
         oldLabel = process.allLayer1Jets.jetSource;
         jetCollection = self._parameters['jetCollection'].value
@@ -381,7 +399,7 @@ class SwitchJetCollection(ConfigToolBase):
             process.allLayer1Jets.addJetCorrFactors = False
 
         process.enableRecording()
-        action = Action("switchJetCollection",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
         ConfigToolBase._callingFlag=False
         
@@ -432,7 +450,7 @@ class AddJetCollection(ConfigToolBase):
         dumpPython += str(self.getvalue('jetCorrLabel'))+', '
         dumpPython += str(self.getvalue('doType1MET'))+', '
         dumpPython += str(self.getvalue('doL1Counters'))+', '
-        dumpPython += str(self.getvalue('genJetCollection'))+'\n'
+        dumpPython += str(self.getvalue('genJetCollection'))+')'+'\n'
         return dumpPython
 
     def __call__(self,process,
@@ -447,6 +465,9 @@ class AddJetCollection(ConfigToolBase):
                  genJetCollection=cms.InputTag("iterativeCone5GenJets")
                  ):
 
+        #print type(jetCollection)
+        #assert type(jetCollection) is str
+
         self.addParameter('process',process, 'The  process')
         self.addParameter('jetCollection',jetCollection, 'Input jet Collection')
         self.addParameter('postfixLabel',postfixLabel, 'Label to identify all modules that work with this jet collection')
@@ -457,6 +478,20 @@ class AddJetCollection(ConfigToolBase):
         self.addParameter('doL1Cleaning',doL1Cleaning, 'copy also the producer modules for cleanLayer1 will be set to "True" automatically when doL1Counters is "True"')
         self.addParameter('doL1Counters',doL1Counters, 'copy also the filter modules that accept/reject the event looking at the number of jets')
         self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(jetCollection,InputTag),self.instanceError(jetCollection,'InputTag')
+        assert isinstance(postfixLabel,str), self.typeError(postfixLabel,'string')
+        assert isinstance(doJTA,bool) , self.typeError(doJTA,'bool')
+        assert isinstance(doBTagging,bool),self.typeError(doBTagging,'bool')
+        assert isinstance(jetCorrLabel,tuple), self.typeError(jetCorrLabel,'tuple')
+        assert isinstance(doType1MET,bool), self.typeError(doType1MET,'bool')
+        assert isinstance(doL1Cleaning, bool),self.typeError(doL1Cleaning, 'bool')
+        assert isinstance(doL1Counters, bool),self.typeError(doL1Counters, 'bool')
+        assert isinstance(genJetCollection,InputTag),self.instanceError(genJetCollection,'InputTag')
+        
+        self.doCall() 
+        
+    def doCall(self):
         
         process = self._parameters['process'].value
         jetCollection = self._parameters['jetCollection'].value
@@ -470,16 +505,8 @@ class AddJetCollection(ConfigToolBase):
         genJetCollection = self._parameters['genJetCollection'].value
 
         process.disableRecording()
-                #process.__dict__['_Process__enableRecording'] +=1
-        
-        
-         
-        
-        #action = Action("AddJetCollection",copy.copy(self._parameters),self)
-        #process.addAction(action)
-
-
-
+                     
+      
         ## add module as process to the default sequence
         def addAlso(label, value):
             existing = getattr(process, label)
@@ -555,7 +582,6 @@ class AddJetCollection(ConfigToolBase):
     
         if (doBTagging):
             ## add b tagging sequence
-           
             (btagSeq, btagLabels) = runBTagging(process, jetCollection, postfixLabel)
             ## add b tagging sequence before running the allLayer1Jets modules
             process.makeAllLayer1Jets.replace(getattr(process,jtaLabel), getattr(process,jtaLabel)+btagSeq)
@@ -625,7 +651,7 @@ class AddJetCollection(ConfigToolBase):
             l1Jets.addJetCorrFactors = False
         #process.__dict__['_Process__enableRecording'] -=1
         process.enableRecording()
-        action = Action("AddJetCollection",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
             
 addJetCollection=AddJetCollection()

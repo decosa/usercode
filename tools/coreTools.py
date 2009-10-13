@@ -2,7 +2,7 @@
 import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-
+from FWCore.ParameterSet.Config  import Process  
 
 class RestrictInputToAOD(ConfigToolBase):
     
@@ -23,7 +23,7 @@ class RestrictInputToAOD(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nrestrictInputToAOD(process, "
-        dumpPython += str(self.getvalue('names'))+'\n'
+        dumpPython += str(self.getvalue('names'))+')'+'\n'
         return dumpPython
 
     
@@ -33,7 +33,13 @@ class RestrictInputToAOD(ConfigToolBase):
       
         self.addParameter('process',process, 'The process')
         self.addParameter('names',names, "list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(names,list), self.typeError(names,'list')
         
+        self.doCall()
+        
+    def doCall(self):     
+
         process=self._parameters['process'].value
         names=self._parameters['names'].value
         process.disableRecording()                                     
@@ -90,7 +96,7 @@ class RestrictInputToAOD(ConfigToolBase):
         print "-----------------------------------------------------------------------------"
 
         process.enableRecording()
-        action = Action("RestrictInputToAOD",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
         
 restrictInputToAOD=RestrictInputToAOD()          
@@ -113,7 +119,7 @@ class RemoveMCMatching(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveMCMatching(process, "
-        dumpPython += str(self.getvalue('name'))+'\n'
+        dumpPython += str(self.getvalue('name'))+')'+'\n'
         return dumpPython
 
     def __call__(self,process,
@@ -121,7 +127,12 @@ class RemoveMCMatching(ConfigToolBase):
                          ):
         self.addParameter('process',process, 'The process')
         self.addParameter('name',name, "name    : collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'")
-                
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(name,str), self.typeError(name,'string')
+        self.doCall()
+        
+    def doCall(self):
+        
         process=self._parameters['process'].value
         name=self._parameters['name'].value
         process.disableRecording()
@@ -161,7 +172,7 @@ class RemoveMCMatching(ConfigToolBase):
             metProducer.addGenMET           = False
             metProducer.genMETSource        = ''       
         process.enableRecording()
-        action = Action("removeMCMatching",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 removeMCMatching=RemoveMCMatching()
@@ -173,7 +184,13 @@ class _RemoveMCMatchingForPATObject(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('matcherName',matcherName, 'name of matcher')
         self.addParameter('producerName',producerName, 'name of producer')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(matcherName,str), self.typeError(matcherName,'string')
+        assert isinstance(producerName,str), self.typeError(producerName,'string')
+        self.doCall()
         
+      def doCall(self):
+            
         process=self._parameters['process'].value
         matcherName=self._parameters['matcherName'].value
         producerName=self._parameters['producerName'].value
@@ -207,7 +224,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
     
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nRemoveAllPATObjectsBut(process, "
-        dumpPython += str(self.getvalue('names'))+'\n'
+        dumpPython += str(self.getvalue('names'))+')'+'\n'
         return dumpPython 
    
     def __call__(self,process,
@@ -216,7 +233,12 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
           
         self.addParameter('process',process, 'the progess')
         self.addParameter('names',names, "name    : list of collection names; supported are 'Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(names,list), self.typeError(names,'list')
+        self.doCall()
         
+    def doCall(self):
+
         process=self._parameters['process'].value
         names=self._parameters['names'].value
         process.disableRecording()                                
@@ -225,11 +247,13 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
             removeTheseObjectCollections.remove(names[obj])
         removeSpecificPATObjects(process, removeTheseObjectCollections)
         process.enableRecording()
-        action = Action("RemoveAllPATObjectsBut",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
                 
             
 removeAllPATObjectsBut= RemoveAllPATObjectsBut()
+
+
 
 class RemoveSpecificPATObjects(ConfigToolBase):
 
@@ -246,7 +270,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
     
     def dumpPython(self):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n\nremoveSpecificPATObjects(process, "
-        dumpPython += str(self.getvalue('names'))+'\n'
+        dumpPython += str(self.getvalue('names'))+')'+'\n'
         return dumpPython 
     
     def __call__(self,process,
@@ -254,11 +278,19 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                  ):
         
         self.addParameter('process',process, 'the process')
-        self.addParameter('names',names, "names   : listr of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
+        self.addParameter('names',names, "names   : list of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(names,list), self.typeError(names,'list')
+        self.doCall()
+        
+    def doCall(self):
         
         process=self._parameters['process'].value
         names=self._parameters['names'].value
-        process.disableRecording()                          
+        process.disableRecording()
+
+
+      
     ## remove pre object production steps from the default sequence
         for obj in range(len(names)):
             if( names[obj] == 'Photons' ):
@@ -309,11 +341,21 @@ class RemoveSpecificPATObjects(ConfigToolBase):
             if( names[obj] == 'METs' ):
                 process.allLayer1Summary.candidates.remove( cms.InputTag('layer1'+names[obj]) )
             else:
-                process.allLayer1Summary.candidates.remove( cms.InputTag('allLayer1'+names[obj]) )
-                process.selectedLayer1Summary.candidates.remove( cms.InputTag('selectedLayer1'+names[obj]) )
-                process.cleanLayer1Summary.candidates.remove( cms.InputTag('cleanLayer1'+names[obj]) )
+                try:
+                    process.allLayer1Summary.candidates.remove( cms.InputTag('allLayer1'+names[obj])) 
+                except ValueError:
+                    print 'allLayer1'+names[obj]+' collection is not in the sequence. Is not possible to remove it.'
+                try:
+                    process.selectedLayer1Summary.candidates.remove( cms.InputTag('selectedLayer1'+names[obj]) )    
+                except ValueError:
+                    print 'selectedLayer1'+names[obj]+' collection is not in the sequence. Is not possible to remove it.'
+                try:
+                    process.cleanLayer1Summary.candidates.remove( cms.InputTag('cleanLayer1'+names[obj]) )
+                except ValueError:
+                    print 'cleanLayer1'+names[obj]+' collection is not in the sequence. Is not possible to remove it.'
+                
         process.enableRecording()
-        action = Action("RemoveSpecificPATObjects",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
                 
     
@@ -339,7 +381,11 @@ class RemoveCleaning(ConfigToolBase):
     def __call__(self,process):
     
         self.addParameter('process',process, 'the process')
-                
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        self.doCall()
+        
+    def doCall(self):
+        
         process=self._parameters['process'].value
         process.disableRecording()                               
     ## adapt single object counters
@@ -355,7 +401,7 @@ class RemoveCleaning(ConfigToolBase):
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoLayer1Cleaning
         process.out.outputCommands = patEventContentNoLayer1Cleaning
         process.enableRecording()
-        action = Action("RemoveCleaning",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 removeCleaning=RemoveCleaning()                
@@ -378,6 +424,10 @@ class AddCleaning(ConfigToolBase):
     def __call__(self,process):
     
         self.addParameter('process',process, 'the process')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        self.doCall()
+
+    def doCall(self):
 
         process=self._parameters['process'].value
         process.disableRecording()    
@@ -395,7 +445,7 @@ class AddCleaning(ConfigToolBase):
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
         process.out.outputCommands = patEventContent               
         process.enableRecording()
-        action = Action("AddCleaning",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
          
 addCleaning=AddCleaning()

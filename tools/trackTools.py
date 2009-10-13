@@ -4,6 +4,8 @@ import copy
 
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.ParameterSet.Types  import InputTag
+from FWCore.ParameterSet.Config  import Process
 
 class MakeAODTrackCandidates(ConfigToolBase):
     """
@@ -23,7 +25,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n\nmakeAODTrackCandidates(process, "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += str(self.getvalue('particleType'))+", "
-        dumpPython += str(self.getvalue('candSelection'))+'\n'
+        dumpPython += str(self.getvalue('candSelection'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -38,8 +40,17 @@ class MakeAODTrackCandidates(ConfigToolBase):
         self.addParameter('tracks',tracks, 'input tracks')
         self.addParameter('particleType',particleType, 'particle type (for mass)')
         self.addParameter('candSelection',candSelection, 'preselection cut on the candidates')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(label,str), self.typeError(label,'string')
+        assert isinstance(tracks,InputTag), self.instanceError(tracks,'InputTag')
+        assert isinstance(particleType,str), self.typeError(particleType,'string')
+        assert isinstance(candSelection,str), self.typeError(candSelectiondo,'string')
+               
+        self.doCall() 
         
+    def doCall(self):        
         process=self._parameters['process'].value
+        label=self._parameters['label'].value
         tracks=self._parameters['tracks'].value
         particleType=self._parameters['particleType'].value
         candSelection=self._parameters['candSelection'].value
@@ -60,7 +71,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
     ## run production of TrackCandidates at the very beginning of the sequence
         process.patDefaultSequence.replace(process.allLayer1Objects, getattr(process, 'patAOD' + label + 'Unfiltered') * getattr(process, 'patAOD' + label) * process.allLayer1Objects)
         process.enableRecording()
-        action = Action("MakeAODTrackCandidates",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 makeAODTrackCandidates=MakeAODTrackCandidates()
@@ -91,7 +102,7 @@ class MakePATTrackCandidates(ConfigToolBase):
         dumpPython += str(self.getvalue('selection'))+", "
         dumpPython += str(self.getvalue('isolation'))+", "
         dumpPython += str(self.getvalue('isoDeposits'))+", "
-        dumpPython += str(self.getvalue('mcAs'))+'\n'
+        dumpPython += str(self.getvalue('mcAs'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process, 
@@ -110,7 +121,16 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, 'iso deposits')
         self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(label,str), self.typeError(label,'string')
+        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
+        assert isinstance(selection,str), self.instanceError(selection,'string')
+        assert isinstance(isolation,dict), self.typeError(isolation,'dictionary')
+        assert isinstance(isoDeposits,list), self.typeError(isoDeposits,'list')
+        assert (isinstance(mcAs,str) or mcAs is None ),self.typeError(jetCorrLabel,'string')
+        self.doCall() 
         
+    def doCall(self):        
         process=self._parameters['process'].value
         label=self._parameters['label'].value
         input=self._parameters['input'].value
@@ -227,7 +247,7 @@ class MakePATTrackCandidates(ConfigToolBase):
             l1cands.addGenMatch = True
             l1cands.genParticleMatch = cms.InputTag('pat'+label+'MCMatch')
             process.enableRecording()
-            action = Action("MakePATTrackCandidates",copy.copy(self._parameters),self)
+            action = Action(self._label,copy.copy(self._parameters),self)
             process.addAction(action)
 makePATTrackCandidates = MakePATTrackCandidates()
 
@@ -263,7 +283,7 @@ class MakeTrackCandidates(ConfigToolBase):
         dumpPython += str(self.getvalue('selection'))+", "
         dumpPython += str(self.getvalue('isolation'))+", "
         dumpPython += str(self.getvalue('isoDeposits'))+", "
-        dumpPython += str(self.getvalue('mcAs'))+'\n'
+        dumpPython += str(self.getvalue('mcAs'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process, 
@@ -289,7 +309,18 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, " iso deposits")
         self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau', 'jet', 'met' as input string")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(label,str), self.typeError(label,'string')
+        assert isinstance(tracks,InputTag), self.instanceError(tracks,'InputTag')
+        assert isinstance(particleType,str), self.typeError(particleType,'string')
+        assert isinstance(preselection,str), self.instanceError(preselection,'string')
+        assert isinstance(selection,str), self.instanceError(selection,'string')
+        assert isinstance(isolation,dict), self.typeError(isolation,'dictionary')
+        assert isinstance(isoDeposits,list), self.typeError(isoDeposits,'list')
+        assert (isinstance(mcAs,str) or mcAs is None ),self.typeError(jetCorrLabel,'string')
+        self.doCall() 
         
+    def doCall(self):        
         process=self._parameters['process'].value
         label=self._parameters['label'].value
         tracks=self._parameters['tracks'].value
@@ -338,6 +369,6 @@ class MakeTrackCandidates(ConfigToolBase):
                                selection     = selection
                                )
         process.enableRecording()
-        action = Action("MakeTrackCandidates",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 makeTrackCandidates=MakeTrackCandidates()

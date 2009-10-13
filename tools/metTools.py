@@ -4,6 +4,7 @@
 import copy
 from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.ParameterSet.Config  import Process
 
 class AddTcMET(ConfigToolBase):
 
@@ -21,7 +22,7 @@ class AddTcMET(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n\naddTcMET(process, "
-        dumpPython += str(self.getvalue('postfixLabel'))+'\n'
+        dumpPython += str(self.getvalue('postfixLabel'))+')'+'\n'
         return dumpPython
     
 
@@ -32,10 +33,14 @@ class AddTcMET(ConfigToolBase):
 
         self.addParameter('process',process, 'The  process')
         self.addParameter('postfixLabel',postfixLabel, '')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(postfixLabel,str),self.typeError(postfixLabel,'string')
+        self.doCall()
 
-        
+    def doCall(self):
+
         process=self._parameters['process'].value
-        postfixlabel=self._parameters['postfixLabel'].value
+        postfixLabel=self._parameters['postfixLabel'].value
         process.disableRecording()
     ## add module as process to the default sequence
         def addAlso (label,value):
@@ -55,7 +60,7 @@ class AddTcMET(ConfigToolBase):
     ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
         process.enableRecording()
-        action = Action("AddTcMET",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
                                                         
@@ -79,7 +84,7 @@ class AddPfMET(ConfigToolBase):
     def dumpPython(self):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n\naddPfMET(process, "
-        dumpPython += str(self.getvalue('postfixLabel'))+'\n'
+        dumpPython += str(self.getvalue('postfixLabel'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -87,7 +92,11 @@ class AddPfMET(ConfigToolBase):
 
         self.addParameter('process',process, 'The process')
         self.addParameter('postfixLabel',postfixLabel, '')
-        
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(postfixLabel,str),self.typeError(postfixLabel,'string')
+        self.doCall()
+
+    def doCall(self):
         
         process=self._parameters['process'].value
         postfixLabel=self._parameters['postfixLabel'].value
@@ -110,7 +119,7 @@ class AddPfMET(ConfigToolBase):
     ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
         process.enableRecording()
-        action = Action("AddPfMET",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
                 
 

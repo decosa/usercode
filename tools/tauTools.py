@@ -5,7 +5,8 @@ import copy
 
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.coreTools import *
-
+from FWCore.ParameterSet.Types  import InputTag 
+from FWCore.ParameterSet.Config  import Process
 
 class RedoPFTauDiscriminators(ConfigToolBase):
     """
@@ -17,7 +18,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nredoPFTauDiscriminators(process, "
         dumpPython += str(self.getvalue('oldPFTauLabel'))+ ", "
         dumpPython += str(self.getvalue('newPFTauLabel'))+", "
-        dumpPython += str(self.getvalue('tauType'))+'\n'
+        dumpPython += str(self.getvalue('tauType'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -29,7 +30,13 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         self.addParameter('oldPFTauLabel',oldPFTauLabel, '')
         self.addParameter('newPFTauLabel',newPFTauLabel, '')
         self.addParameter('tauType',tauType, 'description: label')
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(oldPFTauLabel,InputTag),self.instanceError(oldPFTauLabel,'InputTag')
+        assert isinstance(newPFTauLabel,InputTag), self.instanceError(newPFTauLabel,'InputTag')
+        assert isinstance(tauType,str), self.typeError(tauType,'string')
+        self.doCall() 
         
+    def doCall(self):  
         process=self._parameters['process'].value
         oldPFTauLabel =self._parameters['oldPFTauLabel'].value
         newPFTauLabel =self._parameters['newPFTauLabel'].value
@@ -53,7 +60,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
                                                )
         massSearchReplaceParam(tauDiscriminationSequence, tauSrc, oldPFTauLabel, newPFTauLabel)
         process.enableRecording()
-        action = Action("RedoPFTauDiscriminators",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 redoPFTauDiscriminators=RedoPFTauDiscriminators()
@@ -68,7 +75,7 @@ class SwitchToCaloTau(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToCaloTau(process, "
         dumpPython += str(self.getvalue('pfTauLabel'))+ ", "
-        dumpPython += str(self.getvalue('caloTauLabel'))+'\n'
+        dumpPython += str(self.getvalue('caloTauLabel'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -79,7 +86,12 @@ class SwitchToCaloTau(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabel',pfTauLabel, "label of the (original) particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
         self.addParameter('caloTauLabel',caloTauLabel, "label of the (new) calo tau collection as a string (default is 'caloRecoTauProducer')")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(pfTauLabel,InputTag), self.instanceError(pfTauLabel,'InputTag')
+        assert isinstance(caloTauLabel,InputTag), self.instanceError(caloTauLabel,'InputTag')
+        self.doCall() 
         
+    def doCall(self):          
         process=self._parameters['process'].value
         pfTauLabel=self._parameters['pfTauLabel'].value
         caloTauLabel=self._parameters['caloTauLabel'].value
@@ -100,7 +112,7 @@ class SwitchToCaloTau(ConfigToolBase):
         process.allLayer1Taus.isolation   = cms.PSet()
         process.allLayer1Taus.isoDeposits = cms.PSet()
         process.enableRecording()
-        action = Action("SwitchToCaloTau",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 switchToCaloTau=SwitchToCaloTau()
 
@@ -153,7 +165,7 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
-        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return dumpPython
     
     def __call__(self,process,
@@ -163,7 +175,12 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
-
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(pfTauLabelOld,InputTag),self.istanceError(pfTauLabelOld,'InputTag')
+        assert isinstance(pfTauLabelNew,InputTag), self.istanceError(pfTauLabelNew,'InputTag')
+        self.doCall() 
+        
+    def doCall(self):  
         
         process=self._parameters['process'].value
         pfTauLabelOld=self._parameters['pfTauLabelOld'].value
@@ -178,7 +195,7 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         #
         process.allLayer1Taus.addDecayMode = cms.bool(False)
         process.enableRecording()
-        action = Action("SwitchToPFTauFixedCone",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 switchToPFTauFixedCone=SwitchToPFTauFixedCone()
@@ -193,7 +210,7 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedConeHighEff(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
-        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return dumpPython
  
     def __call__(self,process,
@@ -203,7 +220,12 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConeHighEffPFTauProducer')")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
+        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
+        self.doCall() 
         
+    def doCall(self):          
         process=self._parameters['process'].value
         pfTauLabelOld=self._parameters['pfTauLabelOld'].value
         pfTauLabelNew=self._parameters['pfTauLabelNew'].value
@@ -217,7 +239,7 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         #
         process.allLayer1Taus.addDecayMode = cms.bool(False)
         process.enableRecording()
-        action = Action("SwitchToPFTauFixedConeHighEff",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
         
 switchToPFTauFixedConeHighEff=SwitchToPFTauFixedConeHighEff()
@@ -231,7 +253,7 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauShrinkingCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
-        dumpPython += str(self.getvalue('pfTauLabelNew'))+'\n'
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return dumpPython
  
     # switch to PFTau collection produced for shrinking signal cone of size dR = 5.0/Et(PFTau)
@@ -241,7 +263,12 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'shrinkingConePFTauProducer')")
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
+        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
+        self.doCall() 
         
+    def doCall(self):          
         process=self._parameters['process'].value
         pfTauLabelOld=self._parameters['pfTauLabelOld'].value
         pfTauLabelNew=self._parameters['pfTauLabelNew'].value
@@ -268,7 +295,7 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
             byTaNCfrTenthPercent = cms.InputTag("shrinkingConePFTauDiscriminationByTaNCfrTenthPercent")
             )
         process.enableRecording()
-        action = Action("SwitchToPFTauShrinkingCone",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
 
 switchToPFTauShrinkingCone=SwitchToPFTauShrinkingCone()
@@ -286,7 +313,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToAnyPFTau(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+ ", "
-        dumpPython += str(self.getvalue('pfTauType'))+'\n'
+        dumpPython += str(self.getvalue('pfTauType'))+')'+'\n'
         return dumpPython
  
     def __call__(self,process,
@@ -298,7 +325,13 @@ class SwitchToAnyPFTau(ConfigToolBase):
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
         self.addParameter('pfTauType',pfTauType, "")
-         
+        assert isinstance(process,Process),self.instanceError(process,'Process')
+        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
+        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
+        assert isinstance(pfTauType,str), self.typeError(pfTauType,'string')
+        self.doCall() 
+        
+    def doCall(self):           
         process=self._parameters['process'].value
         pfTauLabelOld=self._parameters['pfTauLabelOld'].value
         pfTauLabelNew=self._parameters['pfTauLabelNew'].value
@@ -307,7 +340,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         process.disableRecording()
         _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, pfTauType)
         process.enableRecording()
-        action = Action("SwitchToAnyPFTau",copy.copy(self._parameters),self)
+        action = Action(self._label,copy.copy(self._parameters),self)
         process.addAction(action)
         
 switchToAnyPFTau=SwitchToAnyPFTau()
