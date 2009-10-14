@@ -142,8 +142,16 @@ class Process(object):
         historycopy=copy.copy(self.__dict__['_Process__history'])
 
         for item in historycopy:
-            dumpHistory.append(item.dumpPython())
-                       
+            dump=item.dumpPython()
+            
+            if isinstance(dump,tuple):
+                print type(dump[0])
+                if dump[0] not in dumpHistory:
+                    dumpHistory.append(dump[0])
+                dumpHistory.append(dump[1])
+            else:
+                dumpHistory.append(dump)
+                                         
         return ''.join(dumpHistory)
 
     def setStrict(self, value):
