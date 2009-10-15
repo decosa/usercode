@@ -22,11 +22,12 @@ class MakeAODTrackCandidates(ConfigToolBase):
     _label='MakeAODTrackCandidates'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n\nmakeAODTrackCandidates(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython = "\nmakeAODTrackCandidates(process, "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += str(self.getvalue('particleType'))+", "
         dumpPython += str(self.getvalue('candSelection'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
                                label         = 'TrackCands',                 
@@ -96,14 +97,15 @@ class MakePATTrackCandidates(ConfigToolBase):
     _label='MakePATTrackCandidates'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n\nmakePATTrackCandidates(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython = "\nmakePATTrackCandidates(process, "
         dumpPython += str(self.getvalue('label'))+", "
         dumpPython += str(self.getvalue('input'))+", "
         dumpPython += str(self.getvalue('selection'))+", "
         dumpPython += str(self.getvalue('isolation'))+", "
         dumpPython += str(self.getvalue('isoDeposits'))+", "
         dumpPython += str(self.getvalue('mcAs'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process, 
                  label       = 'TrackCands',                    
@@ -275,7 +277,8 @@ class MakeTrackCandidates(ConfigToolBase):
     _label='MakeTrackCandidates'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n\nmakeTrackCandidates(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython = "\nmakeTrackCandidates(process, "
         dumpPython += str(self.getvalue('label'))+", "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += str(self.getvalue('particleType'))+", "
@@ -284,7 +287,7 @@ class MakeTrackCandidates(ConfigToolBase):
         dumpPython += str(self.getvalue('isolation'))+", "
         dumpPython += str(self.getvalue('isoDeposits'))+", "
         dumpPython += str(self.getvalue('mcAs'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process, 
                  label        = 'TrackCands',                 

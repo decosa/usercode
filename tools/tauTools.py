@@ -15,11 +15,12 @@ class RedoPFTauDiscriminators(ConfigToolBase):
     
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nredoPFTauDiscriminators(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nredoPFTauDiscriminators(process, "
         dumpPython += str(self.getvalue('oldPFTauLabel'))+ ", "
         dumpPython += str(self.getvalue('newPFTauLabel'))+", "
         dumpPython += str(self.getvalue('tauType'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
                  oldPFTauLabel = cms.InputTag('pfRecoTauProducer'),
@@ -73,10 +74,11 @@ class SwitchToCaloTau(ConfigToolBase):
     _label='SwitchToCaloTau'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToCaloTau(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nswitchToCaloTau(process, "
         dumpPython += str(self.getvalue('pfTauLabel'))+ ", "
         dumpPython += str(self.getvalue('caloTauLabel'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
                  pfTauLabel = cms.InputTag('fixedConePFTauProducer'),
@@ -163,10 +165,11 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
     _label='SwitchToPFTauFixedCone'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedCone(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nswitchToPFTauFixedCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
@@ -208,11 +211,12 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
     # switch to PFTau collection produced for fixed dR = 0.15 signal cone size
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauFixedConeHighEff(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nswitchToPFTauFixedConeHighEff(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
-        return dumpPython
- 
+        return (dumpPythonImport,dumpPython)
+     
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),
                  pfTauLabelNew = cms.InputTag('fixedConeHighEffPFTauProducer')):
@@ -251,10 +255,11 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
     _label='SwitchToPFTauShrinkingCone'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToPFTauShrinkingCone(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nswitchToPFTauShrinkingCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
  
     # switch to PFTau collection produced for shrinking signal cone of size dR = 5.0/Et(PFTau)
     def __call__(self,process,
@@ -310,11 +315,12 @@ class SwitchToAnyPFTau(ConfigToolBase):
     _label='SwitchToAnyPFTau'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n\nswitchToAnyPFTau(process, "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython = "\nswitchToAnyPFTau(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+ ", "
         dumpPython += str(self.getvalue('pfTauType'))+')'+'\n'
-        return dumpPython
+        return (dumpPythonImport,dumpPython)
  
     def __call__(self,process,
                  pfTauLabelOld = cms.InputTag('pfRecoTauProducer'),

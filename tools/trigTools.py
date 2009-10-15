@@ -13,8 +13,9 @@ class SwitchOnTrigger(ConfigToolBase):
     _label='SwitchOnTrigger'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTrigger(process) \n "
-        return dumpPython
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
+        dumpPython = "\nswitchOnTrigger(process) \n "
+        return (dumpPythonImport,dumpPython)
     
     
     def __call__(self, process ):
@@ -51,8 +52,9 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
     _label='SwitchOnTriggerStandAlone'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerStandAlone(process) \n "
-        return dumpPython
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
+        dumpPython = "\nswitchOnTriggerStandAlone(process) \n "
+        return (dumpPythonImport,dumpPython)
 
     def __call__(self, process ):
     ## add trigger modules to path
@@ -83,8 +85,9 @@ class SwitchOnTriggerAll(ConfigToolBase):
     _label='SwitchOnTriggerAll'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerAll(process) \n "
-        return dumpPython
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
+        dumpPython="\nswitchOnTriggerAll(process) \n "
+        return (dumpPythonImport,dumpPython)
 
     def __call__( process ):
 
@@ -109,8 +112,9 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
     _label='SwitchOnTriggerMatchEmbedding'
     def dumpPython(self):
         
-        dumpPython = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n\nswitchOnTriggerMatchEmbedding(process) \n "
-        return dumpPython
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
+        dumpPython = "\nswitchOnTriggerMatchEmbedding(process) \n "
+        return (dumpPythonImport,dumpPython)
     
     def __call__(self,process ):
         self.addParameter('process',process, 'the process')
