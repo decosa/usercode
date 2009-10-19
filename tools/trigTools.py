@@ -22,7 +22,8 @@ class SwitchOnTrigger(ConfigToolBase):
         """ Enables trigger information in PAT  """
 
         self.addParameter('process',process, 'the process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall() 
         
     def doCall(self):            
@@ -60,7 +61,8 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
     ## add trigger modules to path
 
         self.addParameter('process',process, 'the process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall() 
         
     def doCall(self):        
@@ -92,7 +94,8 @@ class SwitchOnTriggerAll(ConfigToolBase):
     def __call__( process ):
 
         self.addParameter('process',process, 'the  process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall() 
         
     def doCall(self):         
@@ -118,7 +121,8 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
     
     def __call__(self,process ):
         self.addParameter('process',process, 'the process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall() 
         
     def doCall(self): 

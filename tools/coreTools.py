@@ -34,8 +34,10 @@ class RestrictInputToAOD(ConfigToolBase):
       
         self.addParameter('process',process, 'The process')
         self.addParameter('names',names, "list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(names,list), self.typeError(names,'list')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(names,list):
+            raise TypeError(self.typeError(names,'list'))
         
         self.doCall()
         
@@ -129,8 +131,10 @@ class RemoveMCMatching(ConfigToolBase):
                          ):
         self.addParameter('process',process, 'The process')
         self.addParameter('name',name, "name    : collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(name,str), self.typeError(name,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(name,str): 
+           raise TypeError(self.typeError(name,'string'))
         self.doCall()
         
     def doCall(self):
@@ -186,9 +190,12 @@ class _RemoveMCMatchingForPATObject(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('matcherName',matcherName, 'name of matcher')
         self.addParameter('producerName',producerName, 'name of producer')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(matcherName,str), self.typeError(matcherName,'string')
-        assert isinstance(producerName,str), self.typeError(producerName,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(matcherName,str):
+            raise TypeError(self.typeError(matcherName,'string'))
+        if not isinstance(producerName,str):
+            raise TypeError(self.typeError(producerName,'string'))
         self.doCall()
         
       def doCall(self):
@@ -236,8 +243,10 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
           
         self.addParameter('process',process, 'the progess')
         self.addParameter('names',names, "name    : list of collection names; supported are 'Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(names,list), self.typeError(names,'list')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(names,list):
+            raise TypeError(self.typeError(names,'list'))
         self.doCall()
         
     def doCall(self):
@@ -283,8 +292,10 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         
         self.addParameter('process',process, 'the process')
         self.addParameter('names',names, "names   : list of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs'")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(names,list), self.typeError(names,'list')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(names,list):
+            raise TypeError(self.typeError(names,'list'))
         self.doCall()
         
     def doCall(self):
@@ -387,7 +398,8 @@ class RemoveCleaning(ConfigToolBase):
     def __call__(self,process):
     
         self.addParameter('process',process, 'the process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall()
         
     def doCall(self):
@@ -431,7 +443,8 @@ class AddCleaning(ConfigToolBase):
     def __call__(self,process):
     
         self.addParameter('process',process, 'the process')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
         self.doCall()
 
     def doCall(self):

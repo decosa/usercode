@@ -41,11 +41,16 @@ class MakeAODTrackCandidates(ConfigToolBase):
         self.addParameter('tracks',tracks, 'input tracks')
         self.addParameter('particleType',particleType, 'particle type (for mass)')
         self.addParameter('candSelection',candSelection, 'preselection cut on the candidates')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(label,str), self.typeError(label,'string')
-        assert isinstance(tracks,InputTag), self.instanceError(tracks,'InputTag')
-        assert isinstance(particleType,str), self.typeError(particleType,'string')
-        assert isinstance(candSelection,str), self.typeError(candSelectiondo,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(label,str):
+            raise TypeError(self.typeError(label,'string'))
+        if not isinstance(tracks,InputTag):
+            raise TypeError(self.instanceError(tracks,'InputTag'))
+        if not  isinstance(particleType,str):
+            raise TypeError(self.instanceError(particleType,'string'))
+        if not  isinstance(candSelection,str):
+            raise TypeError(self.typeError(candSelectiondo,'string'))
                
         self.doCall() 
         
@@ -123,13 +128,20 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, 'iso deposits')
         self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(label,str), self.typeError(label,'string')
-        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
-        assert isinstance(selection,str), self.instanceError(selection,'string')
-        assert isinstance(isolation,dict), self.typeError(isolation,'dictionary')
-        assert isinstance(isoDeposits,list), self.typeError(isoDeposits,'list')
-        assert (isinstance(mcAs,str) or mcAs is None ),self.typeError(jetCorrLabel,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(label,str):
+            raise TypeError(self.typeError(label,'string'))
+        if not isinstance(input,InputTag):
+            raise TypeErrort(self.instanceError(input,'InputTag'))
+        if not isinstance(selection,str):
+            raise TypeError(self.instanceError(selection,'string'))
+        if not isinstance(isolation,dict):
+            raise TypeError(self.typeError(isolation,'dictionary'))
+        if not isinstance(isoDeposits,list):
+            raise TypeError(self.typeError(isoDeposits,'list'))
+        if not (isinstance(mcAs,str) or mcAs is None ):
+            raise TypeError(self.typeError(jetCorrLabel,'string'))
         self.doCall() 
         
     def doCall(self):        
@@ -312,15 +324,24 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter('isolation',isolation, "isolation to use (as 'source': value of dR)")
         self.addParameter('isoDeposits',isoDeposits, " iso deposits")
         self.addParameter('mcAs',mcAs, "replicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau', 'jet', 'met' as input string")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(label,str), self.typeError(label,'string')
-        assert isinstance(tracks,InputTag), self.instanceError(tracks,'InputTag')
-        assert isinstance(particleType,str), self.typeError(particleType,'string')
-        assert isinstance(preselection,str), self.instanceError(preselection,'string')
-        assert isinstance(selection,str), self.instanceError(selection,'string')
-        assert isinstance(isolation,dict), self.typeError(isolation,'dictionary')
-        assert isinstance(isoDeposits,list), self.typeError(isoDeposits,'list')
-        assert (isinstance(mcAs,str) or mcAs is None ),self.typeError(jetCorrLabel,'string')
+        if not isinstance(process,Process):
+            raise Typeerror(self.instanceError(process,'Process'))
+        if not isinstance(label,str):
+            raise TypeError(self.typeError(label,'string'))
+        if not isinstance(tracks,InputTag):
+            raise TypeError(self.instanceError(tracks,'InputTag'))
+        if not isinstance(particleType,str):
+            raise TypeError(self.typeError(particleType,'string'))
+        if not isinstance(preselection,str):
+            raise TypeError(self.instanceError(preselection,'string'))
+        if not isinstance(selection,str):
+            raise TypeError(self.instanceError(selection,'string'))
+        if not isinstance(isolation,dict):
+            raise TypeError(self.typeError(isolation,'dictionary'))
+        if not isinstance(isoDeposits,list):
+            raise TypeError(self.typeError(isoDeposits,'list'))
+        if not (isinstance(mcAs,str) or mcAs is None ):
+            raise TypeError(self.typeError(jetCorrLabel,'string'))
         self.doCall() 
         
     def doCall(self):        

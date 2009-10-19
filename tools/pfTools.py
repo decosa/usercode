@@ -31,8 +31,10 @@ class AdaptPFMuons(ConfigToolBase):
 
         self.addParameter('process',process, 'the Process')
         self.addParameter('module',module, '')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(module,EDProducer), self.instanceError(module,'EDProducer')
+        if not isinstance(process,Process):
+            raise Typeerror(self.instanceError(process,'Process'))
+        if not isinstance(module,EDProducer):
+            raise TypeError(self.instanceError(module,'EDProducer'))
         self.doCall()
 
     def doCall(self):
@@ -91,8 +93,10 @@ class AdaptPFElectrons(ConfigToolBase):
 
         self.addParameter('process',process, 'the Process')
         self.addParameter('module',module, '')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(module,EDProducer), self.instanceError(module,'EDProducer')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(module,EDProducer):
+            raise TypeError(self.instanceError(module,'EDProducer'))
         self.doCall()
 
     def doCall(self):
@@ -175,8 +179,10 @@ class AdaptPFTaus(ConfigToolBase):
         
         self.addParameter('process',process, 'the Process')
         self.addParameter('tauType',tauType, '')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(tauType,str), self.typeError(tauType,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not  isinstance(tauType,str):
+            raise TypeError(self.typeError(tauType,'string'))
         self.doCall()
 
     def doCall(self):        
@@ -231,10 +237,14 @@ class AddPFCandidates(ConfigToolBase):
         self.addParameter('src',src, 'source of particle flow candidates as an edm::Module')
         self.addParameter('patLabel',patLabel, "collection label for PAT (default is 'PFParticles')")
         self.addParameter('cut',cut, 'cut string for the selectedLayer1PFCandidate collection (default is "")')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(src,InputTag), self.instanceError(src,'InputTag')
-        assert isinstance(patLabel,str), self.typeError(patLabel,'string')
-        assert isinstance(cut,str), self.typeError(cut,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not  isinstance(src,InputTag):
+            raise TypeError(self.instanceError(src,'InputTag'))
+        if not  isinstance(patLabel,str):
+            raise TypeError(self.typeError(patLabel,'string'))
+        if not isinstance(cut,str):
+            raise TypeError(self.typeError(cut,'string'))
         self.doCall()
 
     def doCall(self):        
@@ -286,8 +296,10 @@ class SwitchToPFMET(ConfigToolBase):
 
         self.addParameter('process',process, 'the  process')
         self.addParameter('input',input, "input collection label to the pat::MET producer (default is 'pfMET')")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(input,InputTag):
+            raise TypeError(self.instanceError(input,'InputTag'))
         self.doCall()
 
     def doCall(self):        
@@ -323,8 +335,10 @@ class SwitchToPFJets(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('input',input, "input collection label to the pat::Jet producer as an edm::Module (default is 'pfNoTau')")
         print type(input)
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(input,InputTag), self.instanceError(input,'InputTag')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(input,InputTag):
+            raise TypeError(self.instanceError(input,'InputTag'))
         self.doCall()
 
     def doCall(self):        
@@ -363,8 +377,10 @@ class  UsePF2PAT(ConfigToolBase):
 
         self.addParameter('process',process, 'the  process')
         self.addParameter('runPF2PAT',runPF2PAT, 'Run the PF2PAT sequence before pat::Candidate production (default is True)')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(runPF2PAT,bool), self.typeError(runPF2PAT,'bool')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(runPF2PAT,bool):
+            raise TypeError(self.typeError(runPF2PAT,'bool'))
         self.doCall()
 
     def doCall(self):       

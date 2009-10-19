@@ -34,8 +34,10 @@ class AddTcMET(ConfigToolBase):
 
         self.addParameter('process',process, 'The  process')
         self.addParameter('postfixLabel',postfixLabel, '')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(postfixLabel,str),self.typeError(postfixLabel,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(postfixLabel,str):
+            raise typeError(self.typeError(postfixLabel,'string'))
         self.doCall()
 
     def doCall(self):
@@ -94,8 +96,10 @@ class AddPfMET(ConfigToolBase):
 
         self.addParameter('process',process, 'The process')
         self.addParameter('postfixLabel',postfixLabel, '')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(postfixLabel,str),self.typeError(postfixLabel,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(postfixLabel,str):
+            raise TypeError(self.typeError(postfixLabel,'string'))
         self.doCall()
 
     def doCall(self):

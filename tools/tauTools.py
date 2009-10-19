@@ -31,10 +31,14 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         self.addParameter('oldPFTauLabel',oldPFTauLabel, '')
         self.addParameter('newPFTauLabel',newPFTauLabel, '')
         self.addParameter('tauType',tauType, 'description: label')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(oldPFTauLabel,InputTag),self.instanceError(oldPFTauLabel,'InputTag')
-        assert isinstance(newPFTauLabel,InputTag), self.instanceError(newPFTauLabel,'InputTag')
-        assert isinstance(tauType,str), self.typeError(tauType,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(oldPFTauLabel,InputTag):
+            raise TypeError(self.instanceError(oldPFTauLabel,'InputTag'))
+        if not isinstance(newPFTauLabel,InputTag):
+            raise TypeError(self.instanceError(newPFTauLabel,'InputTag'))
+        if not  isinstance(tauType,str):
+            raise TypeError(self.typeError(tauType,'string'))
         self.doCall() 
         
     def doCall(self):  
@@ -88,9 +92,12 @@ class SwitchToCaloTau(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabel',pfTauLabel, "label of the (original) particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
         self.addParameter('caloTauLabel',caloTauLabel, "label of the (new) calo tau collection as a string (default is 'caloRecoTauProducer')")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(pfTauLabel,InputTag), self.instanceError(pfTauLabel,'InputTag')
-        assert isinstance(caloTauLabel,InputTag), self.instanceError(caloTauLabel,'InputTag')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(pfTauLabel,InputTag):
+            raise TypeError(self.instanceError(pfTauLabel,'InputTag'))
+        if not isinstance(caloTauLabel,InputTag):
+            raise TypeError(self.instanceError(caloTauLabel,'InputTag'))
         self.doCall() 
         
     def doCall(self):          
@@ -178,9 +185,12 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(pfTauLabelOld,InputTag),self.istanceError(pfTauLabelOld,'InputTag')
-        assert isinstance(pfTauLabelNew,InputTag), self.istanceError(pfTauLabelNew,'InputTag')
+        if not  isinstance(process,Process):
+            raise Type(self.instanceError(process,'Process'))
+        if not isinstance(pfTauLabelOld,InputTag):
+            raise TypeError(self.istanceError(pfTauLabelOld,'InputTag'))
+        if not  isinstance(pfTauLabelNew,InputTag):
+            raise TypeError(self.istanceError(pfTauLabelNew,'InputTag'))
         self.doCall() 
         
     def doCall(self):  
@@ -224,9 +234,12 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConeHighEffPFTauProducer')")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
-        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(pfTauLabelOld,InputTag):
+            raise TypeError(self.instanceError(pfTauLabelOld,'InputTag')) 
+        if not isinstance(pfTauLabelNew,InputTag):
+            raise TypeError(self.instanceError(pfTauLabelNew,'InputTag'))
         self.doCall() 
         
     def doCall(self):          
@@ -268,9 +281,12 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         self.addParameter('process',process, 'the process')
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'shrinkingConePFTauProducer')")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
-        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
+        if not isinstance(process,Process):
+            raise self.instanceError(process,'Process')
+        if not isinstance(pfTauLabelOld,InputTag):
+            raise self.instanceError(pfTauLabelOld,'InputTag')
+        if not isinstance(pfTauLabelNew,InputTag):
+            raise TypeError(self.instanceError(pfTauLabelNew,'InputTag'))
         self.doCall() 
         
     def doCall(self):          
@@ -331,10 +347,14 @@ class SwitchToAnyPFTau(ConfigToolBase):
         self.addParameter('pfTauLabelOld',pfTauLabelOld, "label of the original particle flow tau collection as a string (default is 'pfRecoTauProducer')")
         self.addParameter('pfTauLabelNew',pfTauLabelNew, "label of the new particle flow tau collection as a string (default is 'fixedConePFTauProducer')")
         self.addParameter('pfTauType',pfTauType, "")
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(pfTauLabelOld,InputTag),self.instanceError(pfTauLabelOld,'InputTag')
-        assert isinstance(pfTauLabelNew,InputTag), self.instanceError(pfTauLabelNew,'InputTag')
-        assert isinstance(pfTauType,str), self.typeError(pfTauType,'string')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(pfTauLabelOld,InputTag):
+            raise TypeError(self.instanceError(pfTauLabelOld,'InputTag'))
+        if not isinstance(pfTauLabelNew,InputTag):
+            raise TypeError(self.instanceError(pfTauLabelNew,'InputTag'))
+        if not isinstance(pfTauType,str):
+            raise TypeError(self.typeError(pfTauType,'string'))
         self.doCall() 
         
     def doCall(self):           

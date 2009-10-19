@@ -121,9 +121,16 @@ class RunBTagging(ConfigToolBase):
         self.addParameter('process',process, 'The process')
         self.addParameter('jetCollection',jetCollection, ' Input jet collection')
         self.addParameter('label',label, 'Postfix label to identify new sequence/modules')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(jetCollection,InputTag),self.instanceError(jetCollection,'InputTag')
-        assert isinstance(label,str), self.typeError(label,'string')
+
+        #if not isinstance(process,Process)
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not  isinstance(jetCollection,InputTag):
+            raise TypeError(self.instanceError(jetCollection,'InputTag'))
+        if not isinstance(jetCollection,InputTag):
+            raise self.instanceError(jetCollection,'InputTag')
+        if not isinstance(label,str):
+            raise self.typeError(label,'string')
 
         return self.doCall() 
         
@@ -283,13 +290,20 @@ class SwitchJetCollection(ConfigToolBase):
         self.addParameter('jetCorrLabel',jetCorrLabel, 'Algorithm and type of JEC; use "None" for no JEC; examples are ("IC5","Calo"), ("SC7","Calo"), ("KT4","PF")')
         self.addParameter('doType1MET',doType1MET, 'If jetCorrLabel is not "None", set this to "True" to redo the Type1 MET correction for the new jet colllection; at the moment it must be "False" for non CaloJets otherwise the JetMET POG module crashes.')
         self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(jetCollection,InputTag), self.instanceError(jetCollection,'InputTag')
-        assert isinstance(doJTA,bool),self.typeError(doJTA,'bool')
-        assert isinstance(doBTagging,bool),self.typeError(doBTagging,'bool')
-        assert (isinstance(jetCorrLabel,list) or jetCorrLabel is None ),self.typeError(jetCorrLabel,'tuple')
-        assert isinstance(doType1MET,bool), self.typeError(doType1MET,'bool')
-        assert isinstance(genJetCollection,InputTag),self.instanceError(genJetCollection,'InputTag')
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(jetCollection,InputTag):
+            raise TypeError(self.instanceError(jetCollection,'InputTag'))
+        if not isinstance(doJTA,bool):
+            raise TypeError(self.typeError(doJTA,'bool'))
+        if not isinstance(doBTagging,bool):
+            raise TypeError(self.typeError(doBTagging,'bool'))
+        if not (isinstance(jetCorrLabel,list) or jetCorrLabel is None ):
+            raise TypeError(self.typeError(jetCorrLabel,'tuple'))
+        if not isinstance(doType1MET,bool):
+            raise TypeError(self.typeError(doType1MET,'bool'))
+        if not isinstance(genJetCollection,InputTag):
+            raise TypeError(self.instanceError(genJetCollection,'InputTag'))
         
         self.doCall() 
         
@@ -481,17 +495,27 @@ class AddJetCollection(ConfigToolBase):
         self.addParameter('doL1Cleaning',doL1Cleaning, 'copy also the producer modules for cleanLayer1 will be set to "True" automatically when doL1Counters is "True"')
         self.addParameter('doL1Counters',doL1Counters, 'copy also the filter modules that accept/reject the event looking at the number of jets')
         self.addParameter('genJetCollection',genJetCollection, 'GenJet collection to match to')
-        assert isinstance(process,Process),self.instanceError(process,'Process')
-        assert isinstance(jetCollection,InputTag),self.instanceError(jetCollection,'InputTag')
-        assert isinstance(postfixLabel,str), self.typeError(postfixLabel,'string')
-        assert isinstance(doJTA,bool) , self.typeError(doJTA,'bool')
-        assert isinstance(doBTagging,bool),self.typeError(doBTagging,'bool')
-        assert isinstance(jetCorrLabel,tuple), self.typeError(jetCorrLabel,'tuple')
-        assert isinstance(doType1MET,bool), self.typeError(doType1MET,'bool')
-        assert isinstance(doL1Cleaning, bool),self.typeError(doL1Cleaning, 'bool')
-        assert isinstance(doL1Counters, bool),self.typeError(doL1Counters, 'bool')
-        assert isinstance(genJetCollection,InputTag),self.instanceError(genJetCollection,'InputTag')
-        
+
+        if not isinstance(process,Process):
+            raise TypeError(self.instanceError(process,'Process'))
+        if not isinstance(jetCollection,InputTag):
+            raise TypeError(self.instanceError(jetCollection,'InputTag'))
+        if not isinstance(postfixLabel,str):
+            raise TypeError(self.typeError(postfixLabel,'string'))
+        if not isinstance(doJTA,bool):
+            raise TypeError(self.typeError(doJTA,'bool'))
+        if not isinstance(doBTagging,bool):
+            raise TypeError(self.typeError(doBTagging,'bool'))
+        if not isinstance(jetCorrLabel,tuple):
+            raise TypeError(self.typeError(jetCorrLabel,'tuple'))
+        if not isinstance(doType1MET,bool):
+            raise TypeError(self.typeError(doType1MET,'bool'))
+        if not isinstance(doL1Cleaning, bool):
+            raise TypeError(self.typeError(doL1Cleaning, 'bool'))
+        if not isinstance(doL1Counters, bool):
+            raise TypeError(self.typeError(doL1Counters, 'bool'))
+        if not isinstance(genJetCollection,InputTag):
+            raise TypeError(self.instanceError(genJetCollection,'InputTag'))
         self.doCall() 
         
     def doCall(self):
