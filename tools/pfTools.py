@@ -32,7 +32,7 @@ class AdaptPFMuons(ConfigToolBase):
         self.addParameter('process',process, 'the Process')
         self.addParameter('module',module, '')
         if not isinstance(process,Process):
-            raise Typeerror(self.instanceError(process,'Process'))
+            raise TypeError(self.instanceError(process,'Process'))
         if not isinstance(module,EDProducer):
             raise TypeError(self.instanceError(module,'EDProducer'))
         self.doCall()

@@ -127,8 +127,6 @@ class RunBTagging(ConfigToolBase):
             raise TypeError(self.instanceError(process,'Process'))
         if not  isinstance(jetCollection,InputTag):
             raise TypeError(self.instanceError(jetCollection,'InputTag'))
-        if not isinstance(jetCollection,InputTag):
-            raise self.instanceError(jetCollection,'InputTag')
         if not isinstance(label,str):
             raise self.typeError(label,'string')
 
@@ -506,7 +504,7 @@ class AddJetCollection(ConfigToolBase):
             raise TypeError(self.typeError(doJTA,'bool'))
         if not isinstance(doBTagging,bool):
             raise TypeError(self.typeError(doBTagging,'bool'))
-        if not isinstance(jetCorrLabel,tuple):
+        if not (isinstance(jetCorrLabel,list) or jetCorrLabel is None ):
             raise TypeError(self.typeError(jetCorrLabel,'tuple'))
         if not isinstance(doType1MET,bool):
             raise TypeError(self.typeError(doType1MET,'bool'))
