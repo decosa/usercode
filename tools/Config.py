@@ -124,7 +124,6 @@ class Process(object):
     def addAction(self,tool):
         if self.__dict__['_Process__enableRecording'] == 0:
             self.__dict__['_Process__history'].append(tool)
-            print 'ADD ACTION'
         
     def deleteAction(self,i):
         del self.__dict__['_Process__history'][i]
