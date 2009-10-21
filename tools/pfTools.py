@@ -69,7 +69,7 @@ class AdaptPFMuons(ConfigToolBase):
         print module.isoDeposits
         print
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 adaptPFMuons=AdaptPFMuons()
@@ -134,7 +134,7 @@ class AdaptPFElectrons(ConfigToolBase):
         print module.isoDeposits
         print 
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 adaptPFElectrons=AdaptPFElectrons()
@@ -210,7 +210,7 @@ class AdaptPFTaus(ConfigToolBase):
                                 tauType)
         switchToAnyPFTau(process, oldTaus, process.allLayer1Taus.tauSource, tauType)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 
@@ -275,7 +275,7 @@ class AddPFCandidates(ConfigToolBase):
         process.allLayer1Summary.candidates.append(cms.InputTag('allLayer1' + patLabel))
         process.selectedLayer1Summary.candidates.append(cms.InputTag('selectedLayer1' + patLabel))
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
            
 
@@ -313,7 +313,7 @@ class SwitchToPFMET(ConfigToolBase):
         process.layer1METs.addMuonCorrections = False
         process.patDefaultSequence.remove(process.patMETCorrections)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
        
 switchToPFMET=SwitchToPFMET()
@@ -355,7 +355,7 @@ class SwitchToPFJets(ConfigToolBase):
                             doType1MET=False)  
         adaptPFJets(process, process.allLayer1Jets)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 switchToPFJets=SwitchToPFJets()
@@ -428,7 +428,7 @@ class  UsePF2PAT(ConfigToolBase):
         # Unmasked PFCandidates
         addPFCandidates(process,cms.InputTag('pfNoJet'),patLabel='PFParticles',cut="")
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 usePF2PAT=UsePF2PAT()

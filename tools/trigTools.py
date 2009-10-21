@@ -41,7 +41,7 @@ class SwitchOnTrigger(ConfigToolBase):
         for matchLabel in process.patTriggerEvent.patTriggerMatches:
             process.out.outputCommands += [ 'keep patTriggerObjectsedmAssociation_patTriggerEvent_' + matchLabel + '_*' ]
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 switchOnTrigger=SwitchOnTrigger()
@@ -76,7 +76,7 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         process.patTriggerSequence.remove( process.patTriggerEvent )
         process.out.outputCommands += patTriggerStandAloneEventContent
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
                
 switchOnTriggerStandAlone=SwitchOnTriggerStandAlone()
@@ -104,7 +104,7 @@ class SwitchOnTriggerAll(ConfigToolBase):
         switchOnTrigger( process )
         process.out.outputCommands += patTriggerStandAloneEventContent
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 switchOnTriggerAll=SwitchOnTriggerAll()
@@ -131,6 +131,6 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
         process.patTriggerSequence += process.patTriggerMatchEmbedder
         process.out.outputCommands += patEventContentTriggerMatch
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 switchOnTriggerMatchEmbedding=SwitchOnTriggerMatchEmbedding()

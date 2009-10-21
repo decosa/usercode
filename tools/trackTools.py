@@ -77,7 +77,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
     ## run production of TrackCandidates at the very beginning of the sequence
         process.patDefaultSequence.replace(process.allLayer1Objects, getattr(process, 'patAOD' + label + 'Unfiltered') * getattr(process, 'patAOD' + label) * process.allLayer1Objects)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 makeAODTrackCandidates=MakeAODTrackCandidates()
@@ -261,7 +261,7 @@ class MakePATTrackCandidates(ConfigToolBase):
             l1cands.addGenMatch = True
             l1cands.genParticleMatch = cms.InputTag('pat'+label+'MCMatch')
             process.enableRecording()
-            action = Action(self._label,copy.copy(self._parameters),self)
+            action=self.__copy__()
             process.addAction(action)
 makePATTrackCandidates = MakePATTrackCandidates()
 
@@ -393,6 +393,6 @@ class MakeTrackCandidates(ConfigToolBase):
                                selection     = selection
                                )
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 makeTrackCandidates=MakeTrackCandidates()

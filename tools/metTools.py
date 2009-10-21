@@ -63,7 +63,7 @@ class AddTcMET(ConfigToolBase):
     ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
                                                         
@@ -125,7 +125,7 @@ class AddPfMET(ConfigToolBase):
     ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
                 
 

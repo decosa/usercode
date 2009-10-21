@@ -1,17 +1,6 @@
 import FWCore.ParameterSet.Config as cms  
-class Action(object):
 
-    def __init__(self,label,parameters=[],referenceToFunctor=None, bool=True):
 
-        self.label=label
-        self.parameters=parameters
-        self.referenceToFunctor=referenceToFunctor
-  
-    def dumpPython(self):
-        self.referenceToFunctor.setParameters(self.parameters)
-        return self.referenceToFunctor.dumpPython()
-        
-        
 class parameter:
     pass
 
@@ -19,8 +8,6 @@ class ConfigToolBase(object) :
 
     """ Base class for PAT tools
     """
-
-    _callingFlag=False
 
     def __init__(self):
         self._label = "ConfigToolBase"
@@ -30,6 +17,10 @@ class ConfigToolBase(object) :
         """ Call the istance 
         """
         raise NotImplementedError
+    def __copy__(self):
+        c=type(self)()
+        c.setParameters(self.getParameters().copy())
+        return c
     def getvalue(self,name):
         """ Return the value of parameter 'name'
         """

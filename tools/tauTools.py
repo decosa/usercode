@@ -121,7 +121,7 @@ class SwitchToCaloTau(ConfigToolBase):
         process.allLayer1Taus.isolation   = cms.PSet()
         process.allLayer1Taus.isoDeposits = cms.PSet()
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 switchToCaloTau=SwitchToCaloTau()
 
@@ -208,7 +208,7 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         #
         process.allLayer1Taus.addDecayMode = cms.bool(False)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 switchToPFTauFixedCone=SwitchToPFTauFixedCone()
@@ -256,7 +256,7 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         #
         process.allLayer1Taus.addDecayMode = cms.bool(False)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
         
 switchToPFTauFixedConeHighEff=SwitchToPFTauFixedConeHighEff()
@@ -316,7 +316,7 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
             byTaNCfrTenthPercent = cms.InputTag("shrinkingConePFTauDiscriminationByTaNCfrTenthPercent")
             )
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
 switchToPFTauShrinkingCone=SwitchToPFTauShrinkingCone()
@@ -366,7 +366,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         process.disableRecording()
         _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, pfTauType)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
         
 switchToAnyPFTau=SwitchToAnyPFTau()

@@ -222,7 +222,7 @@ class RunBTagging(ConfigToolBase):
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
         return (seq, labels)
 
@@ -327,15 +327,7 @@ class SwitchJetCollection(ConfigToolBase):
         ## replace input jet collection for pat jet production
         process.allLayer1Jets.jetSource = jetCollection
         process.disableRecording()
-        print 'calling tag before'
-        print ConfigToolBase._callingFlag
-        if not ConfigToolBase._callingFlag:
-            action = Action("SwitchJetCollection",copy.copy(self._parameters),self)
-            process.addAction(action)
-            ConfigToolBase._callingFlag=True
-            print 'calling tag after'
-            print ConfigToolBase._callingFlag
-
+       
         ## make VInputTag from strings
         def vit(*args) : return cms.VInputTag( *[ cms.InputTag(x) for x in args ] )
 
@@ -413,11 +405,9 @@ class SwitchJetCollection(ConfigToolBase):
             process.allLayer1Jets.addJetCorrFactors = False
 
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
-        ConfigToolBase._callingFlag=False
-        
-
+     
 switchJetCollection=SwitchJetCollection()
 
 class AddJetCollection(ConfigToolBase):
@@ -504,7 +494,7 @@ class AddJetCollection(ConfigToolBase):
             raise TypeError(self.typeError(doJTA,'bool'))
         if not isinstance(doBTagging,bool):
             raise TypeError(self.typeError(doBTagging,'bool'))
-        if not (isinstance(jetCorrLabel,list) or jetCorrLabel is None ):
+        if not (isinstance(jetCorrLabel,tuple) or jetCorrLabel is None ):
             raise TypeError(self.typeError(jetCorrLabel,'tuple'))
         if not isinstance(doType1MET,bool):
             raise TypeError(self.typeError(doType1MET,'bool'))
@@ -676,7 +666,7 @@ class AddJetCollection(ConfigToolBase):
             l1Jets.addJetCorrFactors = False
         #process.__dict__['_Process__enableRecording'] -=1
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
             
 addJetCollection=AddJetCollection()

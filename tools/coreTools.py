@@ -99,7 +99,7 @@ class RestrictInputToAOD(ConfigToolBase):
         print "-----------------------------------------------------------------------------"
 
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
         
 restrictInputToAOD=RestrictInputToAOD()          
@@ -178,7 +178,7 @@ class RemoveMCMatching(ConfigToolBase):
             metProducer.addGenMET           = False
             metProducer.genMETSource        = ''       
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
 
 removeMCMatching=RemoveMCMatching()
@@ -259,7 +259,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
             removeTheseObjectCollections.remove(names[obj])
         removeSpecificPATObjects(process, removeTheseObjectCollections)
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
                 
             
@@ -370,7 +370,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                     print 'cleanLayer1'+names[obj]+' collection is not in the sequence. Is not possible to remove it.'
                 
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
                 
     
@@ -419,7 +419,7 @@ class RemoveCleaning(ConfigToolBase):
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoLayer1Cleaning
         process.out.outputCommands = patEventContentNoLayer1Cleaning
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
 
 removeCleaning=RemoveCleaning()                
@@ -465,7 +465,7 @@ class AddCleaning(ConfigToolBase):
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
         process.out.outputCommands = patEventContent               
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action = self.__copy__()
         process.addAction(action)
          
 addCleaning=AddCleaning()
