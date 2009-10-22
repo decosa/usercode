@@ -10,9 +10,15 @@ class ChangeSource(ConfigToolBase):
     """
     
     _label='ChangeSource'
-
-    _defaultParameters={'process':'No default value. Set your own', 'source':'No default value. Set your own'}
-
+    
+    _defaultParameters={}
+    
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self.addParameterNew(self._defaultParameters,'process','No default value. Set your own', 'The process')
+        self.addParameterNew(self._defaultParameters,'source','No default value. Set your own', ' Source')
+        self._parameters=self.parameters()
+        
     def getDefaultParameters(self):
         return self._defaultParameters
     
@@ -24,12 +30,13 @@ class ChangeSource(ConfigToolBase):
         return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
-                 source=_defaultParameters['source']
+                 source=None
                     ) :
        
-
-        self.addParameter('process',process, 'The process')
-        self.addParameter('source',source, ' Source')
+        if  source is None:
+            source=self._defaultParameters['source'].value 
+        self.setParameterNew('process',process)
+        self.setParameterNew('source',source)
         print type(source)
         if not isinstance(process,Process):
             raise TypeError(self.instanceError(process,'Process'))
@@ -39,8 +46,8 @@ class ChangeSource(ConfigToolBase):
         
     def apply(self):
                 
-        process=self._parameters['process'].value
-        source=self._parameters['source'].value
+        process=self._parameters['process']
+        source=self._parameters['source']
         process.disableRecording()
 
         process.source.fileNames=cms.untracked.vstring(source)

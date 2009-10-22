@@ -9,7 +9,6 @@ class ConfigToolBase(object) :
     """ Base class for PAT tools
     """
     _label="ConfigToolBase"
-    
     def __init__(self):
         self._parameters={}
         self._description=self.__doc__  
@@ -21,6 +20,13 @@ class ConfigToolBase(object) :
         c=type(self)()
         c.setParameters(self.getParameters().copy())
         return c
+    def setDefaultParameters(self):
+        pass
+    def parameters(self):
+        parameters={}
+        for key in self._defaultParameters.keys():
+            parameters[key]=self._defaultParameters[key].value
+        return parameters
     def getvalue(self,name):
         """ Return the value of parameter 'name'
         """
@@ -39,6 +45,19 @@ class ConfigToolBase(object) :
         par.type=type(parvalue)
         #print type(parvalue)
         self._parameters[par.name]=par
+        
+    def addParameterNew(self,dict,parname, parvalue, description):
+        """ Add a parameter with its label, value, description and type to self._parameters
+        """
+        par=parameter()
+        par.name=parname
+        par.value=parvalue
+        par.description=description
+        par.type=type(parvalue)
+        #print type(parvalue)
+        #self._parameters[par.name]=par
+        dict[par.name]=par
+        
     def getParameters(self):
         """ Return the list of the parameters of an action.
 
@@ -47,23 +66,16 @@ class ConfigToolBase(object) :
         The type determines how the parameter is represented in the GUI.
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
-        #print 'Inside function parameters()'
-        #for key in self._parameters.keys():
-            #print key
-            #print 'par name = '+self._parameters[key].name
-            #print 'par value = '+str(self._parameters[key].value)
-            #print 'par type = '+str(self._parameters[key].type)
         return self._parameters
                                                                         
-        #raise NotImplementedError
     def setParameter(self, name, value):
         """ Change parameter 'name' to a new value
         """
-        #print 'Inside function setParameters()'
         self._parameters[name].value=value
-        #print 'New parameter value ('+name + ') '+str(self._parameters[name].value)
-        #raise NotImplementedError
-
+    def setParameterNew(self, name, value):
+        """ Change parameter 'name' to a new value
+        """
+        self._parameters[name]=value      
     def setParameters(self, parameters):
         self._parameters=parameters
         
