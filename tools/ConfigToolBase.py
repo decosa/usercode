@@ -8,9 +8,9 @@ class ConfigToolBase(object) :
 
     """ Base class for PAT tools
     """
-
+    _label="ConfigToolBase"
+    
     def __init__(self):
-        self._label = "ConfigToolBase"
         self._parameters={}
         self._description=self.__doc__  
     def __call__(self):
