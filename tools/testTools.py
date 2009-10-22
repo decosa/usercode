@@ -6,10 +6,16 @@ from FWCore.ParameterSet.Config  import Process
 
 class ChangeSource(ConfigToolBase):
 
+    """
+    """
+    
     _label='ChangeSource'
 
-    """
-    """      
+    _defaultParameters={'process':'No default value. Set your own', 'source':'No default value. Set your own'}
+
+    def getDefaultParameters(self):
+        return self._defaultParameters
+    
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
@@ -18,7 +24,7 @@ class ChangeSource(ConfigToolBase):
         return (dumpPythonImport,dumpPython)
     
     def __call__(self,process,
-                 source
+                 source=_defaultParameters['source']
                     ) :
        
 
