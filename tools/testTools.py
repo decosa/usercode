@@ -35,9 +35,9 @@ class ChangeSource(ConfigToolBase):
             raise TypeError(self.instanceError(process,'Process'))
         if not isinstance(source,str):
             raise TypeError(self.typeError(source,'string'))
-        self.doCall() 
+        self.apply() 
         
-    def doCall(self):
+    def apply(self):
                 
         process=self._parameters['process'].value
         source=self._parameters['source'].value
