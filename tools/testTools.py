@@ -21,6 +21,10 @@ class ChangeSource(ConfigToolBase):
         
     def getDefaultParameters(self):
         return self._defaultParameters
+
+    def setParameterNew(self,name,value):
+        ConfigToolBase.setParameterNew(self,name, value)
+        self.typeErrorNew(value,self._defaultParameters[name].type)
     
     def dumpPython(self):
         
@@ -28,7 +32,7 @@ class ChangeSource(ConfigToolBase):
         dumpPython = "\nchangeSource(process, "
         dumpPython += str(self.getvalue('source'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
-    
+
     def __call__(self,process,
                  source=None
                     ) :
@@ -37,11 +41,6 @@ class ChangeSource(ConfigToolBase):
             source=self._defaultParameters['source'].value 
         self.setParameterNew('process',process)
         self.setParameterNew('source',source)
-        print type(source)
-        if not isinstance(process,Process):
-            raise TypeError(self.instanceError(process,'Process'))
-        if not isinstance(source,str):
-            raise TypeError(self.typeError(source,'string'))
         self.apply() 
         
     def apply(self):

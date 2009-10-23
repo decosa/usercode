@@ -35,6 +35,7 @@ class ConfigToolBase(object) :
         """ Return a string with a detailed description of the action.
         """
         return self._description
+    ### addParameter must be replaced by addParameterNew, as soon as the migration of tool is completed
     def addParameter(self,parname, parvalue, description):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
@@ -68,6 +69,7 @@ class ConfigToolBase(object) :
         """
         return self._parameters
                                                                         
+    ### setParameter must be replaced by setParameterNew, as soon as the migration of tool is completed
     def setParameter(self, name, value):
         """ Change parameter 'name' to a new value
         """
@@ -75,7 +77,8 @@ class ConfigToolBase(object) :
     def setParameterNew(self, name, value):
         """ Change parameter 'name' to a new value
         """
-        self._parameters[name]=value      
+        self._parameters[name]=value
+        
     def setParameters(self, parameters):
         self._parameters=parameters
         
@@ -89,8 +92,17 @@ class ConfigToolBase(object) :
         dumpPython='#'+comment+'\n'
         return dumpPython
 
-    def typeError(self,name,type):
-        return "The type for parameter "+'"'+str(name)+'"'+" is not "+'"'+type+'"'
+    ### typeError and instanceError must be deleted after exporting the new defaultparameter system to all the tools 
+    def typeError(self,value,type):
+        return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+type+'"'
 
-    def instanceError(self,name,obj):
-        return "Parameter "+'"'+str(name)+'"'+" is not an instance of object "+'"'+obj+'"'                                                 
+    def instanceError(self,value,obj):
+        return "Parameter "+'"'+str(value)+'"'+" is not an instance of object "+'"'+obj+'"'                                                 
+
+    def errorMessage(self,value,type):
+        return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+str(type)+'"'
+
+    def typeErrorNew(self,value,type):
+        if not isinstance(value,type):
+            raise TypeError(self.errorMessage(value,type))
+        
