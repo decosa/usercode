@@ -86,9 +86,9 @@ class ConfigToolBase(object) :
         """
         return self._parameters
 
-      def getDefaults(self):
-          return self._defaultParameters
-                                                                        
+    def getDefaults(self):
+        return self._defaultParameters
+    
     ### setParameter must be replaced by setParameterNew, as soon as the migration of tool is completed
     def setParameter(self, name, value):
         """ Change parameter 'name' to a new value
