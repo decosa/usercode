@@ -4,13 +4,13 @@ class Action(object):
 
     def __init__(self,label,parameters=[],referenceToFunctor=None, bool=True):
 
-        self.label=label
-        self.parameters=parameters
-        self.referenceToFunctor=referenceToFunctor
+        self._label=label
+        self._parameters=parameters
+        self._referenceToFunctor=referenceToFunctor
   
     def dumpPython(self):
-        self.referenceToFunctor.setParameters(self.parameters)
-        return self.referenceToFunctor.dumpPython()
+        self._referenceToFunctor.setParameters(self._parameters)
+        return self._referenceToFunctor.dumpPython()
     
 class parameter:
     pass
