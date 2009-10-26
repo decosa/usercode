@@ -1,6 +1,17 @@
 import FWCore.ParameterSet.Config as cms  
 
+class Action(object):
 
+    def __init__(self,label,parameters=[],referenceToFunctor=None, bool=True):
+
+        self.label=label
+        self.parameters=parameters
+        self.referenceToFunctor=referenceToFunctor
+  
+    def dumpPython(self):
+        self.referenceToFunctor.setParameters(self.parameters)
+        return self.referenceToFunctor.dumpPython()
+    
 class parameter:
     pass
 
@@ -30,7 +41,11 @@ class ConfigToolBase(object) :
     def getvalue(self,name):
         """ Return the value of parameter 'name'
         """
-        return self._parameters[name].value    
+        return self._parameters[name].value
+    def getvalueNew(self,name):
+        """ Return the value of parameter 'name'
+        """
+        return self._parameters[name]
     def description(self):
         """ Return a string with a detailed description of the action.
         """
@@ -47,16 +62,18 @@ class ConfigToolBase(object) :
         #print type(parvalue)
         self._parameters[par.name]=par
         
-    def addParameterNew(self,dict,parname, parvalue, description):
+    def addParameterNew(self,dict,parname, parvalue, description,Type=None):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
         par=parameter()
         par.name=parname
         par.value=parvalue
         par.description=description
-        par.type=type(parvalue)
-        #print type(parvalue)
-        #self._parameters[par.name]=par
+        print Type==None
+        if Type==None:
+            par.type=type(parvalue)
+        else: par.type=Type
+        print 'TYPE', par.type
         dict[par.name]=par
         
     def getParameters(self):

@@ -15,7 +15,7 @@ class ChangeSource(ConfigToolBase):
     
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameterNew(self._defaultParameters,'process','No default value. Set your own', 'The process')
+        self.addParameterNew(self._defaultParameters,'process','No default value. Set your own', 'The process',cms.Process)
         self.addParameterNew(self._defaultParameters,'source','No default value. Set your own', ' Source')
         self._parameters=self.parameters()
         
@@ -30,7 +30,7 @@ class ChangeSource(ConfigToolBase):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
         dumpPython = "\nchangeSource(process, "
-        dumpPython += str(self.getvalue('source'))+')'+'\n'
+        dumpPython += str(self.getvalueNew('source'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process,
