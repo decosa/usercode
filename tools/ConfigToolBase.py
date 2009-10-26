@@ -85,6 +85,9 @@ class ConfigToolBase(object) :
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
         return self._parameters
+
+      def getDefaults(self):
+          return self._defaultParameters
                                                                         
     ### setParameter must be replaced by setParameterNew, as soon as the migration of tool is completed
     def setParameter(self, name, value):
