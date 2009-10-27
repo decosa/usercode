@@ -296,7 +296,7 @@ class SwitchJetCollection(ConfigToolBase):
             raise TypeError(self.typeError(doJTA,'bool'))
         if not isinstance(doBTagging,bool):
             raise TypeError(self.typeError(doBTagging,'bool'))
-        if not (isinstance(jetCorrLabel,list) or jetCorrLabel is None ):
+        if not (isinstance(jetCorrLabel,tuple) or jetCorrLabel is None ):
             raise TypeError(self.typeError(jetCorrLabel,'tuple'))
         if not isinstance(doType1MET,bool):
             raise TypeError(self.typeError(doType1MET,'bool'))
