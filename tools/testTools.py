@@ -31,6 +31,7 @@ class ChangeSource(ConfigToolBase):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
         dumpPython = "\nchangeSource(process, "
         dumpPython += str(self.getvalueNew('source'))+')'+'\n'
+
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process,
@@ -52,7 +53,7 @@ class ChangeSource(ConfigToolBase):
         process.source.fileNames=cms.untracked.vstring(source)
         
         process.enableRecording()
-        action = Action(self._label,copy.copy(self._parameters),self)
+        action=self.__copy__()
         process.addAction(action)
 
     

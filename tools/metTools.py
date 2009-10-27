@@ -86,7 +86,7 @@ class AddPfMET(ConfigToolBase):
     
     def dumpPython(self):
         
-        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n "
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n"
         dumpPython = "\naddPfMET(process, "
         dumpPython += str(self.getvalue('postfixLabel'))+')'+'\n'
         return (dumpPythonImport,dumpPython)

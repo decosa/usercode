@@ -69,11 +69,9 @@ class ConfigToolBase(object) :
         par.name=parname
         par.value=parvalue
         par.description=description
-        print Type==None
         if Type==None:
             par.type=type(parvalue)
         else: par.type=Type
-        print 'TYPE', par.type
         dict[par.name]=par
         
     def getParameters(self):
@@ -85,9 +83,6 @@ class ConfigToolBase(object) :
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
         return self._parameters
-
-    def getDefaults(self):
-        return self._defaultParameters
     
     ### setParameter must be replaced by setParameterNew, as soon as the migration of tool is completed
     def setParameter(self, name, value):
