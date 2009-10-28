@@ -17,20 +17,21 @@ class ChangeSource(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameterNew(self._defaultParameters,'process','No default value. Set your own', 'The process',cms.Process)
         self.addParameterNew(self._defaultParameters,'source','No default value. Set your own', ' Source')
-        self._parameters=self.parameters()
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        #self._parameters=self.parameters()
         
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def setParameterNew(self,name,value):
-        ConfigToolBase.setParameterNew(self,name, value)
-        self.typeErrorNew(value,self._defaultParameters[name].type)
+    def setParameter(self,name,value):
+        ConfigToolBase.setParameter(self,name, value)
+        self.typeErrorNew(name)
     
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
         dumpPython = "\nchangeSource(process, "
-        dumpPython += str(self.getvalueNew('source'))+')'+'\n'
+        dumpPython += str(self.getvalue('source'))+')'+'\n'
 
         return (dumpPythonImport,dumpPython)
 
@@ -40,14 +41,14 @@ class ChangeSource(ConfigToolBase):
        
         if  source is None:
             source=self._defaultParameters['source'].value 
-        self.setParameterNew('process',process)
-        self.setParameterNew('source',source)
+        self.setParameter('process',process)
+        self.setParameter('source',source)
         self.apply() 
         
     def apply(self):
                 
-        process=self._parameters['process']
-        source=self._parameters['source']
+        process=self._parameters['process'].value
+        source=self._parameters['source'].value
         process.disableRecording()
 
         process.source.fileNames=cms.untracked.vstring(source)

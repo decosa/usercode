@@ -1,3 +1,4 @@
+import copy
 import FWCore.ParameterSet.Config as cms  
 
 class Action(object):
@@ -33,6 +34,8 @@ class ConfigToolBase(object) :
         return c
     def setDefaultParameters(self):
         pass
+    def reset(self):
+        self._parameters=copy.deepcopy(self._defaultParameters)
     def parameters(self):
         parameters={}
         for key in self._defaultParameters.keys():
@@ -59,7 +62,6 @@ class ConfigToolBase(object) :
         par.value=parvalue
         par.description=description
         par.type=type(parvalue)
-        #print type(parvalue)
         self._parameters[par.name]=par
         
     def addParameterNew(self,dict,parname, parvalue, description,Type=None):
@@ -117,7 +119,7 @@ class ConfigToolBase(object) :
     def errorMessage(self,value,type):
         return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+str(type)+'"'
 
-    def typeErrorNew(self,value,type):
-        if not isinstance(value,type):
-            raise TypeError(self.errorMessage(value,type))
+    def typeErrorNew(self,name):
+        if not isinstance(self._parameters[name].value,self._parameters[name].type):
+            raise TypeError(self.errorMessage(self._parameters[name].value,self._parameters[name].type))
         
