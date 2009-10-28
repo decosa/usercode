@@ -23,10 +23,8 @@ class ChangeSource(ConfigToolBase):
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def setParameter(self,name,value):
-        ConfigToolBase.setParameter(self,name, value)
-        self.typeErrorNew(name)
-    
+    #def setParameter(self,name,value):
+        #ConfigToolBase.setParameter(self,name, value)
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"

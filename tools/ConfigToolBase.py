@@ -36,24 +36,14 @@ class ConfigToolBase(object) :
         pass
     def reset(self):
         self._parameters=copy.deepcopy(self._defaultParameters)
-    def parameters(self):
-        parameters={}
-        for key in self._defaultParameters.keys():
-            parameters[key]=self._defaultParameters[key].value
-        return parameters
     def getvalue(self,name):
         """ Return the value of parameter 'name'
         """
         return self._parameters[name].value
-    def getvalueNew(self,name):
-        """ Return the value of parameter 'name'
-        """
-        return self._parameters[name]
     def description(self):
         """ Return a string with a detailed description of the action.
         """
         return self._description
-    ### addParameter must be replaced by addParameterNew, as soon as the migration of tool is completed
     def addParameter(self,parname, parvalue, description):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
@@ -63,7 +53,6 @@ class ConfigToolBase(object) :
         par.description=description
         par.type=type(parvalue)
         self._parameters[par.name]=par
-        
     def addParameterNew(self,dict,parname, parvalue, description,Type=None):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
@@ -85,20 +74,13 @@ class ConfigToolBase(object) :
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
         return self._parameters
-    
-    ### setParameter must be replaced by setParameterNew, as soon as the migration of tool is completed
     def setParameter(self, name, value):
         """ Change parameter 'name' to a new value
         """
         self._parameters[name].value=value
-    def setParameterNew(self, name, value):
-        """ Change parameter 'name' to a new value
-        """
-        self._parameters[name]=value
-        
+        self.typeErrorNew(name)
     def setParameters(self, parameters):
         self._parameters=parameters
-        
     def dumpPython(self):
         """ Return the python code to perform the action
         """
