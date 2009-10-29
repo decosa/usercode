@@ -1,18 +1,6 @@
 import copy
 import FWCore.ParameterSet.Config as cms  
 
-class Action(object):
-
-    def __init__(self,label,parameters=[],referenceToFunctor=None, bool=True):
-
-        self._label=label
-        self._parameters=parameters
-        self._referenceToFunctor=referenceToFunctor
-  
-    def dumpPython(self):
-        self._referenceToFunctor.setParameters(self._parameters)
-        return self._referenceToFunctor.dumpPython()
-    
 class parameter:
     pass
 
@@ -44,16 +32,8 @@ class ConfigToolBase(object) :
         """ Return a string with a detailed description of the action.
         """
         return self._description
-    def addParameter(self,parname, parvalue, description):
-        """ Add a parameter with its label, value, description and type to self._parameters
-        """
-        par=parameter()
-        par.name=parname
-        par.value=parvalue
-        par.description=description
-        par.type=type(parvalue)
-        self._parameters[par.name]=par
-    def addParameterNew(self,dict,parname, parvalue, description,Type=None):
+
+    def addParameter(self,dict,parname, parvalue, description,Type=None):
         """ Add a parameter with its label, value, description and type to self._parameters
         """
         par=parameter()
@@ -78,7 +58,7 @@ class ConfigToolBase(object) :
         """ Change parameter 'name' to a new value
         """
         self._parameters[name].value=value
-        self.typeErrorNew(name)
+        self.typeError(name)
     def setParameters(self, parameters):
         self._parameters=parameters
     def dumpPython(self):
@@ -91,17 +71,10 @@ class ConfigToolBase(object) :
         dumpPython='#'+comment+'\n'
         return dumpPython
 
-    ### typeError and instanceError must be deleted after exporting the new defaultparameter system to all the tools 
-    def typeError(self,value,type):
-        return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+type+'"'
-
-    def instanceError(self,value,obj):
-        return "Parameter "+'"'+str(value)+'"'+" is not an instance of object "+'"'+obj+'"'                                                 
-
     def errorMessage(self,value,type):
         return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+str(type)+'"'
 
-    def typeErrorNew(self,name):
+    def typeError(self,name):
         if not isinstance(self._parameters[name].value,self._parameters[name].type):
             raise TypeError(self.errorMessage(self._parameters[name].value,self._parameters[name].type))
         
