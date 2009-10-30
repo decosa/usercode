@@ -1,5 +1,5 @@
 import copy
-#from PhysicsTools.PatAlgos.tools.helpers import *
+
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from FWCore.ParameterSet.Types  import InputTag    
 from FWCore.ParameterSet.Config  import Process  
@@ -27,7 +27,9 @@ class ChangeSource(ConfigToolBase):
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
         dumpPython = "\nchangeSource(process, "
-        dumpPython += str(self.getvalue('source'))+')'+'\n'
+        dumpPython += '"'+str(self.getvalue('source'))+'"'+","
+        dumpPython += str(self.getvalue('events'))+","
+        dumpPython += str(self.getvalue('bool'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process,source=None,events=None, bool=None) :
