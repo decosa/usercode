@@ -1,5 +1,5 @@
 import copy
-from PhysicsTools.PatAlgos.tools.helpers import *
+#from PhysicsTools.PatAlgos.tools.helpers import *
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from FWCore.ParameterSet.Types  import InputTag    
 from FWCore.ParameterSet.Config  import Process  
