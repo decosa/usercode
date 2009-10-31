@@ -9,6 +9,7 @@ class ConfigToolBase(object) :
     """ Base class for PAT tools
     """
     _label="ConfigToolBase"
+    _defaultValue="No default value. Set parameter value."
     def __init__(self):
         self._parameters={}
         self._description=self.__doc__  
@@ -54,13 +55,13 @@ class ConfigToolBase(object) :
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
         return self._parameters
-    def setParameter(self, name, value):
+    def setParameter(self, name, value, bool=False):
         """ Change parameter 'name' to a new value
         """
         self._parameters[name].value=value
-        self.typeError(name)
+        self.typeError(name, bool)
     def setParameters(self, parameters):
-        self._parameters=parameters
+        self._parameters=parameters.copy()
     def dumpPython(self):
         """ Return the python code to perform the action
         """
@@ -74,7 +75,10 @@ class ConfigToolBase(object) :
     def errorMessage(self,value,type):
         return "The type for parameter "+'"'+str(value)+'"'+" is not "+'"'+str(type)+'"'
 
-    def typeError(self,name):
-        if not isinstance(self._parameters[name].value,self._parameters[name].type):
-            raise TypeError(self.errorMessage(self._parameters[name].value,self._parameters[name].type))
-        
+    def typeError(self,name, bool):
+        if bool is False:
+            if not isinstance(self._parameters[name].value,self._parameters[name].type):
+                raise TypeError(self.errorMessage(self._parameters[name].value,self._parameters[name].type))
+        else:
+            if not (isinstance(self._parameters[name].value,self._parameters[name].type) or self._parameters[name].value is None):
+                raise TypeError(self.errorMessage(self._parameters[name].value,self._parameters[name].type))

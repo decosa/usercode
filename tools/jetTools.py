@@ -1,3 +1,4 @@
+from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.helpers import *
 from FWCore.ParameterSet.Types  import InputTag    
 
@@ -293,9 +294,9 @@ class SwitchJetCollection(ConfigToolBase):
         self._parameters=copy.deepcopy(self._defaultParameters)  
     def getDefaultParameters(self):
         return self._defaultParameters
-    def setDefaultValue(self,name):
-        if name  is None:
-            name=self._defaultParameters[str(name)].value
+    #def setDefaultValue(self,name):
+        #if name  is None:
+           # name=self._defaultParameters[name].value
     def dumpPython(self):
         dumpPythonImport= "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n "
         dumpPython = "\nswitchJetCollection(process, "
@@ -304,7 +305,7 @@ class SwitchJetCollection(ConfigToolBase):
         dumpPython += str(self.getvalue('doBTagging'))+', '
         dumpPython += str(self.getvalue('jetCorrLabel'))+', '
         dumpPython += str(self.getvalue('doType1MET'))+', '
-        dumpPython += str(self.getvalue('genJetCollection'))', '
+        dumpPython += str(self.getvalue('genJetCollection'))+', '
         dumpPython += str(self.getvalue('doJetID'))+', '
         dumpPython += '"'+str(self.getvalue('jetIdLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -317,21 +318,37 @@ class SwitchJetCollection(ConfigToolBase):
                  genJetCollection = None,
                  doJetID          = None,
                  jetIdLabel       = None
-                 ): 
-        self.setDefaultValue(jetCollection)
-        self.setDefaultValue(doJTA)
-        self.setDefaultValue(doBTagging)
-        self.setDefaultValue(jetCorrLabel)
-        self.setDefaultValue(doType1MET)
-        self.setDefaultValue(genJetCollection)
-        self.setDefaultValue(doJetID)
-        self.setDefaultValue(jetIdLabel)
+                 ):
+        if jetCollection  is None:
+            jetCollection=self._defaultParameters['jetCollection'].value
+        if  doJTA is None:
+            doJTA=self._defaultParameters['doJTA'].value
+        if  doBTagging is None:
+            doBTagging=self._defaultParameters['doBTagging'].value
+        if jetCorrLabel  is None:
+            jetCorrLabel=self._defaultParameters['jetCorrLabel'].value
+        if doType1MET  is None:
+            doType1MET=self._defaultParameters['doType1MET'].value
+        if genJetCollection  is None:
+            genJetCollection=self._defaultParameters['genJetCollection'].value
+        if doJetID  is None:
+            doJetID=self._defaultParameters['doJetID'].value
+        if jetIdLabel  is None:
+            jetIdLabel=self._defaultParameters['jetIdLabel'].value
+        #self.setDefaultValue(jetCollection)
+        #self.setDefaultValue(doJTA)
+        #self.setDefaultValue(doBTagging)
+        #self.setDefaultValue(jetCorrLabel)
+        #self.setDefaultValue(doType1MET)
+        #self.setDefaultValue(genJetCollection)
+        #self.setDefaultValue(doJetID)
+        #self.setDefaultValue(jetIdLabel)
        
         self.setParameter('process',process)
         self.setParameter('jetCollection',jetCollection)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
-        self.setParameter('jetCorrLabel'jetCorrLabel,)
+        self.setParameter('jetCorrLabel',jetCorrLabel)
         self.setParameter('doType1MET',doType1MET)
         self.setParameter('genJetCollection',genJetCollection)
         self.setParameter('doJetID',doJetID)
@@ -457,19 +474,6 @@ class SwitchJetCollection(ConfigToolBase):
 switchJetCollection=SwitchJetCollection()   
 
 class AddJetCollection(ConfigToolBase):
-def addJetCollection(process,
-                     jetCollection,
-                     postfixLabel,
-                     doJTA        = True,
-                     doBTagging   = True,
-                     jetCorrLabel = None,
-                     doType1MET   = True,
-                     doL1Cleaning = True,                     
-                     doL1Counters = False,
-                     genJetCollection=cms.InputTag("ak5GenJets"),
-                     doJetID      = True,
-                     jetIdLabel   = "ak5"
-                     ):
     """
     ------------------------------------------------------------------        
     add a new collection of jets in PAT
@@ -528,15 +532,9 @@ def addJetCollection(process,
         self._parameters=copy.deepcopy(self._defaultParameters)  
     def getDefaultParameters(self):
         return self._defaultParameters
-    def setDefaultValue(self,name):
-        if name  is None:
-            name=self._defaultParameters[str(name)].value
-
-    ## add module as process to the makeAllLayer1Jets sequence
-    def addAlso(label, value):
-        existing = getattr(process, label)
-        setattr( process, label+postfixLabel, value)
-        process.makeAllLayer1Jets.replace( existing, existing*value )
+    #def setDefaultValue(self,name):
+     #   if name  is None:
+      #      name=self._defaultParameters[str(name)].value
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n "
         dumpPython = "\naddJetCollection(process, "
@@ -565,24 +563,46 @@ def addJetCollection(process,
                  doJetID          = None,
                  jetIdLabel       = None
                  ): 
-        self.setDefaultValue(jetCollection)
-        self.setDefaultValue(postfixLabel)
-        self.setDefaultValue(doJTA)
-        self.setDefaultValue(doBTagging)
-        self.setDefaultValue(jetCorrLabel)
-        self.setDefaultValue(doType1MET)
-        self.setDefaultValue(doL1Cleaning)
-        self.setDefaultValue(doL1Counters)
-        self.setDefaultValue(genJetCollection)
-        self.setDefaultValue(doJetID)
-        self.setDefaultValue(jetIdLabel)
+        if jetCollection  is None:
+            jetCollection=self._defaultParameters['jetCollection'].value
+        if postfixLabel is None:
+            postfixLabel=self._defaultParameters['postfixLabel'].value
+        if doJTA is None:
+            doJTA=self._defaultParameters['doJTA'].value
+        if doBTagging is None:
+            doBTagging=self._defaultParameters['doBTagging'].value
+        if jetCorrLabel  is None:
+            jetCorrLabel=self._defaultParameters['jetCorrLabel'].value
+        if doType1MET  is None:
+            doType1MET=self._defaultParameters['doType1MET'].value
+        if doL1Cleaning is None:
+            doL1Cleaning=self._defaultParameters['doL1Cleaning'].value
+        if doL1Counters  is None:
+            doL1Counters=self._defaultParameters['doL1Counters'].value
+        if genJetCollection  is None:
+            genJetCollection=self._defaultParameters['genJetCollection'].value
+        if doJetID  is None:
+            doJetID=self._defaultParameters['doJetID'].value
+        if jetIdLabel  is None:
+            jetIdLabel=self._defaultParameters['jetIdLabel'].value
+        #self.setDefaultValue(jetCollection)
+        #self.setDefaultValue(postfixLabel)
+        #self.setDefaultValue(doJTA)
+        #self.setDefaultValue(doBTagging)
+        #self.setDefaultValue(jetCorrLabel)
+        #self.setDefaultValue(doType1MET)
+        #self.setDefaultValue(doL1Cleaning)
+        #self.setDefaultValue(doL1Counters)
+        #self.setDefaultValue(genJetCollection)
+        #self.setDefaultValue(doJetID)
+        #self.setDefaultValue(jetIdLabel)
        
         self.setParameter('process',process)
         self.setParameter('jetCollection',jetCollection)
         self.setParameter('postfixLabel',postfixLabel)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
-        self.setParameter('jetCorrLabel'jetCorrLabel,)
+        self.setParameter('jetCorrLabel',jetCorrLabel, True)
         self.setParameter('doType1MET',doType1MET)
         self.setParameter('doL1Cleaning',doL1Cleaning)
         self.setParameter('doL1Counters',doL1Counters)
@@ -605,7 +625,11 @@ def addJetCollection(process,
         jetIdLabel=self._parameters['jetIdLabel'].value
         process.disableRecording()
         ### tool code  
-
+        ## add module as process to the makeAllLayer1Jets sequence
+        def addAlso(label, value):
+            existing = getattr(process, label)
+            setattr( process, label+postfixLabel, value)
+            process.makeAllLayer1Jets.replace( existing, existing*value )
         ## clone and add a module as process to the
         ## default sequence
         def addClone(label, **replaceStatements):
@@ -726,9 +750,9 @@ def addJetCollection(process,
         else:
             ## switch jetCorrFactors off
             l1Jets.addJetCorrFactors = False
-    process.enableRecording()
-    action=self.__copy__()
-    process.addAction(action)
+        process.enableRecording()
+        action=self.__copy__()
+        process.addAction(action)
 
 addJetCollection=AddJetCollection()  
 
