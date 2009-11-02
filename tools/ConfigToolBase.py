@@ -19,7 +19,7 @@ class ConfigToolBase(object) :
         raise NotImplementedError
     def __copy__(self):
         c=type(self)()
-        c.setParameters(self.getParameters().copy())
+        c.setParameters(copy.deepcopy(self._parameters))
         return c
     def setDefaultParameters(self):
         pass
@@ -54,14 +54,15 @@ class ConfigToolBase(object) :
         The type determines how the parameter is represented in the GUI.
         Possible types are: 'Category','String','Text','File','FileVector','Boolean','Integer','Float'.
         """
-        return self._parameters
+        print 'ok'
+        return copy.deepcopy(self._parameters)
     def setParameter(self, name, value, bool=False):
         """ Change parameter 'name' to a new value
         """
         self._parameters[name].value=value
         self.typeError(name, bool)
     def setParameters(self, parameters):
-        self._parameters=parameters.copy()
+        self._parameters=copy.deepcopy(parameters)
     def dumpPython(self):
         """ Return the python code to perform the action
         """

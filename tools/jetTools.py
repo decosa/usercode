@@ -114,7 +114,6 @@ class RunBTagging(ConfigToolBase):
 
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'process',self._defaultValue, 'The process',cms.Process)
         self.addParameter(self._defaultParameters,'jetCollection',self._defaultValue,'Input jet collection', InputTag)
         self.addParameter(self._defaultParameters,'label',self._defaultValue, 'Postfix label to identify new sequence/modules',str)
         self._parameters=copy.deepcopy(self._defaultParameters)  
@@ -134,12 +133,10 @@ class RunBTagging(ConfigToolBase):
             jetCollection=self._defaultParameters['jetCollection'].value
         if label is None:
             label=self._defaultParameters['label'].value 
-        self.setParameter('process',process)
         self.setParameter('jetCollection',jetCollection)
         self.setParameter('label',label)
-        return self.apply() 
-    def apply(self):
-        process=self._parameters['process'].value
+        return self.apply(process) 
+    def apply(self,process):
         jetCollection=self._parameters['jetCollection'].value
         label=self._parameters['label'].value
         process.disableRecording()
@@ -282,7 +279,6 @@ class SwitchJetCollection(ConfigToolBase):
 
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'process',self._defaultValue, 'The process',cms.Process)
         self.addParameter(self._defaultParameters,'jetCollection',self._defaultValue,'Input jet collection', InputTag)
         self.addParameter(self._defaultParameters,'doJTA',True, 'run b tagging sequence for new jet collection and add it to the new pat jet collection')
         self.addParameter(self._defaultParameters,'doBTagging',True, 'run JetTracksAssociation and JetCharge and add it to the new pat jet collection (will autom. be true if doBTagging is set to true)')
@@ -344,7 +340,6 @@ class SwitchJetCollection(ConfigToolBase):
         #self.setDefaultValue(doJetID)
         #self.setDefaultValue(jetIdLabel)
        
-        self.setParameter('process',process)
         self.setParameter('jetCollection',jetCollection)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
@@ -353,9 +348,8 @@ class SwitchJetCollection(ConfigToolBase):
         self.setParameter('genJetCollection',genJetCollection)
         self.setParameter('doJetID',doJetID)
         self.setParameter('jetIdLabel',jetIdLabel)
-        self.apply() 
-    def apply(self):
-        process=self._parameters['process'].value
+        self.apply(process) 
+    def apply(self,process):
         jetCollection=self._parameters['jetCollection'].value
         doJTA=self._parameters['doJTA'].value
         doBTagging=self._parameters['doBTagging'].value
@@ -517,7 +511,6 @@ class AddJetCollection(ConfigToolBase):
 
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'process',self._defaultValue, 'The process',cms.Process)
         self.addParameter(self._defaultParameters,'jetCollection',self._defaultValue,'Input jet collection', InputTag)
         self.addParameter(self._defaultParameters,'postfixLabel',self._defaultValue, "label to identify all modules that work with this jet collection",str)
         self.addParameter(self._defaultParameters,'doJTA',True, "run b tagging sequence for new jet collection and add it to the new pat jet collection")
@@ -597,7 +590,6 @@ class AddJetCollection(ConfigToolBase):
         #self.setDefaultValue(doJetID)
         #self.setDefaultValue(jetIdLabel)
        
-        self.setParameter('process',process)
         self.setParameter('jetCollection',jetCollection)
         self.setParameter('postfixLabel',postfixLabel)
         self.setParameter('doJTA',doJTA)
@@ -609,9 +601,8 @@ class AddJetCollection(ConfigToolBase):
         self.setParameter('genJetCollection',genJetCollection)
         self.setParameter('doJetID',doJetID)
         self.setParameter('jetIdLabel',jetIdLabel)
-        self.apply() 
-    def apply(self):
-        process=self._parameters['process'].value
+        self.apply(process) 
+    def apply(self,process):
         jetCollection=self._parameters['jetCollection'].value
         postfixLabel=self._parameters['postfixLabel'].value
         doJTA=self._parameters['doJTA'].value

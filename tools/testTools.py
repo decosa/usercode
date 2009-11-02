@@ -1,8 +1,5 @@
-import copy
-
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from FWCore.ParameterSet.Types  import InputTag    
-from FWCore.ParameterSet.Config  import Process  
 
 class ChangeSource(ConfigToolBase):
 
@@ -12,13 +9,9 @@ class ChangeSource(ConfigToolBase):
     _label='ChangeSource'
     
     _defaultParameters={}
-    
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'process','No default value. Set your own', 'The process',cms.Process)
         self.addParameter(self._defaultParameters,'source','No default value. Set your own', ' Source')
-        self.addParameter(self._defaultParameters,'events','No default value. Set your own', ' events',int)
-        self.addParameter(self._defaultParameters,'bool','No default value. Set your own', ' bool',bool)
         self._parameters=copy.deepcopy(self._defaultParameters)
         
     def getDefaultParameters(self):
@@ -27,26 +20,18 @@ class ChangeSource(ConfigToolBase):
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n"
         dumpPython = "\nchangeSource(process, "
-        dumpPython += '"'+str(self.getvalue('source'))+'"'+","
-        dumpPython += str(self.getvalue('events'))+","
-        dumpPython += str(self.getvalue('bool'))+')'+'\n'
+        dumpPython +='"'+ str(self.getvalue('source'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
-    def __call__(self,process,source=None,events=None, bool=None) :
+    def __call__(self,process,source=None) :
         if  source is None:
             source=self._defaultParameters['source'].value 
-        self.setParameter('process',process)
         self.setParameter('source',source)
-        self.setParameter('events',events)
-        self.setParameter('bool',bool)
-        self.apply() 
+        self.apply(process) 
         
-    def apply(self):
+    def apply(self, process):
                 
-        process=self._parameters['process'].value
         source=self._parameters['source'].value
-        events=self._parameters['events'].value
-        bool=self._parameters['bool'].value
         process.disableRecording()
 
         process.source.fileNames=cms.untracked.vstring(source)
