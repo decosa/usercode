@@ -1,42 +1,40 @@
-#import FWCore.ParameterSet.Config as cms
-import copy
 from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+import FWCore.ParameterSet.Config as cms
+
 from PhysicsTools.PatAlgos.patEventContent_cff import *
-from FWCore.ParameterSet.Config  import Process
 
-class SwitchOnTrigger(ConfigToolBase):
-    """ Tool to switch on pat::Trigger information and to add the needed modules to the patDefaultSequence.
-        As trigger information in PAT is quite disc space consuming trigger information is not added per default but left to the user.
+class SwitchOnTrigger(ConfigToolBase):    
+    """ Enables trigger information in PAT
+    """    
+    _label='SwitchOnTrigger'    
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        
+    def getDefaultParameters(self):
+        return self._defaultParameters
 
-
-    """
-    _label='SwitchOnTrigger'
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython = "\nswitchOnTrigger(process) \n "
         return (dumpPythonImport,dumpPython)
-    
-    
-    def __call__(self, process ):
-        """ Enables trigger information in PAT  """
 
-        self.addParameter('process',process, 'the process')
-        if not isinstance(process,Process):
-            raise TypeError(self.instanceError(process,'Process'))
-        self.doCall() 
+    def __call__(self,process) :
+        self.apply(process) 
         
-    def doCall(self):            
-        process=self._parameters['process'].value
+    def apply(self, process):
         process.disableRecording()
-    ## add trigger modules to path
+    
+        ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
         process.patDefaultSequence += process.patTriggerSequence
-
-    ## configure pat trigger
+        
+        ## configure pat trigger
         process.patTrigger.onlyStandAlone = False
         
-    ## add trigger specific event content to PAT event content
+        ## add trigger specific event content to PAT event content
         process.out.outputCommands += patTriggerEventContent
         for matchLabel in process.patTriggerEvent.patTriggerMatches:
             process.out.outputCommands += [ 'keep patTriggerObjectsedmAssociation_patTriggerEvent_' + matchLabel + '_*' ]
@@ -47,60 +45,65 @@ class SwitchOnTrigger(ConfigToolBase):
 switchOnTrigger=SwitchOnTrigger()
 
 class SwitchOnTriggerStandAlone(ConfigToolBase):
-    """ Tool to switch on pat::Trigger information in standalone mode and to add the needed modules to the patDefaultSequence
     """
-    
-    _label='SwitchOnTriggerStandAlone'
+    """
+    _label='SwitchOnTriggerStandAlone'    
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        
+    def getDefaultParameters(self):
+        return self._defaultParameters
+
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython = "\nswitchOnTriggerStandAlone(process) \n "
         return (dumpPythonImport,dumpPython)
-
-    def __call__(self, process ):
-    ## add trigger modules to path
-
-        self.addParameter('process',process, 'the process')
-        if not isinstance(process,Process):
-            raise TypeError(self.instanceError(process,'Process'))
-        self.doCall() 
+     
+    def __call__(self,process) :
+        self.apply(process) 
         
-    def doCall(self):        
-        process=self._parameters['process'].value
+    def apply(self, process):
         process.disableRecording()
+        ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
         process.patDefaultSequence += process.patTriggerSequence
-        
-    ## configure pat trigger
+
+        ## configure pat trigger
         process.patTrigger.onlyStandAlone = True
         process.patTriggerSequence.remove( process.patTriggerEvent )
         process.out.outputCommands += patTriggerStandAloneEventContent
         process.enableRecording()
         action=self.__copy__()
         process.addAction(action)
-               
+        
 switchOnTriggerStandAlone=SwitchOnTriggerStandAlone()
 
 class SwitchOnTriggerAll(ConfigToolBase):
-    """ Tool to switch on all pat::Trigger information (including standalone mode) and to add the needed modules to the patDefaultSequence.
     """
-    _label='SwitchOnTriggerAll'
+    """
+    _label='SwitchOnTriggerAll'    
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        
+    def getDefaultParameters(self):
+        return self._defaultParameters
+
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython="\nswitchOnTriggerAll(process) \n "
         return (dumpPythonImport,dumpPython)
-
-    def __call__( process ):
-
-        self.addParameter('process',process, 'the  process')
-        if not isinstance(process,Process):
-            raise TypeError(self.instanceError(process,'Process'))
-        self.doCall() 
+    
+    def __call__(self,process) :
+        self.apply(process) 
         
-    def doCall(self):         
-        process=self._parameters['process'].value
-        process.disableRecording()          
+    def apply(self, process):
+        process.disableRecording()
         switchOnTrigger( process )
         process.out.outputCommands += patTriggerStandAloneEventContent
         process.enableRecording()
@@ -108,29 +111,34 @@ class SwitchOnTriggerAll(ConfigToolBase):
         process.addAction(action)
 
 switchOnTriggerAll=SwitchOnTriggerAll()
-
+        
 class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
-    """ Tool to switch on trigger information embedding and to add the needed modules to the patDefaultSequence
     """
-    _label='SwitchOnTriggerMatchEmbedding'
+    """
+    _label='SwitchOnTriggerMatchEmbedding'    
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        
+    def getDefaultParameters(self):
+        return self._defaultParameters
+
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython = "\nswitchOnTriggerMatchEmbedding(process) \n "
         return (dumpPythonImport,dumpPython)
-    
-    def __call__(self,process ):
-        self.addParameter('process',process, 'the process')
-        if not isinstance(process,Process):
-            raise TypeError(self.instanceError(process,'Process'))
-        self.doCall() 
         
-    def doCall(self): 
-        process=self._parameters['process'].value
-        process.disableRecording()         
+    def __call__(self,process) :
+        self.apply(process) 
+        
+    def apply(self, process):
+        process.disableRecording()
         process.patTriggerSequence += process.patTriggerMatchEmbedder
         process.out.outputCommands += patEventContentTriggerMatch
         process.enableRecording()
         action=self.__copy__()
         process.addAction(action)
+
 switchOnTriggerMatchEmbedding=SwitchOnTriggerMatchEmbedding()
