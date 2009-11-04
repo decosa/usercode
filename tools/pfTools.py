@@ -459,7 +459,6 @@ class UsePF2PAT(ConfigToolBase):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython = "\nusePF2PAT(process, "
-        dumpPython += str(self.getvalue('process'))+ ", "
         dumpPython += str(self.getvalue('runPF2PAT'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
   

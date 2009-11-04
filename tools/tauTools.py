@@ -350,7 +350,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         if  pfTauType  is None:
             pfTauType=self._defaultParameters['pfTauType'].value
 
-        self.setParameter('pfTauLabelOld',pfTauLabel)
+        self.setParameter('pfTauLabelOld',pfTauLabelOld)
         self.setParameter('pfTauLabelNew',pfTauLabelNew)
         self.setParameter('pfTauType',pfTauType)
         self.apply(process) 
