@@ -1,5 +1,6 @@
 from ConfigToolBase import *
 from testTools import *
+from FWCore.ParameterSet.Modules  import Source
 import unittest
 
 
@@ -74,7 +75,21 @@ class testConfigToolBase(unittest.TestCase):
             print "Test on setComment method "
             self.assertEqual(self._tool.setComment("Write a comment"),"#Write a comment\n")
 
-       
-            
+        def testReset(self):
+            """ Test on reset
+            """
+            print "Test on reset method "
+
+            process=cms.Process("TEST")
+	    process.source=Source("PoolSource",fileNames = cms.untracked.string("file:file.root"))
+	    changeSource(process,"file:filename.root")
+	    self.assertEqual(changeSource._defaultParameters['source'].value,"No default value. Set your own")
+            self.assertEqual(changeSource._parameters['source'].value,"file:filename.root")
+            changeSource.setParameter('source',"filename2.txt")
+            self.assertEqual(changeSource._parameters['source'].value,"filename2.txt")
+	    self.assertEqual(changeSource._defaultParameters['source'].value,"No default value. Set your own")
+	    changeSource.reset()
+	    self.assertEqual(changeSource._parameters['source'].value,"No default value. Set your own")
+	    
 if __name__=="__main__":
     unittest.main()
