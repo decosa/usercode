@@ -9,6 +9,8 @@ class testConfigToolBase(unittest.TestCase):
 
         def setUp(self):
             self._tool=ConfigToolBase()
+	    self._process=cms.Process("TEST")
+	    self._process.source=Source("PoolSource",fileNames = cms.untracked.string("file:file.root"))
 
         def testParameters(self):
             """ Test on methods to manage _parameters
@@ -75,14 +77,11 @@ class testConfigToolBase(unittest.TestCase):
             print "Test on setComment method "
             self.assertEqual(self._tool.setComment("Write a comment"),"#Write a comment\n")
 
-        def testReset(self):
-            """ Test on reset
+	def testReset(self):
+	    """ Test on reset
             """
             print "Test on reset method "
-
-            process=cms.Process("TEST")
-	    process.source=Source("PoolSource",fileNames = cms.untracked.string("file:file.root"))
-	    changeSource(process,"file:filename.root")
+	    changeSource(self._process,"file:filename.root")
 	    self.assertEqual(changeSource._defaultParameters['source'].value,"No default value. Set your own")
             self.assertEqual(changeSource._parameters['source'].value,"file:filename.root")
             changeSource.setParameter('source',"filename2.txt")
@@ -90,6 +89,42 @@ class testConfigToolBase(unittest.TestCase):
 	    self.assertEqual(changeSource._defaultParameters['source'].value,"No default value. Set your own")
 	    changeSource.reset()
 	    self.assertEqual(changeSource._parameters['source'].value,"No default value. Set your own")
+
+	def testdumpPython(self):
+	    """ Test on dumpPython
+	    """
+            print "Test on dumpPython method "
+	    changeSource(self._process,"file:filename.root")
+	    self.assertEqual(changeSource.dumpPython(),("\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n",'\nchangeSource(process, "file:filename.root")\n'))
+
+	def testdumpHistory(self):
+	    """ Test on dumpHistory
+	    """
+            print "Test on dumpHistory method "
+	    changeSource(self._process,"file:filename.root")
+	    self.assertEqual(self._process.dumpHistory(),('\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n\nchangeSource(process, "file:filename.root")\n'))
+
+	def testAddAction(self):
+	    """ Test on addAction method and on the process attributes enableRecording and disableRecording
+	    """
+            print "Test on dumpHistory method "
+	    changeSource(self._process,"file:filename.root")
+	    changeSource.setParameter('source',"file:filename2.root")
+	    action=changeSource.__copy__()
+	    self.assertEqual(action._parameters['source'].value,"file:filename2.root")
+	    self._process.addAction(action)
+	    changeSource.setParameter('source',"file:filename3.root")
+	    self._process.disableRecording()
+	    action=changeSource.__copy__()
+	    self.assertEqual(action._parameters['source'].value,"file:filename3.root")
+	    self._process.addAction(action)
+	    changeSource.setParameter('source',"file:filename4.root")
+	    self._process.enableRecording()
+	    action=changeSource.__copy__()
+	    self.assertEqual(action._parameters['source'].value,"file:filename4.root")
+	    self._process.addAction(action)
+	    self.assertEqual(self._process.dumpHistory(),('\nfrom PhysicsTools.PatAlgos.tools.testTools import *\n\nchangeSource(process, "file:filename.root")\n\nchangeSource(process, "file:filename2.root")\n\nchangeSource(process, "file:filename4.root")\n'))
+
 	    
 if __name__=="__main__":
-    unittest.main()
+	unittest.main()
