@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.patEventContent_cff import *

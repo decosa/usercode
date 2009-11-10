@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.helpers import *
 from FWCore.ParameterSet.Types  import InputTag    
 

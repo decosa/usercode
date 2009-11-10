@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.tools.coreTools import *
@@ -310,7 +311,7 @@ class AddPFCandidates(ConfigToolBase):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython = "\naddPFCandidates(process, "
         dumpPython += str(self.getvalue('src'))+ ", "
-        dumpPython += '"'+str(self.getvalue('patLabel'))+'"'+')'
+        dumpPython += '"'+str(self.getvalue('patLabel'))+'"'+', '
         dumpPython += '"'+str(self.getvalue('cut'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
                

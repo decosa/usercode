@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.tools.helpers import *
@@ -186,8 +187,8 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
 
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
-        dumpPython = "\nRemoveAllPATObjectsBut(process, "
-        dumpPython += str(self.getvalue('names'))+')'
+        dumpPython = "\nremoveAllPATObjectsBut(process, "
+        dumpPython += str(self.getvalue('names'))+','
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,
@@ -244,7 +245,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython = "\nremoveSpecificPATObjects(process, "
-        dumpPython += str(self.getvalue('names'))+')'
+        dumpPython += str(self.getvalue('names'))+', '
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
 

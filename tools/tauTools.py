@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.tools.coreTools import *
@@ -69,8 +70,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
 redoPFTauDiscriminators= RedoPFTauDiscriminators()
 
 class SwitchToCaloTau(ConfigToolBase):
-# switch to CaloTau collection
-    """
+    """ Switch to CaloTau collection
     """
     _label='SwitchToCaloTau'    
     _defaultParameters={}

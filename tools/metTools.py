@@ -1,4 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
 
 class AddTcMET(ConfigToolBase):
     """
@@ -67,7 +68,7 @@ class AddPfMET(ConfigToolBase):
     process : process
     ------------------------------------------------------------------
     """
-    _label='ChangeSource'
+    _label='AddPfMET'
     
     _defaultParameters={}
     def __init__(self):
