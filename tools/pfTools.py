@@ -240,7 +240,7 @@ class AdaptPFTaus(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'tauType','shrinkingConePFTau', '')
+        self.addParameter(self._defaultParameters,'tauType',"shrinkingConePFTau", '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         
     def getDefaultParameters(self):
@@ -250,7 +250,7 @@ class AdaptPFTaus(ConfigToolBase):
        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython = "\nadaptPFTaus(process, "
-        dumpPython += str(self.getvalue('tauType'))+')'+'\n'
+        dumpPython += '"'+str(self.getvalue('tauType'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
     def __call__(self,process,tauType=None) :
