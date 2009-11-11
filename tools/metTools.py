@@ -34,7 +34,8 @@ class AddTcMET(ConfigToolBase):
     def apply(self, process):
                 
         postfixLabel=self._parameters['postfixLabel'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
 
         ## add module as process to the default sequence
         def addAlso (label,value):
@@ -54,9 +55,10 @@ class AddTcMET(ConfigToolBase):
         ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
 
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 addTcMET=AddTcMET()
 
@@ -93,7 +95,8 @@ class AddPfMET(ConfigToolBase):
 
     def apply(self, process): 
         postfixLabel=self._parameters['postfixLabel'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         ## add module as process to the default sequence
         def addAlso (label,value):
@@ -113,8 +116,9 @@ class AddPfMET(ConfigToolBase):
         ## add new met collections output to the pat summary
         process.allLayer1Summary.candidates += [ cms.InputTag('layer1METs'+postfixLabel) ]
 
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 addPfMET=AddPfMET()

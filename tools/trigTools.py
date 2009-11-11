@@ -26,7 +26,8 @@ class SwitchOnTrigger(ConfigToolBase):
         self.apply(process) 
         
     def apply(self, process):
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
     
         ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
@@ -39,9 +40,10 @@ class SwitchOnTrigger(ConfigToolBase):
         process.out.outputCommands += patTriggerEventContent
         for matchLabel in process.patTriggerEvent.patTriggerMatches:
             process.out.outputCommands += [ 'keep patTriggerObjectsedmAssociation_patTriggerEvent_' + matchLabel + '_*' ]
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchOnTrigger=SwitchOnTrigger()
 
@@ -67,7 +69,8 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         self.apply(process) 
         
     def apply(self, process):
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
         process.patDefaultSequence += process.patTriggerSequence
@@ -76,9 +79,10 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         process.patTrigger.onlyStandAlone = True
         process.patTriggerSequence.remove( process.patTriggerEvent )
         process.out.outputCommands += patTriggerStandAloneEventContent
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
         
 switchOnTriggerStandAlone=SwitchOnTriggerStandAlone()
 
@@ -104,12 +108,14 @@ class SwitchOnTriggerAll(ConfigToolBase):
         self.apply(process) 
         
     def apply(self, process):
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         switchOnTrigger( process )
         process.out.outputCommands += patTriggerStandAloneEventContent
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchOnTriggerAll=SwitchOnTriggerAll()
         
@@ -135,11 +141,13 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
         self.apply(process) 
         
     def apply(self, process):
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         process.patTriggerSequence += process.patTriggerMatchEmbedder
         process.out.outputCommands += patEventContentTriggerMatch
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchOnTriggerMatchEmbedding=SwitchOnTriggerMatchEmbedding()

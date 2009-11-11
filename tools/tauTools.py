@@ -45,7 +45,8 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         oldPFTauLabel =self._parameters['oldPFTauLabel'].value
         newPFTauLabel =self._parameters['newPFTauLabel'].value
         tauType =self._parameters['tauType'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
 
         print 'Tau discriminators: ', oldPFTauLabel, '->', newPFTauLabel
         print 'Tau type: ', tauType
@@ -63,9 +64,10 @@ class RedoPFTauDiscriminators(ConfigToolBase):
                                            process.allLayer1Objects
                                            )
         massSearchReplaceParam(tauDiscriminationSequence, tauSrc, oldPFTauLabel, newPFTauLabel)
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 redoPFTauDiscriminators= RedoPFTauDiscriminators()
 
@@ -101,7 +103,8 @@ class SwitchToCaloTau(ConfigToolBase):
                 
          pfTauLabel=self._parameters['pfTauLabel'].value
          caloTauLabel=self._parameters['caloTauLabel'].value
-         process.disableRecording()
+         if hasattr(process, "addAction"):
+             process.disableRecording()
         
          process.tauMatch.src       = caloTauLabel
          process.tauGenJetMatch.src = caloTauLabel
@@ -120,9 +123,10 @@ class SwitchToCaloTau(ConfigToolBase):
          process.allLayer1Taus.userIsolation = cms.PSet()
 
          # internal auxiliary function to switch to **any** PFTau collection
-         process.enableRecording()
-         action=self.__copy__()
-         process.addAction(action)
+         if hasattr(process, "addAction"):
+             process.enableRecording()
+             action=self.__copy__()
+             process.addAction(action)
 
 switchToCaloTau=SwitchToCaloTau()
          
@@ -195,7 +199,8 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
                 
          pfTauLabelOld=self._parameters['pfTauLabelOld'].value
          pfTauLabelNew=self._parameters['pfTauLabelNew'].value
-         process.disableRecording()
+         if hasattr(process, "addAction"):
+             process.disableRecording()
     
          _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, 'fixedConePFTau')
          #
@@ -204,9 +209,10 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
          #     so need to disable embedding of PFTauDecayMode information into pat::Tau for now...
          #
          process.allLayer1Taus.addDecayMode = cms.bool(False)
-         process.enableRecording()
-         action=self.__copy__()
-         process.addAction(action)
+         if hasattr(process, "addAction"):
+             process.enableRecording()
+             action=self.__copy__()
+             process.addAction(action)
 
 switchToPFTauFixedCone=SwitchToPFTauFixedCone()       
 
@@ -244,7 +250,8 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
                 
          pfTauLabelOld=self._parameters['pfTauLabelOld'].value
          pfTauLabelNew=self._parameters['pfTauLabelNew'].value
-         process.disableRecording()
+         if hasattr(process, "addAction"):
+             process.disableRecording()
          _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, 'fixedConeHighEffPFTau')
          #
          # CV: PFTauDecayMode objects produced only for shrinking cone reco::PFTaus in
@@ -252,9 +259,10 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
          #     so need to disable embedding of PFTauDecayMode information into pat::Tau for now...
          #
          process.allLayer1Taus.addDecayMode = cms.bool(False)
-         process.enableRecording()
-         action=self.__copy__()
-         process.addAction(action)
+         if hasattr(process, "addAction"):
+             process.enableRecording()
+             action=self.__copy__()
+             process.addAction(action)
 
 switchToPFTauFixedConeHighEff=SwitchToPFTauFixedConeHighEff()
 
@@ -291,7 +299,8 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
                 
          pfTauLabelOld=self._parameters['pfTauLabelOld'].value
          pfTauLabelNew=self._parameters['pfTauLabelNew'].value
-         process.disableRecording()
+         if hasattr(process, "addAction"):
+             process.disableRecording()
          _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, 'shrinkingConePFTau')
          #
          # CV: TaNC only trained for shrinkingCone PFTaus up to now,
@@ -312,9 +321,10 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
              byTaNCfrQuarterPercent = cms.InputTag("shrinkingConePFTauDiscriminationByTaNCfrQuarterPercent"),
              byTaNCfrTenthPercent = cms.InputTag("shrinkingConePFTauDiscriminationByTaNCfrTenthPercent")
              )
-         process.enableRecording()
-         action=self.__copy__()
-         process.addAction(action)
+         if hasattr(process, "addAction"):
+             process.enableRecording()
+             action=self.__copy__()
+             process.addAction(action)
          
 switchToPFTauShrinkingCone=SwitchToPFTauShrinkingCone()
 
@@ -360,10 +370,12 @@ class SwitchToAnyPFTau(ConfigToolBase):
          pfTauLabelOld=self._parameters['pfTauLabelOld'].value
          pfTauLabelNew=self._parameters['pfTauLabelNew'].value
          pfTauType =self._parameters['pfTauType'].value
-         process.disableRecording()
+         if hasattr(process, "addAction"):
+             process.disableRecording()
          _switchToPFTau(process, pfTauLabelOld, pfTauLabelNew, pfTauType)
-         process.enableRecording()
-         action=self.__copy__()
-         process.addAction(action)
+         if hasattr(process, "addAction"):
+             process.enableRecording()
+             action=self.__copy__()
+             process.addAction(action)
 
 switchToAnyPFTau=SwitchToAnyPFTau()

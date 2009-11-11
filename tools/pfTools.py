@@ -39,7 +39,8 @@ class AdaptPFMuons(ConfigToolBase):
     def apply(self, process):
                 
         module=self._parameters['module'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
 
         print "Adapting PF Muons "
         print "***************** "
@@ -66,9 +67,10 @@ class AdaptPFMuons(ConfigToolBase):
         print " isodeposits: "
         print module.isoDeposits
         print 
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 adaptPFMuons=AdaptPFMuons()
 
@@ -101,7 +103,8 @@ class AdaptPFElectrons(ConfigToolBase):
     def apply(self, process):
                 
         module=self._parameters['module'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         # module.useParticleFlow = True
 
         print "Adapting PF Electrons "
@@ -153,9 +156,10 @@ class AdaptPFElectrons(ConfigToolBase):
         ##     if module.embedSuperCluster.value(): 
         ##         module.embedSuperCluster = False
         ##         print "Temporarily switching off electron supercluster embedding"
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
         
 adaptPFElectrons=AdaptPFElectrons()
 
@@ -225,11 +229,13 @@ class AdaptPFJets(ConfigToolBase):
     def apply(self, process):
                 
         module=self._parameters['module'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         module.embedCaloTowers   = False
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
         
 adaptPFJets=AdaptPFJets()
         
@@ -262,7 +268,8 @@ class AdaptPFTaus(ConfigToolBase):
     def apply(self, process):
                 
         tauType=self._parameters['tauType'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         # MICHAL: tauType can be changed only to fixed cone one, otherwise request is igonred
         oldTaus = process.allLayer1Taus.tauSource
@@ -285,9 +292,10 @@ class AdaptPFTaus(ConfigToolBase):
                                 process.allLayer1Taus.tauSource,
                                 tauType)
         switchToAnyPFTau(process, oldTaus, process.allLayer1Taus.tauSource, tauType)
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 adaptPFTaus=AdaptPFTaus()
 
@@ -332,7 +340,8 @@ class AddPFCandidates(ConfigToolBase):
         src=self._parameters['src'].value
         patLabel =self._parameters['patLabel'].value
         cut=self._parameters['cut'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         from PhysicsTools.PatAlgos.producersLayer1.pfParticleProducer_cfi import allLayer1PFParticles
         # make modules
         producer = allLayer1PFParticles.clone(pfCandidateSource = src)
@@ -354,9 +363,10 @@ class AddPFCandidates(ConfigToolBase):
         # summary tables
         process.allLayer1Summary.candidates.append(cms.InputTag('allLayer1' + patLabel))
         process.selectedLayer1Summary.candidates.append(cms.InputTag('selectedLayer1' + patLabel))
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 addPFCandidates= AddPFCandidates()
 
@@ -386,15 +396,17 @@ class SwitchToPFMET(ConfigToolBase):
         self.apply(process)
     def apply(self, process):         
         input=self._parameters['input'].value
-        process.disableRecording() 
+        if hasattr(process, "addAction"):
+            process.disableRecording() 
         print 'MET: using ', input
         oldMETSource = process.layer1METs.metSource
         process.layer1METs.metSource = input
         process.layer1METs.addMuonCorrections = False
         process.patDefaultSequence.remove(getattr(process, 'makeLayer1METs'))
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchToPFMET=SwitchToPFMET()
 
@@ -423,7 +435,8 @@ class SwitchToPFJets(ConfigToolBase):
         self.apply(process)
     def apply(self, process):         
         input=self._parameters['input'].value
-        process.disableRecording() 
+        if hasattr(process, "addAction"):
+            process.disableRecording() 
         print 'Jets: using ', input
         switchJetCollection(process,
                             input,
@@ -432,9 +445,10 @@ class SwitchToPFJets(ConfigToolBase):
                             jetCorrLabel=('IC5','PF'), 
                             doType1MET=False)  
         adaptPFJets(process, process.allLayer1Jets)
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchToPFJets=SwitchToPFJets()
 
@@ -470,7 +484,8 @@ class UsePF2PAT(ConfigToolBase):
         self.apply(process)
     def apply(self, process):         
         runPF2PAT=self._parameters['runPF2PAT'].value
-        process.disableRecording() 
+        if hasattr(process, "addAction"):
+            process.disableRecording() 
         # -------- CORE ---------------
         if runPF2PAT:
             process.load("PhysicsTools.PFCandProducer.PF2PAT_cff")
@@ -509,8 +524,9 @@ class UsePF2PAT(ConfigToolBase):
         # Unmasked PFCandidates
         addPFCandidates(process,cms.InputTag('pfNoJet'),patLabel='PFParticles',cut="")
 
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 usePF2PAT=UsePF2PAT()

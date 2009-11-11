@@ -63,7 +63,8 @@ class MakeAODTrackCandidates(ConfigToolBase):
         tracks=self._parameters['tracks'].value
         particleType=self._parameters['particleType'].value
         candSelection=self._parameters['candSelection'].value        
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
 
         process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi");
         ## add ChargedCandidateProducer from track
@@ -80,9 +81,10 @@ class MakeAODTrackCandidates(ConfigToolBase):
                 )
         ## run production of TrackCandidates at the very beginning of the sequence
         process.patDefaultSequence.replace(process.allLayer1Objects, getattr(process, 'patAOD' + label + 'Unfiltered') * getattr(process, 'patAOD' + label) * process.allLayer1Objects)
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 makeAODTrackCandidates=MakeAODTrackCandidates()
 
@@ -174,7 +176,8 @@ class MakePATTrackCandidates(ConfigToolBase):
         isoDeposits=self._parameters['isoDeposits'].value
         mcAs=self._parameters['mcAs'].value
                                                 
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         ## add allLayer1Tracks to the process
         from PhysicsTools.PatAlgos.producersLayer1.genericParticleProducer_cfi import allLayer1GenericParticles
@@ -282,9 +285,10 @@ class MakePATTrackCandidates(ConfigToolBase):
             process.patDefaultSequence.replace( l1cands, getattr(process, 'pat'+label+'MCMatch') * l1cands)
             l1cands.addGenMatch = True
             l1cands.genParticleMatch = cms.InputTag('pat'+label+'MCMatch')
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 makePATTrackCandidates=MakePATTrackCandidates()
 class MakeTrackCandidates(ConfigToolBase):
@@ -389,7 +393,8 @@ class MakeTrackCandidates(ConfigToolBase):
         isoDeposits=self._parameters['isoDeposits'].value
         mcAs=self._parameters['mcAs'].value
                                                 
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
 
         makeAODTrackCandidates(process,
@@ -406,8 +411,9 @@ class MakeTrackCandidates(ConfigToolBase):
                                mcAs          = mcAs,
                                selection     = selection
                                )
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 makeTrackCandidates=MakeTrackCandidates()

@@ -1,5 +1,4 @@
-from FWCore.GuiBrowsers.ConfigToolBase import *
-#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 from FWCore.ParameterSet.Types  import InputTag    
 
 class ChangeSource(ConfigToolBase):
@@ -33,13 +32,15 @@ class ChangeSource(ConfigToolBase):
     def apply(self, process):
                 
         source=self._parameters['source'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
 
         process.source.fileNames=cms.untracked.vstring(source)
         
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
     
 changeSource=ChangeSource()

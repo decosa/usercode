@@ -43,7 +43,8 @@ class RestrictInputToAOD (ConfigToolBase):
     def apply(self, process):
                 
         names=self._parameters['names'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         for obj in range(len(names)):
             print "---------------------------------------------------------------------"
@@ -62,9 +63,10 @@ class RestrictInputToAOD (ConfigToolBase):
             if( names[obj] == 'METs' or names[obj] == 'All' ):
                 print "          * nothing needs to be done for METs"            
             print "---------------------------------------------------------------------"
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+           process.enableRecording()
+           action=self.__copy__()
+           process.addAction(action)
 
 restrictInputToAOD=RestrictInputToAOD() 
 
@@ -106,7 +108,8 @@ class RemoveMCMatching(ConfigToolBase):
     def apply(self, process):
                 
         name=self._parameters['name'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         if( name == 'Photons'   or name == 'All' ):
             _removeMCMatchingForPATObject(process, 'photonMatch', 'allLayer1Photons') 
@@ -143,9 +146,10 @@ class RemoveMCMatching(ConfigToolBase):
             metProducer = getattr(process, 'layer1METs')        
             metProducer.addGenMET           = False
             metProducer.genMETSource        = ''       
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 removeMCMatching = RemoveMCMatching()   
 
@@ -206,15 +210,17 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
                 
         names=self._parameters['names'].value
         outputInProcess=self._parameters['outputInProcess'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         removeTheseObjectCollections = ['Photons', 'Electrons', 'Muons', 'Taus', 'Jets', 'METs']
         for obj in range(len(names)):
             removeTheseObjectCollections.remove(names[obj])
         removeSpecificPATObjects(process, removeTheseObjectCollections, outputInProcess)
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 removeAllPATObjectsBut=RemoveAllPATObjectsBut()
 
@@ -264,7 +270,8 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                 
         names=self._parameters['names'].value
         outputInProcess=self._parameters['outputInProcess'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         ## remove pre object production steps from the default sequence
         for obj in range(len(names)):
@@ -319,9 +326,10 @@ class RemoveSpecificPATObjects(ConfigToolBase):
                 process.allLayer1Summary.candidates.remove( cms.InputTag('allLayer1'+names[obj]) )
                 process.selectedLayer1Summary.candidates.remove( cms.InputTag('selectedLayer1'+names[obj]) )
                 process.cleanLayer1Summary.candidates.remove( cms.InputTag('cleanLayer1'+names[obj]) )
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
         
 removeSpecificPATObjects=RemoveSpecificPATObjects()
 
@@ -360,7 +368,8 @@ class RemoveCleaning(ConfigToolBase):
     def apply(self, process):
                 
         outputInProcess=self._parameters['outputInProcess'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         
         ## adapt single object counters
         for m in listModules(process.countLayer1Objects):
@@ -375,9 +384,10 @@ class RemoveCleaning(ConfigToolBase):
             ## add selected layer1 objects to the pat output
             from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoLayer1Cleaning
             process.out.outputCommands = patEventContentNoLayer1Cleaning
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 removeCleaning=RemoveCleaning()
 
@@ -408,7 +418,8 @@ class AddCleaning(ConfigToolBase):
         self.apply(process) 
         
     def apply(self, process):
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         ## adapt single object counters
         process.patDefaultSequence.replace(process.countLayer1Objects, process.cleanLayer1Objects * process.countLayer1Objects)
         for m in listModules(process.countLayer1Objects):
@@ -421,8 +432,9 @@ class AddCleaning(ConfigToolBase):
         ## add clean layer1 objects to the pat output
         from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
         process.out.outputCommands = patEventContent               
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 addCleaning=AddCleaning()

@@ -1,5 +1,5 @@
-#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-from FWCore.GuiBrowsers.ConfigToolBase import *
+from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+#from FWCore.GuiBrowsers.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.helpers import *
 from FWCore.ParameterSet.Types  import InputTag    
 
@@ -140,7 +140,8 @@ class RunBTagging(ConfigToolBase):
     def apply(self,process):
         jetCollection=self._parameters['jetCollection'].value
         label=self._parameters['label'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         ### tool code
         
         if (label == ''):
@@ -232,9 +233,10 @@ class RunBTagging(ConfigToolBase):
         setattr( process, 'btagging'+label, seq )
         ## return the combined sequence and the labels defined above
     
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
         return (seq, labels)
 
 runBTagging=RunBTagging()
@@ -359,7 +361,8 @@ class SwitchJetCollection(ConfigToolBase):
         genJetCollection=self._parameters['genJetCollection'].value
         doJetID=self._parameters['doJetID'].value
         jetIdLabel=self._parameters['jetIdLabel'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         ### tool code  
 
         ## save label of old jet collection
@@ -462,9 +465,10 @@ class SwitchJetCollection(ConfigToolBase):
             ## switch embedding of jetCorrFactors off
             ## for pat jet production
             process.allLayer1Jets.addJetCorrFactors = False
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process,"addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 switchJetCollection=SwitchJetCollection()   
 
@@ -615,7 +619,8 @@ class AddJetCollection(ConfigToolBase):
         genJetCollection=self._parameters['genJetCollection'].value
         doJetID=self._parameters['doJetID'].value
         jetIdLabel=self._parameters['jetIdLabel'].value
-        process.disableRecording()
+        if hasattr(process, "addAction"):
+            process.disableRecording()
         ### tool code  
         ## add module as process to the makeAllLayer1Jets sequence
         def addAlso(label, value):
@@ -742,9 +747,10 @@ class AddJetCollection(ConfigToolBase):
         else:
             ## switch jetCorrFactors off
             l1Jets.addJetCorrFactors = False
-        process.enableRecording()
-        action=self.__copy__()
-        process.addAction(action)
+        if hasattr(process, "addAction"):
+            process.enableRecording()
+            action=self.__copy__()
+            process.addAction(action)
 
 addJetCollection=AddJetCollection()  
 
