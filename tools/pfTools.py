@@ -19,13 +19,16 @@ class AdaptPFMuons(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'module','No default value. Set your own', '',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nadaptPFMuons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -83,13 +86,16 @@ class AdaptPFElectrons(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'module','No default value. Set your own', '',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nadaptPFElectrons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -172,13 +178,16 @@ class AdaptPFPhotons(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'module','No default value. Set your own', '',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment 
         dumpPython = "\nadaptPFPhotons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -209,13 +218,16 @@ class AdaptPFJets(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'module','No default value. Set your own', '',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nadaptPFJets(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -248,13 +260,16 @@ class AdaptPFTaus(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'tauType',"shrinkingConePFTau", '')
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nadaptPFTaus(process, "
         dumpPython += '"'+str(self.getvalue('tauType'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -311,12 +326,15 @@ class AddPFCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'cut',"", '')
                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\naddPFCandidates(process, "
         dumpPython += str(self.getvalue('src'))+ ", "
         dumpPython += '"'+str(self.getvalue('patLabel'))+'"'+', '
@@ -379,12 +397,15 @@ class SwitchToPFMET(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'input',cms.InputTag('pfMET'), '')
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToPFMET(process, "
         dumpPython += str(self.getvalue('input'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -419,12 +440,15 @@ class SwitchToPFJets(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'input',cms.InputTag('pfNoTau'), '')
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self): 
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToPFJets(process, "
         dumpPython += str(self.getvalue('input'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -466,13 +490,16 @@ class UsePF2PAT(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'runPF2PAT',True, '')
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nusePF2PAT(process, "
         dumpPython += str(self.getvalue('runPF2PAT'))+')'+'\n'
         return (dumpPythonImport,dumpPython)

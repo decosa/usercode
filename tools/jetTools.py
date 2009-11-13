@@ -1,5 +1,5 @@
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-#from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
 from PhysicsTools.PatAlgos.tools.helpers import *
 from FWCore.ParameterSet.Types  import InputTag    
 
@@ -117,11 +117,15 @@ class RunBTagging(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'jetCollection',self._defaultValue,'Input jet collection', InputTag)
         self.addParameter(self._defaultParameters,'label',self._defaultValue, 'Postfix label to identify new sequence/modules',str)
-        self._parameters=copy.deepcopy(self._defaultParameters)  
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ''
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nrunBTagging(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+')'+'\n'
@@ -290,7 +294,8 @@ class SwitchJetCollection(ConfigToolBase):
         self.addParameter(self._defaultParameters,'genJetCollection',cms.InputTag("ak5GenJets"), "GenJet collection to match to")
         self.addParameter(self._defaultParameters,'doJetID',True, "add jetId variables to the added jet collection?")
         self.addParameter(self._defaultParameters,'jetIdLabel',"ak5", "specify the label prefix of the xxxJetID object; in general it is the jet collection tag like ak5, kt4 sc5, aso. For more informatrino have a look to SWGuidePATTools#switch_JetCollection")
-        self._parameters=copy.deepcopy(self._defaultParameters)  
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ''
     def getDefaultParameters(self):
         return self._defaultParameters
     #def setDefaultValue(self,name):
@@ -298,6 +303,9 @@ class SwitchJetCollection(ConfigToolBase):
            # name=self._defaultParameters[name].value
     def dumpPython(self):
         dumpPythonImport= "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n "
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchJetCollection(process, "
         dumpPython += str(self.getvalue('jetCollection'))+', '
         dumpPython += str(self.getvalue('doJTA'))+', '
@@ -527,7 +535,8 @@ class AddJetCollection(ConfigToolBase):
         self.addParameter(self._defaultParameters,'genJetCollection',cms.InputTag("ak5GenJets"), "GenJet collection to match to")
         self.addParameter(self._defaultParameters,'doJetID',True, "add jetId variables to the added jet collection?")
         self.addParameter(self._defaultParameters,'jetIdLabel',"ak5", "specify the label prefix of the xxxJetID object; in general it is the jet collection tag like ak5, kt4 sc5, aso. For more information have a look to SWGuidePATTools#add_JetCollection")
-        self._parameters=copy.deepcopy(self._defaultParameters)  
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     #def setDefaultValue(self,name):
@@ -535,6 +544,9 @@ class AddJetCollection(ConfigToolBase):
       #      name=self._defaultParameters[str(name)].value
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n "
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\naddJetCollection(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
         dumpPython += '"'+str(self.getvalue('postfixLabel'))+'"'+', '

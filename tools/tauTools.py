@@ -15,6 +15,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         self.addParameter(self._defaultParameters,'newPFTauLabel',cms.InputTag('pfRecoTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'tauType','fixedConePFTau', ' ')
         self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
         
     def getDefaultParameters(self):
         return self._defaultParameters
@@ -22,6 +23,9 @@ class RedoPFTauDiscriminators(ConfigToolBase):
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nredoPFTauDiscriminators(process, "
         dumpPython += str(self.getvalue('oldPFTauLabel'))+ ", "
         dumpPython += str(self.getvalue('newPFTauLabel'))+", "
@@ -80,11 +84,15 @@ class SwitchToCaloTau(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'pfTauLabel',cms.InputTag('fixedConePFTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'caloTauLabel',cms.InputTag('caloRecoTauProducer'), ' ')
-        self._parameters=copy.deepcopy(self._defaultParameters)       
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToCaloTau(process, "
         dumpPython += str(self.getvalue('pfTauLabel'))+ ", "
         dumpPython += str(self.getvalue('caloTauLabel'))+')'+'\n'
@@ -176,11 +184,15 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('pfRecoTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'pfTauLabelNew',cms.InputTag('fixedConePFTauProducer'), ' ')
-        self._parameters=copy.deepcopy(self._defaultParameters)       
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToPFTauFixedCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
@@ -226,12 +238,16 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('pfRecoTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'pfTauLabelNew',cms.InputTag('fixedConeHighEffPFTauProducer'), ' ')
-        self._parameters=copy.deepcopy(self._defaultParameters)       
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""  
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToPFTauFixedConeHighEff(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
@@ -276,11 +292,15 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('pfRecoTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'pfTauLabelNew',cms.InputTag('shrinkingConePFTauProducer'), ' ')
-        self._parameters=copy.deepcopy(self._defaultParameters)       
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToPFTauShrinkingCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
@@ -341,11 +361,15 @@ class SwitchToAnyPFTau(ConfigToolBase):
         self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('pfRecoTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'pfTauLabelNew',cms.InputTag('shrinkingConePFTauProducer'), ' ')
         self.addParameter(self._defaultParameters,'pfTauType','fixedConePFTau', ' ')
-        self._parameters=copy.deepcopy(self._defaultParameters)       
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):  
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.jetTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nswitchToAnyPFTau(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+ ", "

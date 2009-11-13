@@ -16,11 +16,15 @@ class AddTcMET(ConfigToolBase):
     def __init__(self):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'postfixLabel','TC', '')
-        self._parameters=copy.deepcopy(self._defaultParameters)        
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ''
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\naddTcMET(process, "
         dumpPython += '"'+str(self.getvalue('postfixLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -77,12 +81,15 @@ class AddPfMET(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'postfixLabel','PF', '')
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ''
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.metTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\naddPfMET(process, "
         dumpPython +='"'+ str(self.getvalue('postfixLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)

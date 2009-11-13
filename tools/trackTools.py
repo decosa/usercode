@@ -24,13 +24,16 @@ class MakeAODTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'candSelection','pt > 10', 'preselection cut on the candidates')
         
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nmakeAODTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "
@@ -121,13 +124,16 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string")
         
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nmakePATTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('input'))+", "
@@ -328,12 +334,15 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string")
         
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nmakeTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "

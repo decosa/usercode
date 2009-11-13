@@ -23,13 +23,16 @@ class RestrictInputToAOD (ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons','Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport= "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nrestrictInputToAOD(process, "
         dumpPython += str(self.getvalue('names'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -88,13 +91,16 @@ class RemoveMCMatching(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'name','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",str)                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nremoveMCMatching(process, "
         dumpPython += '"'+str(self.getvalue('name'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -185,12 +191,15 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
         self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list)
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nremoveAllPATObjectsBut(process, "
         dumpPython += str(self.getvalue('names'))+','
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
@@ -245,11 +254,14 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list)
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment 
         dumpPython = "\nremoveSpecificPATObjects(process, "
         dumpPython += str(self.getvalue('names'))+', '
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
@@ -350,11 +362,14 @@ class RemoveCleaning(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
-        
+        self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
         dumpPython = "\nremoveCleaning(process, "
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -405,12 +420,16 @@ class AddCleaning(ConfigToolBase):
     def __init__(self):
         ConfigToolBase.__init__(self)
         self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
         
     def getDefaultParameters(self):
         return self._defaultParameters
        
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment 
         dumpPython = "\naddCleaning(process)\n" 
         return (dumpPythonImport,dumpPython)
 
