@@ -26,7 +26,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nredoPFTauDiscriminators(process, "
+        dumpPython += "\nredoPFTauDiscriminators(process, "
         dumpPython += str(self.getvalue('oldPFTauLabel'))+ ", "
         dumpPython += str(self.getvalue('newPFTauLabel'))+", "
         dumpPython += '"'+str(self.getvalue('tauType'))+'"'+')'+'\n'
@@ -93,7 +93,7 @@ class SwitchToCaloTau(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToCaloTau(process, "
+        dumpPython += "\nswitchToCaloTau(process, "
         dumpPython += str(self.getvalue('pfTauLabel'))+ ", "
         dumpPython += str(self.getvalue('caloTauLabel'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -193,7 +193,7 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToPFTauFixedCone(process, "
+        dumpPython += "\nswitchToPFTauFixedCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -248,7 +248,7 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToPFTauFixedConeHighEff(process, "
+        dumpPython += "\nswitchToPFTauFixedConeHighEff(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -301,7 +301,7 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToPFTauShrinkingCone(process, "
+        dumpPython += "\nswitchToPFTauShrinkingCone(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -370,7 +370,7 @@ class SwitchToAnyPFTau(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToAnyPFTau(process, "
+        dumpPython += "\nswitchToAnyPFTau(process, "
         dumpPython += str(self.getvalue('pfTauLabelOld'))+ ", "
         dumpPython += str(self.getvalue('pfTauLabelNew'))+ ", "
         dumpPython += '"'+str(self.getvalue('pfTauType'))+ '"'+')'+'\n'

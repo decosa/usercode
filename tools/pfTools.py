@@ -29,7 +29,7 @@ class AdaptPFMuons(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nadaptPFMuons(process, "
+        dumpPython += "\nadaptPFMuons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     
@@ -96,7 +96,7 @@ class AdaptPFElectrons(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nadaptPFElectrons(process, "
+        dumpPython += "\nadaptPFElectrons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
@@ -188,7 +188,7 @@ class AdaptPFPhotons(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment 
-        dumpPython = "\nadaptPFPhotons(process, "
+        dumpPython += "\nadaptPFPhotons(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
@@ -228,7 +228,7 @@ class AdaptPFJets(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nadaptPFJets(process, "
+        dumpPython += "\nadaptPFJets(process, "
         dumpPython += str(self.getvalue('module'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
@@ -270,7 +270,7 @@ class AdaptPFTaus(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nadaptPFTaus(process, "
+        dumpPython += "\nadaptPFTaus(process, "
         dumpPython += '"'+str(self.getvalue('tauType'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
@@ -335,7 +335,7 @@ class AddPFCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\naddPFCandidates(process, "
+        dumpPython += "\naddPFCandidates(process, "
         dumpPython += str(self.getvalue('src'))+ ", "
         dumpPython += '"'+str(self.getvalue('patLabel'))+'"'+', '
         dumpPython += '"'+str(self.getvalue('cut'))+'"'+')'+'\n'
@@ -406,7 +406,7 @@ class SwitchToPFMET(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToPFMET(process, "
+        dumpPython += "\nswitchToPFMET(process, "
         dumpPython += str(self.getvalue('input'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
                
@@ -449,7 +449,7 @@ class SwitchToPFJets(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchToPFJets(process, "
+        dumpPython += "\nswitchToPFJets(process, "
         dumpPython += str(self.getvalue('input'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,input=None) :
@@ -500,7 +500,7 @@ class UsePF2PAT(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nusePF2PAT(process, "
+        dumpPython += "\nusePF2PAT(process, "
         dumpPython += str(self.getvalue('runPF2PAT'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
   

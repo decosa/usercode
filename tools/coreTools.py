@@ -33,7 +33,7 @@ class RestrictInputToAOD (ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nrestrictInputToAOD(process, "
+        dumpPython += "\nrestrictInputToAOD(process, "
         dumpPython += str(self.getvalue('names'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
@@ -101,7 +101,7 @@ class RemoveMCMatching(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nremoveMCMatching(process, "
+        dumpPython += "\nremoveMCMatching(process, "
         dumpPython += '"'+str(self.getvalue('name'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,
@@ -200,7 +200,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nremoveAllPATObjectsBut(process, "
+        dumpPython += "\nremoveAllPATObjectsBut(process, "
         dumpPython += str(self.getvalue('names'))+','
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -262,7 +262,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment 
-        dumpPython = "\nremoveSpecificPATObjects(process, "
+        dumpPython += "\nremoveSpecificPATObjects(process, "
         dumpPython += str(self.getvalue('names'))+', '
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -370,7 +370,7 @@ class RemoveCleaning(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nremoveCleaning(process, "
+        dumpPython += "\nremoveCleaning(process, "
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,
@@ -430,7 +430,7 @@ class AddCleaning(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment 
-        dumpPython = "\naddCleaning(process)\n" 
+        dumpPython += "\naddCleaning(process)\n" 
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process) :

@@ -34,7 +34,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nmakeAODTrackCandidates(process, "
+        dumpPython += "\nmakeAODTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += '"'+str(self.getvalue('particleType'))+'"'+", "
@@ -134,7 +134,7 @@ class MakePATTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nmakePATTrackCandidates(process, "
+        dumpPython += "\nmakePATTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('input'))+", "
         dumpPython += '"'+str(self.getvalue('selection'))+'"'+", "
@@ -343,7 +343,7 @@ class MakeTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nmakeTrackCandidates(process, "
+        dumpPython += "\nmakeTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += '"'+str(self.getvalue('particleType'))+'"'+", "

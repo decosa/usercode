@@ -25,7 +25,7 @@ class AddTcMET(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\naddTcMET(process, "
+        dumpPython += "\naddTcMET(process, "
         dumpPython += '"'+str(self.getvalue('postfixLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
@@ -90,7 +90,7 @@ class AddPfMET(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\naddPfMET(process, "
+        dumpPython += "\naddPfMET(process, "
         dumpPython +='"'+ str(self.getvalue('postfixLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
     

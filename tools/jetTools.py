@@ -126,7 +126,7 @@ class RunBTagging(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nrunBTagging(process, "
+        dumpPython += "\nrunBTagging(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -306,7 +306,7 @@ class SwitchJetCollection(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchJetCollection(process, "
+        dumpPython += "\nswitchJetCollection(process, "
         dumpPython += str(self.getvalue('jetCollection'))+', '
         dumpPython += str(self.getvalue('doJTA'))+', '
         dumpPython += str(self.getvalue('doBTagging'))+', '
@@ -547,7 +547,7 @@ class AddJetCollection(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\naddJetCollection(process, "
+        dumpPython += "\naddJetCollection(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
         dumpPython += '"'+str(self.getvalue('postfixLabel'))+'"'+', '
         dumpPython += str(self.getvalue('doJTA'))+', '

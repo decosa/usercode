@@ -22,7 +22,7 @@ class SwitchOnTrigger(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchOnTrigger(process) \n "
+        dumpPython += "\nswitchOnTrigger(process) \n "
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process) :
@@ -68,7 +68,7 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchOnTriggerStandAlone(process) \n "
+        dumpPython += "\nswitchOnTriggerStandAlone(process) \n "
         return (dumpPythonImport,dumpPython)
      
     def __call__(self,process) :
@@ -110,7 +110,7 @@ class SwitchOnTriggerAll(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython="\nswitchOnTriggerAll(process) \n "
+        dumpPython +="\nswitchOnTriggerAll(process) \n "
         return (dumpPythonImport,dumpPython)
     
     def __call__(self,process) :
@@ -146,7 +146,7 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython = "\nswitchOnTriggerMatchEmbedding(process) \n "
+        dumpPython += "\nswitchOnTriggerMatchEmbedding(process) \n "
         return (dumpPythonImport,dumpPython)
         
     def __call__(self,process) :
