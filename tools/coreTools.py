@@ -4,6 +4,8 @@ import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.tools.helpers import *
 
+
+
 class RestrictInputToAOD (ConfigToolBase):
 
     """
@@ -13,7 +15,7 @@ class RestrictInputToAOD (ConfigToolBase):
 
     process : process
     name    : list of collection names; supported are 'Photons', 
-              'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'
+              'Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'
     ------------------------------------------------------------------    
     """
     _label='RestrictInputToAOD'
@@ -21,7 +23,7 @@ class RestrictInputToAOD (ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons','Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'")                                 
+        self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'",Range=['Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'])
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
@@ -39,8 +41,8 @@ class RestrictInputToAOD (ConfigToolBase):
 
     def __call__(self,process,names=None) :
         if  names is None:
-            names=self._defaultParameters['names'].value 
-        self.setParameter('names',names)
+            names=self._defaultParameters['names'].value
+	self.setParameter('names',names)
         self.apply(process) 
         
     def apply(self, process):
@@ -89,14 +91,13 @@ class RemoveMCMatching(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'name','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",str)                                 
+        self.addParameter(self._defaultParameters,'name','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",str, Range=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -108,7 +109,7 @@ class RemoveMCMatching(ConfigToolBase):
                  name = None) :
         if  name is None:
             name=self._defaultParameters['name'].value 
-        self.setParameter('name',name)
+	self.setParameter('name',name)
         self.apply(process) 
         
     def apply(self, process):
@@ -188,13 +189,13 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list)
+        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list, Range=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
-
+    	
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -211,7 +212,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
             names=self._defaultParameters['names'].value
         if outputInProcess is None:
             outputInProcess=self._defaultParameters['outputInProcess'].value 
-        self.setParameter('names',names)
+	self.setParameter('names',names)
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
@@ -251,12 +252,13 @@ class RemoveSpecificPATObjects(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list)
+        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list,['Photons', 'Electrons', 'Muons', 'Taus', 'Jets','METs'] )
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
         return self._defaultParameters
+    
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -274,7 +276,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
             names=self._defaultParameters['names'].value
         if outputInProcess is None:
             outputInProcess=self._defaultParameters['outputInProcess'].value 
-        self.setParameter('names',names)
+	self.setParameter('names',names)
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
