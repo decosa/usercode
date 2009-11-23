@@ -1,5 +1,5 @@
-#from FWCore.GuiBrowsers.ConfigToolBase import *
-from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+from FWCore.GuiBrowsers.ConfigToolBase import *
+#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
 
 class MakeAODTrackCandidates(ConfigToolBase):
 
@@ -34,7 +34,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nmakeAODTrackCandidates(process, "
+        dumpPython = "\nmakeAODTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += '"'+str(self.getvalue('particleType'))+'"'+", "
@@ -121,7 +121,7 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'selection','pt > 10', 'selection on PAT Layer 1 objects')
         self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "solation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",Range=['tracker','ecalTowers','hcalTowers'])
         self.addParameter(self._defaultParameters,'isoDeposits',['tracker','ecalTowers','hcalTowers'], 'iso deposits')
-        self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photon', 'electron', 'muon', 'tau','jet', 'met',None]) ###check possible values
+        self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photons', 'electrons', 'muons', 'taus','jets', 'mets',None]) ###check possible values
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
@@ -134,7 +134,7 @@ class MakePATTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nmakePATTrackCandidates(process, "
+        dumpPython = "\nmakePATTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('input'))+", "
         dumpPython += '"'+str(self.getvalue('selection'))+'"'+", "
@@ -331,7 +331,7 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'selection','pt > 10', 'selection cut on the PAT candidates (for the selectedLayer1Candidate collection)')
         self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "isolation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",Range=['tracker','ecalTowers','hcalTowers'])
         self.addParameter(self._defaultParameters,'isoDeposits',['tracker','ecalTowers','hcalTowers'], 'iso deposits')
-        self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photon', 'electron', 'muon', 'tau','jet', 'met',None])
+        self.addParameter(self._defaultParameters,'mcAs','muons', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photons', 'electrons', 'muons', 'taus','jets', 'mets',None])
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
@@ -343,7 +343,7 @@ class MakeTrackCandidates(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nmakeTrackCandidates(process, "
+        dumpPython = "\nmakeTrackCandidates(process, "
         dumpPython += '"'+str(self.getvalue('label'))+'"'+", "
         dumpPython += str(self.getvalue('tracks'))+", "
         dumpPython += '"'+str(self.getvalue('particleType'))+'"'+", "
