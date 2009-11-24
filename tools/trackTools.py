@@ -119,9 +119,9 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'label','TrackCands', "output will be 'all/selectedLayer1'+label")
         self.addParameter(self._defaultParameters,'input',cms.InputTag('patAODTrackCands'), 'name of the input collection')
         self.addParameter(self._defaultParameters,'selection','pt > 10', 'selection on PAT Layer 1 objects')
-        self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "solation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",Range=['tracker','ecalTowers','hcalTowers'])
+        self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "solation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",allowedValues=['tracker','ecalTowers','hcalTowers'])
         self.addParameter(self._defaultParameters,'isoDeposits',['tracker','ecalTowers','hcalTowers'], 'iso deposits')
-        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photon', 'electron', 'muon', 'tau','jet', 'met',None]) ###check possible values
+        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",allowedValues=['photon', 'electron', 'muon', 'tau','jet', 'met',None]) ###check possible values
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
@@ -329,9 +329,9 @@ class MakeTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'particleType','pi+', 'particle type (for mass)')
         self.addParameter(self._defaultParameters,'preselection','pt > 10', 'preselection cut on the AOD candidates')
         self.addParameter(self._defaultParameters,'selection','pt > 10', 'selection cut on the PAT candidates (for the selectedLayer1Candidate collection)')
-        self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "isolation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",Range=['tracker','ecalTowers','hcalTowers'])
+        self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "isolation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",allowedValues=['tracker','ecalTowers','hcalTowers'])
         self.addParameter(self._defaultParameters,'isoDeposits',['tracker','ecalTowers','hcalTowers'], 'iso deposits')
-        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",Range=['photon', 'electron', 'muon', 'tau','jet', 'met',None])
+        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",allowedValues=['photon', 'electron', 'muon', 'tau','jet', 'met',None])
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""

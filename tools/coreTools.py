@@ -23,7 +23,7 @@ class RestrictInputToAOD (ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'",Range=['Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'])
+        self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'",allowedValues=['Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'])
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
@@ -35,7 +35,7 @@ class RestrictInputToAOD (ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nrestrictInputToAOD(process, "
+        dumpPython = "\nrestrictInputToAOD(process, "
         dumpPython += str(self.getvalue('names'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
 
@@ -91,7 +91,7 @@ class RemoveMCMatching(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'name','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",str, Range=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])                                 
+        self.addParameter(self._defaultParameters,'name','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",str, allowedValues=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
     def getDefaultParameters(self):
@@ -102,7 +102,7 @@ class RemoveMCMatching(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nremoveMCMatching(process, "
+        dumpPython = "\nremoveMCMatching(process, "
         dumpPython += '"'+str(self.getvalue('name'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,
@@ -189,7 +189,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list, Range=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])
+        self.addParameter(self._defaultParameters,'names','No default value. Set your own', "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'",list, allowedValues=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All'])
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)")                                 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
@@ -201,7 +201,7 @@ class RemoveAllPATObjectsBut(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nremoveAllPATObjectsBut(process, "
+        dumpPython = "\nremoveAllPATObjectsBut(process, "
         dumpPython += str(self.getvalue('names'))+','
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -264,7 +264,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment 
-        dumpPython += "\nremoveSpecificPATObjects(process, "
+        dumpPython = "\nremoveSpecificPATObjects(process, "
         dumpPython += str(self.getvalue('names'))+', '
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
@@ -372,7 +372,7 @@ class RemoveCleaning(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
-        dumpPython += "\nremoveCleaning(process, "
+        dumpPython = "\nremoveCleaning(process, "
         dumpPython += str(self.getvalue('outputInProcess'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     def __call__(self,process,
@@ -432,7 +432,7 @@ class AddCleaning(ConfigToolBase):
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment 
-        dumpPython += "\naddCleaning(process)\n" 
+        dumpPython = "\naddCleaning(process)\n" 
         return (dumpPythonImport,dumpPython)
 
     def __call__(self,process) :
