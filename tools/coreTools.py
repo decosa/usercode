@@ -112,11 +112,13 @@ class RemoveMCMatching(ConfigToolBase):
 	self.setParameter('name',name)
         self.apply(process) 
         
-    def apply(self, process):
+        
+    #def apply(self, process):
+    def toolCode(self, process):
                 
         name=self._parameters['name'].value
-        if hasattr(process, "addAction"):
-            process.disableRecording()
+        #if hasattr(process, "addAction"):
+            #process.disableRecording()
         
         if( name == 'Photons'   or name == 'All' ):
             _removeMCMatchingForPATObject(process, 'photonMatch', 'allLayer1Photons') 
@@ -153,10 +155,10 @@ class RemoveMCMatching(ConfigToolBase):
             metProducer = getattr(process, 'layer1METs')        
             metProducer.addGenMET           = False
             metProducer.genMETSource        = ''       
-        if hasattr(process, "addAction"):
-            process.enableRecording()
-            action=self.__copy__()
-            process.addAction(action)
+        #if hasattr(process, "addAction"):
+            #process.enableRecording()
+            #action=self.__copy__()
+            #process.addAction(action)
 
 removeMCMatching = RemoveMCMatching()   
 
