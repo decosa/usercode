@@ -329,8 +329,8 @@ class AddJetCollection(ConfigToolBase):
 
     def __call__(self,process,
                  jetCollection      = None,
-                 algofixLabel       = None,
-                 typefixLabel       = None,
+                 algoLabel       = None,
+                 typeLabel       = None,
                  doJTA              = None,
                  doBTagging         = None,
                  jetCorrLabel       = None,
@@ -373,8 +373,8 @@ class AddJetCollection(ConfigToolBase):
             standardType=self._defaultParameters['standardType'].value
 
         self.setParameter('jetCollection',jetCollection)
-        self.setParameter('algoLabel',Label)
-        self.setParameter('typeLabel',Label)
+        self.setParameter('algoLabel',algoLabel)
+        self.setParameter('typeLabel',typeLabel)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
         self.setParameter('jetCorrLabel',jetCorrLabel, True)
@@ -717,8 +717,8 @@ class SwitchJetCollection(ConfigToolBase):
 
     def __call__(self,process,
                  jetCollection      = None,
-                 algofixLabel       = None,
-                 typefixLabel       = None,
+                 algoLabel       = None,
+                 typeLabel       = None,
                  doJTA              = None,
                  doBTagging         = None,
                  jetCorrLabel       = None,
@@ -761,8 +761,8 @@ class SwitchJetCollection(ConfigToolBase):
             standardType=self._defaultParameters['standardType'].value
 
         self.setParameter('jetCollection',jetCollection)
-        self.setParameter('algoLabel',Label)
-        self.setParameter('typeLabel',Label)
+        self.setParameter('algoLabel',algoLabel)
+        self.setParameter('typeLabel',typeLabel)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
         self.setParameter('jetCorrLabel',jetCorrLabel, True)
