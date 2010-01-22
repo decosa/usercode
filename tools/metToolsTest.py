@@ -1,3 +1,8 @@
+
+#####################################
+### CHANGE CODE #####################
+#####################################
+
 from FWCore.GuiBrowsers.ConfigToolBase import *
 
 class AddTcMET(ConfigToolBase):
@@ -59,8 +64,6 @@ class AddTcMET(ConfigToolBase):
                
 addTcMET=AddTcMET()
 
-
-from FWCore.GuiBrowsers.ConfigToolBase import *
 
 class AddPfMET(ConfigToolBase):
 

@@ -1,3 +1,9 @@
+
+#######################################
+#### CHANGE CODE ######################
+#### AND REMOVE REMOVEJETCOLLECTION ###
+#######################################
+
 from FWCore.GuiBrowsers.ConfigToolBase import *
 
 from PhysicsTools.PatAlgos.tools.helpers import *
@@ -560,7 +566,9 @@ class AddJetCollection(ConfigToolBase):
        
 addJetCollection=AddJetCollection()
 
-
+############################
+#### REMOVE THIS OBJECT ####
+############################
 class RemoveJetCollection(ConfigToolBase):
 
     """
@@ -675,19 +683,14 @@ class SwitchJetCollection(ConfigToolBase):
     def __init__(self):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'jetCollection',self._defaultValue,'Input jet collection', cms.InputTag)
-        self.addParameter(self._defaultParameters,'algoLabel',self._defaultValue, "label to indicate the jet algorithm (e.g.'AK5')",str)
-        self.addParameter(self._defaultParameters,'typeLabel',self._defaultValue, "label to indicate the type of constituents (e.g. 'Calo', 'Pflow', 'Jpt', ...)",str)
         self.addParameter(self._defaultParameters,'doJTA',True, "run b tagging sequence for new jet collection and add it to the new pat jet collection")
         self.addParameter(self._defaultParameters,'doBTagging',True, 'run JetTracksAssociation and JetCharge and add it to the new pat jet collection (will autom. be true if doBTagging is set to true)')
         self.addParameter(self._defaultParameters,'jetCorrLabel',None, "algorithm and type of JEC; use 'None' for no JEC; examples are ('AK5','Calo'), ('SC7','Calo'), ('KT4','PF')", tuple)
         self.addParameter(self._defaultParameters,'doType1MET',True, "if jetCorrLabel is not 'None', set this to 'True' to redo the Type1 MET correction for the new jet colleection; at the moment it must be 'False' for non CaloJets otherwise the JetMET POG module crashes. ")
-        self.addParameter(self._defaultParameters,'doL1Cleaning',True, "copy also the producer modules for cleanLayer1 will be set to 'True' automatically when doL1Counters is 'True'")
-        self.addParameter(self._defaultParameters,'doL1Counters',False, "copy also the filter modules that accept/reject the event looking at the number of jets")
         self.addParameter(self._defaultParameters,'genJetCollection',cms.InputTag("ak5GenJets"), "GenJet collection to match to")
         self.addParameter(self._defaultParameters,'doJetID',True, "add jetId variables to the added jet collection")
         self.addParameter(self._defaultParameters,'jetIdLabel',"ak5", " specify the label prefix of the xxxJetID object; in general it is the jet collection tag like ak5, kt4 sc5, aso. For more information have a look to SWGuidePATTools#add_JetCollection")
-        self.addParameter(self._defaultParameters,'standardAlgo',"AK5", "standard algorithm label of the collection from which the clones for the new jet collection will be taken from (note that this jet collection has to be available in the event before hand)")
-        self.addParameter(self._defaultParameters,'standardType',"Calo", "standard constituent type label of the collection from which the clones for the new jet collection will be taken from (note that this jet collection has to be available in the event before hand)")
+
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
@@ -700,43 +703,27 @@ class SwitchJetCollection(ConfigToolBase):
             dumpPython = '#'+self._comment
         dumpPython = "\nswitchJetCollection(process, "
         dumpPython += str(self.getvalue('jetCollection'))+ ", "
-        dumpPython += '"'+str(self.getvalue('algoLabel'))+'"'+', '
-        dumpPython += '"'+str(self.getvalue('typeLabel'))+'"'+', '
         dumpPython += str(self.getvalue('doJTA'))+', '
         dumpPython += str(self.getvalue('doBTagging'))+', '
         dumpPython += str(self.getvalue('jetCorrLabel'))+', '
         dumpPython += str(self.getvalue('doType1MET'))+', '
-        dumpPython += str(self.getvalue('doL1Cleaning'))+', '
-        dumpPython += str(self.getvalue('doL1Counters'))+', '
         dumpPython += str(self.getvalue('genJetCollection'))+', '
         dumpPython += str(self.getvalue('doJetID'))+', '
-        dumpPython += '"'+str(self.getvalue('jetIdLabel'))+'"'+', '
-        dumpPython += '"'+str(self.getvalue('standardAlgo'))+'"'+', '
-        dumpPython += '"'+str(self.getvalue('standardType'))+'"'+')'+'\n'
+        dumpPython += '"'+str(self.getvalue('jetIdLabel'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython) 
 
     def __call__(self,process,
                  jetCollection      = None,
-                 algoLabel       = None,
-                 typeLabel       = None,
                  doJTA              = None,
                  doBTagging         = None,
                  jetCorrLabel       = None,
                  doType1MET         = None,
-                 doL1Cleaning       = None,
-                 doL1Counters       = None,
                  genJetCollection   = None,
                  doJetID            = None,
-                 jetIdLabel         = None,
-                 standardAlgo       = None,
-                 standardType       = None):
-
+                 jetIdLabel         = None):
+                 
         if jetCollection  is None:
             jetCollection=self._defaultParameters['jetCollection'].value
-        if algoLabel is None:
-            algoLabel=self._defaultParameters['algoLabel'].value
-        if typeLabel is None:
-            typeLabel=self._defaultParameters['typeLabel'].value
         if doJTA is None:
             doJTA=self._defaultParameters['doJTA'].value
         if doBTagging is None:
@@ -745,54 +732,34 @@ class SwitchJetCollection(ConfigToolBase):
             jetCorrLabel=self._defaultParameters['jetCorrLabel'].value
         if doType1MET  is None:
             doType1MET=self._defaultParameters['doType1MET'].value
-        if doL1Cleaning is None:
-            doL1Cleaning=self._defaultParameters['doL1Cleaning'].value
-        if doL1Counters  is None:
-            doL1Counters=self._defaultParameters['doL1Counters'].value
         if genJetCollection  is None:
             genJetCollection=self._defaultParameters['genJetCollection'].value
         if doJetID  is None:
             doJetID=self._defaultParameters['doJetID'].value
         if jetIdLabel  is None:
             jetIdLabel=self._defaultParameters['jetIdLabel'].value
-        if standardAlgo is None:
-            standardAlgo=self._defaultParameters['standardAlgo'].value
-        if standardType is None:
-            standardType=self._defaultParameters['standardType'].value
 
         self.setParameter('jetCollection',jetCollection)
-        self.setParameter('algoLabel',algoLabel)
-        self.setParameter('typeLabel',typeLabel)
         self.setParameter('doJTA',doJTA)
         self.setParameter('doBTagging',doBTagging)
         self.setParameter('jetCorrLabel',jetCorrLabel, True)
         self.setParameter('doType1MET',doType1MET)
-        self.setParameter('doL1Cleaning',doL1Cleaning)
-        self.setParameter('doL1Counters',doL1Counters)
         self.setParameter('genJetCollection',genJetCollection)
         self.setParameter('doJetID',doJetID)
         self.setParameter('jetIdLabel',jetIdLabel)
-        self.setParameter('standardAlgo',standardAlgo)
-        self.setParameter('standardType',standardType)
         
         self.apply(process) 
         
     def toolCode(self, process):
 
         jetCollection=self._parameters['jetCollection'].value
-        algoLabel=self._parameters['algoLabel'].value
-        typeLabel=self._parameters['typeLabel'].value
         doJTA=self._parameters['doJTA'].value
         doBTagging=self._parameters['doBTagging'].value
         jetCorrLabel=self._parameters['jetCorrLabel'].value
         doType1MET =self._parameters['doType1MET'].value
-        doL1Cleaning=self._parameters['doL1Cleaning'].value
-        doL1Counters=self._parameters['doL1Counters'].value
         genJetCollection=self._parameters['genJetCollection'].value
         doJetID=self._parameters['doJetID'].value
         jetIdLabel=self._parameters['jetIdLabel'].value
-        standardAlgo=self._parameters['standardAlgo'].value
-        standardType=self._parameters['standardType'].value
      
         addJetCollection(process,
                          jetCollection,
