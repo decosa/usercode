@@ -1,5 +1,5 @@
 from FWCore.GuiBrowsers.ConfigToolBase import *
-#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+
 import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.tools.coreTools import *
@@ -34,7 +34,10 @@ class RedoPFTauDiscriminators(ConfigToolBase):
         dumpPython += str(self.getvalue('l0tauCollection'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
    
-    def __call__(self,process,oldPFTauLabel=None,newPFTauLabel=None,tauType=None) :
+    def __call__(self,process,
+                 oldPFTauLabel = None,
+                 newPFTauLabel = None,
+                 tauType       = None) :
         if  oldPFTauLabel is None:
             oldPFTauLabel=self._defaultParameters['oldPFTauLabel'].value
         if  newPFTauLabel is None:
@@ -106,7 +109,9 @@ class SwitchToCaloTau(ConfigToolBase):
         dumpPython += str(self.getvalue('caloTauLabel'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
     
-    def __call__(self,process,pfTauLabel=None,caloTauLabel=None) :
+    def __call__(self,process,
+                 pfTauLabel   = None,
+                 caloTauLabel = None) :
         if  pfTauLabel is None:
             pfTauLabel=self._defaultParameters['pfTauLabel'].value
         if  caloTauLabel is None:
@@ -190,8 +195,8 @@ def _switchToPFTau(process,module, pfTauLabelOld, pfTauLabelNew, pfTauType):
 
 
 class SwitchToPFTauFixedCone(ConfigToolBase):
-# switch to PFTau collection produced for fixed dR = 0.07 signal cone size
-    """
+
+    """  Switch to PFTau collection produced for fixed dR = 0.07 signal cone size
     """
     _label='SwitchToPFTauFixedCone'    
     _defaultParameters={}
@@ -213,7 +218,9 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
        
-    def __call__(self,process,pfTauLabelOld=None,pfTauLabelNew=None) :
+    def __call__(self,process,
+                 pfTauLabelOld = None,
+                 pfTauLabelNew = None) :
         if  pfTauLabelOld is None:
             pfTauLabelOld=self._defaultParameters['pfTauLabelOld'].value
         if  pfTauLabelNew is None:
@@ -238,8 +245,8 @@ class SwitchToPFTauFixedCone(ConfigToolBase):
 switchToPFTauFixedCone=SwitchToPFTauFixedCone()       
 
 class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
-    # switch to PFTau collection produced for fixed dR = 0.15 signal cone size
-    """
+  
+    """ Switch to PFTau collection produced for fixed dR = 0.15 signal cone size
     """
     _label='SwitchToPFTauFixedConeHighEff'    
     _defaultParameters={}
@@ -262,7 +269,9 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
-    def __call__(self,process,pfTauLabelOld=None,pfTauLabelNew=None) :
+    def __call__(self,process,
+                 pfTauLabelOld = None,
+                 pfTauLabelNew = None) :
         if  pfTauLabelOld is None:
             pfTauLabelOld=self._defaultParameters['pfTauLabelOld'].value
         if  pfTauLabelNew is None:
@@ -288,8 +297,8 @@ class SwitchToPFTauFixedConeHighEff(ConfigToolBase):
 switchToPFTauFixedConeHighEff=SwitchToPFTauFixedConeHighEff()
 
 class SwitchToPFTauShrinkingCone(ConfigToolBase):
-# switch to PFTau collection produced for shrinking signal cone of size dR = 5.0/Et(PFTau)
-    """
+
+    """ Switch to PFTau collection produced for shrinking signal cone of size dR = 5.0/Et(PFTau)
     """
     _label='SwitchToPFTauShrinkingCone'    
     _defaultParameters={}
@@ -311,7 +320,9 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
         dumpPython += str(self.getvalue('pfTauLabelNew'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
-    def __call__(self,process,pfTauLabelOld=None,pfTauLabelNew=None) :
+    def __call__(self,process,
+                 pfTauLabelOld = None,
+                 pfTauLabelNew = None) :
         if  pfTauLabelOld is None:
             pfTauLabelOld=self._defaultParameters['pfTauLabelOld'].value
         if  pfTauLabelNew is None:
@@ -353,10 +364,9 @@ class SwitchToPFTauShrinkingCone(ConfigToolBase):
 switchToPFTauShrinkingCone=SwitchToPFTauShrinkingCone()
 
 class SwitchToAnyPFTau(ConfigToolBase):    
-# function to switch to **any** PFTau collection
-# It is just to make internal function accessible externally
 
-    """
+    """ Tool to switche to **any** PFTau collection.
+    It is just to make internal function accessible externally
     """
     _label='SwitchToAnyPFTau'    
     _defaultParameters={}
@@ -380,7 +390,10 @@ class SwitchToAnyPFTau(ConfigToolBase):
         dumpPython += '"'+str(self.getvalue('pfTauType'))+ '"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
             
-    def __call__(self,process,pfTauLabelOld=None,pfTauLabelNew=None,pfTauType=None) :
+    def __call__(self,process,
+                 pfTauLabelOld = None,
+                 pfTauLabelNew = None,
+                 pfTauType     = None) :
         if  pfTauLabelOld is None:
             pfTauLabelOld=self._defaultParameters['pfTauLabelOld'].value
         if  pfTauLabelNew is None:
@@ -403,3 +416,113 @@ class SwitchToAnyPFTau(ConfigToolBase):
             
 
 switchToAnyPFTau=SwitchToAnyPFTau()
+
+
+class SwitchToPFTauByType(ConfigToolBase):
+
+    """ Select switcher by string
+    """
+    _label='SwitchToPFTauByType'
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self.addParameter(self._defaultParameters,'module',self._defaultValue, "", Type=cms._Module) ### SPECIFY MODULE TYPE
+        self.addParameter(self._defaultParameters,'pfTauType',None, "", Type=str)
+        self.addParameter(self._defaultParameters,'pfTauLabelNew',None, "", Type=str)
+        self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('shrinkingConePFTauProducer'), "", Type=str)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
+    def getDefaultParameters(self):
+        return self._defaultParameters
+    def dumpPython(self):
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
+        dumpPython = "\nswitchToPFTauByType(process, "
+        dumpPython += str(self.getvalue('module'))+", "
+        dumpPython += '"'+str(self.getvalue('pfTauType'))+'"'+", "
+        dumpPython += '"'+str(self.getvalue('pfTauLabelNew'))+'"'+", "
+        dumpPython += '"'+str(self.getvalue('pfTauLabelOld'))+'"'+")"+'\n'
+              
+        return (dumpPythonImport,dumpPython) 
+
+    def __call__(self,process,
+                 module        = None,
+                 pfTauType     = None,
+                 pfTauLabelNew = None,
+                 pfTauLabelOld = None) :
+        if  module is None:
+            module=self._defaultParameters['module'].value
+        if  pfTauType is None:
+            pfTauType=self._defaultParameters['pfTauType'].value
+        if  pfTauLabelNew is None:
+            pfTauLabelNew=self._defaultParameters['pfTauLabelNew'].value
+        if  pfTauLabelOld is None:
+            pfTauLabelOld=self._defaultParameters['pfTauLabelOld'].value
+            
+        self.setParameter('module',module)
+        self.setParameter('pfTauType',pfTauType)
+        self.setParameter('pfTauLabelNew',pfTauLabelNew)
+        self.setParameter('pfTauLabelOld',pfTauLabelOld)
+        
+        self.apply(process) 
+        
+    def toolCode(self, process):
+        
+        module=self._parameters['module'].value
+        pfTauType=self._parameters['pfTauType'].value
+        pfTauLabelNew=self._parameters['pfTauLabelNew'].value
+        pfTauLabelOld=self._parameters['pfTauLabelOld'].value
+
+        mapping = { 'shrinkingConePFTau' : switchToPFTauShrinkingCone,
+                    'fixedConePFTau' : switchToPFTauFixedCone,
+                    'fixedConeHighEffPFTau' : switchToPFTauFixedConeHighEff,
+                    'caloTau' : switchToCaloTau }
+        mapping[pfTauType](process, module,pfTauLabelOld=pfTauLabelOld, pfTauLabelNew=pfTauLabelNew)
+
+
+       
+switchToPFTauByType=SwitchToPFTauByType()
+
+
+class SwitchTo31Xdefaults(ConfigToolBase):
+
+    """ Switch to PFTau collection that was default in PAT production in CMSSW_3_1_x release series
+    """
+    _label='SwitchTo31Xdefaults'
+    _defaultParameters={}
+    def __init__(self):
+        ConfigToolBase.__init__(self)
+        self.addParameter(self._defaultParameters,'module',self._defaultValue, "", Type=cms._Module)
+        self._parameters=copy.deepcopy(self._defaultParameters)
+        self._comment = ""
+    def getDefaultParameters(self):
+        return self._defaultParameters
+    def dumpPython(self):
+        dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
+        dumpPython=''
+        if self._comment!="":
+            dumpPython = '#'+self._comment
+        dumpPython = "\nswitchTo31Xdefaults(process, "
+        dumpPython += str(self.getvalue('module'))+")"+'\n'
+                          
+        return (dumpPythonImport,dumpPython) 
+
+    def __call__(self,process,
+                 module        = None):
+        if  module is None:
+            module=self._defaultParameters['module'].value
+            
+        self.setParameter('module',module)
+               
+        self.apply(process) 
+        
+    def toolCode(self, process):
+        
+        module=self._parameters['module'].value
+       
+        switchToPFTauFixedCone(process,module)
+        process.cleanPatTaus.preselection = cms.string('tauID("byIsolation") > 0')
+       
+switchTo31Xdefaults=SwitchTo31Xdefaults()
