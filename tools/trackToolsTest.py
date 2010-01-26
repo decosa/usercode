@@ -1,18 +1,9 @@
 from FWCore.GuiBrowsers.ConfigToolBase import *
-#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
+
 
 class MakeAODTrackCandidates(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    create selected tracks and a candidate hypothesis on AOD:
-    
-    process       : process
-    label         : output collection will be <'patAOD'+label>
-    tracks        : input tracks
-    particleType  : particle type (for mass) 
-    candSelection : preselection cut on the candidates
-    ------------------------------------------------------------------    
+    """ Create selected tracks and a candidate hypothesis on AOD:
     """
     _label='MakeAODTrackCandidates'
     _defaultParameters={}
@@ -25,11 +16,11 @@ class MakeAODTrackCandidates(ConfigToolBase):
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
-    def getDefaultParameters(self):
-        return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def getDefaultParameters(self):
+         return self._defaultParameters
+
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -60,8 +51,7 @@ class MakeAODTrackCandidates(ConfigToolBase):
         self.setParameter('candSelection',candSelection)
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):             
         label=self._parameters['label'].value
         tracks=self._parameters['tracks'].value
         particleType=self._parameters['particleType'].value
@@ -83,30 +73,12 @@ class MakeAODTrackCandidates(ConfigToolBase):
         ## run production of TrackCandidates at the very beginning of the sequence
         process.patDefaultSequence.replace(process.patCandidates, getattr(process, 'patAOD' + label + 'Unfiltered') * getattr(process, 'patAOD' + label) * process.patCandidates)
         
-        
-
 makeAODTrackCandidates=MakeAODTrackCandidates()
+
 
 class MakePATTrackCandidates(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    create pat track candidates from AOD track collections:
-    
-    process       : process
-    label         : output will be 'all/selectedLayer1'+label
-    input         : name of the input collection
-    selection     : selection on PAT Layer 1 objects
-    isolation     : isolation to use (as 'source': value of dR)
-                    tracker     : as muon iso from tracks
-                    ecalTowers  : as muon iso from calo towers.
-                    hcalTowers  : as muon iso from calo towers.
-    isoDeposits   : iso deposits
-    mcAs          : replicate mc match as the one used by PAT
-                    on this AOD collection (None=no mc match);
-                    chosse 'photon', 'electron', 'muon', 'tau',
-                    'jet', 'met' as input string
-    ------------------------------------------------------------------    
+    """ Create pat track candidates from AOD track collections:
     """
     _label='MakePATTrackCandidates'
     _defaultParameters={}
@@ -117,15 +89,15 @@ class MakePATTrackCandidates(ConfigToolBase):
         self.addParameter(self._defaultParameters,'selection','pt > 10', 'selection on PAT Layer 1 objects')
         self.addParameter(self._defaultParameters,'isolation',{'tracker':0.3, 'ecalTowers':0.3, 'hcalTowers':0.3}, "solation to use (as 'source': value of dR)\ntracker     : as muon iso from tracks\necalTowers  : as muon iso from calo tower\nhcalTowers  : as muon iso from calo towers",allowedValues=['tracker','ecalTowers','hcalTowers'])
         self.addParameter(self._defaultParameters,'isoDeposits',['tracker','ecalTowers','hcalTowers'], 'iso deposits')
-        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); chosse 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",allowedValues=['photon', 'electron', 'muon', 'tau','jet', 'met',None]) ###check possible values
+        self.addParameter(self._defaultParameters,'mcAs','muon', "eplicate mc match as the one used by PAT on this AOD collection (None=no mc match); choose 'photon', 'electron', 'muon', 'tau','jet', 'met' as input string",allowedValues=['photon', 'electron', 'muon', 'tau','jet', 'met',None]) 
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self): 
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -157,20 +129,16 @@ class MakePATTrackCandidates(ConfigToolBase):
         if isoDeposits is None:
             isoDeposits=self._defaultParameters['isoDeposits'].value
         if mcAs is None:
-            mcAs=self._defaultParameters['mcAs'].value
-            
-     
+            mcAs=self._defaultParameters['mcAs'].value    
         self.setParameter('label',label)
         self.setParameter('input',input)
         self.setParameter('selection',selection)
         self.setParameter('isolation',isolation)
         self.setParameter('isoDeposits',isoDeposits)
-        self.setParameter('mcAs',mcAs,True)
-                                                                                               
+        self.setParameter('mcAs',mcAs,True)                                                                                              
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         label=self._parameters['label'].value
         input=self._parameters['input'].value
         selection=self._parameters['selection'].value
@@ -286,32 +254,11 @@ class MakePATTrackCandidates(ConfigToolBase):
             l1cands.genParticleMatch = cms.InputTag('pat'+label+'MCMatch')
 
       
-
 makePATTrackCandidates=MakePATTrackCandidates()
 
 
 class MakeTrackCandidates(ConfigToolBase):
-    """
-    ------------------------------------------------------------------
-    create selected tracks and a candidate hypothesis on AOD:
-    
-    process       : process
-    label         : output collection will be <'patAOD'+label>
-    tracks        : input tracks
-    particleType  : particle type (for mass) 
-    preselection  : preselection cut on the AOD candidates
-    selection     : selection cut on the PAT candidates (for the
-                    selectedLayer1Candidate collection)
-    isolation     : isolation to use (as 'source': value of dR)
-                    tracker     : as muon iso from tracks
-                    ecalTowers  : as muon iso from calo towers.
-                    hcalTowers  : as muon iso from calo towers.
-    isoDeposits   : iso deposits
-    mcAs          : replicate mc match as the one used by PAT
-                    on this AOD collection (None=no mc match);
-                    choose 'photon', 'electron', 'muon', 'tau',
-                    'jet', 'met' as input string
-    ------------------------------------------------------------------    
+    """ Create selected tracks and a candidate hypothesis on AOD:
     """
     _label='MakeTrackCandidates'
     _defaultParameters={}
@@ -328,10 +275,11 @@ class MakeTrackCandidates(ConfigToolBase):
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
-    def dumpPython(self):
-        
+
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trackTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -346,6 +294,7 @@ class MakeTrackCandidates(ConfigToolBase):
         dumpPython += str(self.getvalue('isoDeposits'))+", "
         dumpPython += '"'+str(self.getvalue('mcAs'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
+
     def __call__(self,process,
                  label        = None,
                  tracks       = None,
@@ -370,9 +319,7 @@ class MakeTrackCandidates(ConfigToolBase):
         if isoDeposits is None:
             isoDeposits=self._defaultParameters['isoDeposits'].value
         if mcAs is None:
-            mcAs=self._defaultParameters['mcAs'].value
-            
-     
+            mcAs=self._defaultParameters['mcAs'].value  
         self.setParameter('label',label)
         self.setParameter('tracks',tracks)
         self.setParameter('particleType',particleType)
@@ -380,12 +327,10 @@ class MakeTrackCandidates(ConfigToolBase):
         self.setParameter('selection',selection)
         self.setParameter('isolation',isolation)
         self.setParameter('isoDeposits',isoDeposits)
-        self.setParameter('mcAs',mcAs,True)
-                                                                                               
+        self.setParameter('mcAs',mcAs,True)                                                                                              
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         label=self._parameters['label'].value
         tracks=self._parameters['tracks'].value
         particleType=self._parameters['particleType'].value
@@ -394,8 +339,7 @@ class MakeTrackCandidates(ConfigToolBase):
         isolation=self._parameters['isolation'].value
         isoDeposits=self._parameters['isoDeposits'].value
         mcAs=self._parameters['mcAs'].value
-                                                
-      
+        
         makeAODTrackCandidates(process,
                                tracks        = tracks,
                                particleType  = particleType,

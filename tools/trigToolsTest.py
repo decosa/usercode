@@ -1,6 +1,4 @@
 from FWCore.GuiBrowsers.ConfigToolBase import *
-#from PhysicsTools.PatAlgos.tools.ConfigToolBase import *
-import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.patEventContent_cff import *
 
@@ -13,11 +11,11 @@ class SwitchOnTrigger(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -28,8 +26,7 @@ class SwitchOnTrigger(ConfigToolBase):
     def __call__(self,process) :
         self.apply(process) 
         
-    def toolCode(self, process):
-       
+    def toolCode(self, process):       
         ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
         process.patDefaultSequence += process.patTriggerSequence
@@ -51,11 +48,11 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -67,7 +64,6 @@ class SwitchOnTriggerStandAlone(ConfigToolBase):
         self.apply(process) 
         
     def toolCode(self, process):
-
         ## add trigger modules to path
         process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
         process.patDefaultSequence += process.patTriggerSequence
@@ -89,11 +85,11 @@ class SwitchOnTriggerAll(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -105,7 +101,6 @@ class SwitchOnTriggerAll(ConfigToolBase):
         self.apply(process) 
         
     def toolCode(self, process):
-
         switchOnTrigger( process )
         process.out.outputCommands += patTriggerStandAloneEventContent
       
@@ -121,11 +116,11 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.trigTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -137,7 +132,6 @@ class SwitchOnTriggerMatchEmbedding(ConfigToolBase):
         self.apply(process) 
         
     def toolCode(self, process):
-
         process.patTriggerSequence += process.patTriggerMatchEmbedder
         process.out.outputCommands += patEventContentTriggerMatch
       

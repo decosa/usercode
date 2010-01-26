@@ -1,20 +1,11 @@
-#####################################
-### CHANGE CODE #####################
-#####################################
-
-
-
 from FWCore.GuiBrowsers.ConfigToolBase import *
 
 from PhysicsTools.PatAlgos.tools.helpers import *
 
 class RestrictInputToAOD(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    remove pat object production steps which rely on RECO event
+    """ Remove pat object production steps which rely on RECO event
     content
-    ------------------------------------------------------------------
     """
     _label='RestrictInputToAOD'
     _defaultParameters={}
@@ -23,8 +14,10 @@ class RestrictInputToAOD(ConfigToolBase):
         self.addParameter(self._defaultParameters,'names',['All'], "list of collection names; supported are 'Photons', 'Electrons',, 'Muons', 'Taus', 'Jets', 'METs', 'All'", allowedValues=['Photons','Electrons', 'Muons', 'Taus', 'Jets', 'METs', 'All'])
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -41,8 +34,7 @@ class RestrictInputToAOD(ConfigToolBase):
         self.setParameter('names',names)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         names=self._parameters['names'].value
         for obj in range(len(names)):
             print "---------------------------------------------------------------------"
@@ -67,11 +59,8 @@ restrictInputToAOD=RestrictInputToAOD()
 
 class RemoveMCMatching(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    remove monte carlo matching from a given collection or all PAT
+    """ Remove monte carlo matching from a given collection or all PAT
     candidate collections:
-    ------------------------------------------------------------------
     """
     _label='RemoveMCMatching'
     _defaultParameters={}
@@ -80,8 +69,10 @@ class RemoveMCMatching(ConfigToolBase):
         self.addParameter(self._defaultParameters,'names',['All'], "collection name; supported are 'Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All', 'PFAll', 'PFElectrons','PFTaus','PFMuons'", allowedValues=['Photons', 'Electrons','Muons', 'Taus', 'Jets', 'METs', 'All', 'PFAll', 'PFElectrons','PFTaus','PFMuons'])
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -98,8 +89,7 @@ class RemoveMCMatching(ConfigToolBase):
         self.setParameter('names',names)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         names=self._parameters['names'].value
 
         print "************** MC dependence removal ************"
@@ -203,11 +193,8 @@ def _removeMCMatchingForPATObject(process, matcherName, producerName):
     
 class removeAllPATObjectsBut(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    remove all PAT objects from the default sequence but a specific
+    """ Remove all PAT objects from the default sequence but a specific
     one
-    ------------------------------------------------------------------
     """
     _label='removeAllPATObjectsBut'
     _defaultParameters={}
@@ -217,8 +204,10 @@ class removeAllPATObjectsBut(ConfigToolBase):
         self.addParameter(self._defaultParameters,'outputInProcess',True, "indicate whether there is an output module specified for the process (default is True)  ")
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -240,8 +229,7 @@ class removeAllPATObjectsBut(ConfigToolBase):
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         names=self._parameters['names'].value
         outputInProcess=self._parameters['outputInProcess'].value
 
@@ -255,10 +243,7 @@ removeAllPATObjectsBut=removeAllPATObjectsBut()
 
 class RemoveSpecificPATObjects(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    remove a specific PAT object from the default sequence:
-    ------------------------------------------------------------------
+    """ Remove a specific PAT object from the default sequence:
     """
     _label='RemoveSpecificPATObjects'
     _defaultParameters={}
@@ -268,8 +253,10 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         self.addParameter(self._defaultParameters,'outputInProcess',True,"indicate whether there is an output module specified for the process (default is True)" )
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -291,8 +278,7 @@ class RemoveSpecificPATObjects(ConfigToolBase):
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         names=self._parameters['names'].value
         outputInProcess=self._parameters['outputInProcess'].value
         ## remove pre object production steps from the default sequence
@@ -366,17 +352,13 @@ class RemoveSpecificPATObjects(ConfigToolBase):
             print "         sense now. If you still want to keep object collection cross"
             print "         cleaning within PAT you need to run and configure it by hand"
             removeCleaning(process)
-        
-       
+               
 removeSpecificPATObjects=RemoveSpecificPATObjects()
 
 
 class RemoveCleaning(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    remove PAT cleaning from the default sequence:
-    ------------------------------------------------------------------ 
+    """ Remove PAT cleaning from the default sequence:
     """
     _label='RemoveCleaning'
     _defaultParameters={}
@@ -385,8 +367,10 @@ class RemoveCleaning(ConfigToolBase):
         self.addParameter(self._defaultParameters,'outputInProcess',True,"indicate whether there is an output module specified for the process (default is True)" )
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -403,8 +387,7 @@ class RemoveCleaning(ConfigToolBase):
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         outputInProcess=self._parameters['outputInProcess'].value
 
         ## adapt single object counters
@@ -430,10 +413,7 @@ removeCleaning=RemoveCleaning()
 
 class AddCleaning(ConfigToolBase):
 
-    """
-    ------------------------------------------------------------------
-    add PAT cleaning from the default sequence
-    ------------------------------------------------------------------
+    """ Add PAT cleaning from the default sequence
     """
     _label='AddCleaning'
     _defaultParameters={}
@@ -442,8 +422,10 @@ class AddCleaning(ConfigToolBase):
         self.addParameter(self._defaultParameters,'outputInProcess',True, "")
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.coreTools import *\n"
         dumpPython=''
@@ -461,8 +443,7 @@ class AddCleaning(ConfigToolBase):
         self.setParameter('outputInProcess',outputInProcess)
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         outputInProcess=self._parameters['outputInProcess'].value
 
         ## adapt single object counters
