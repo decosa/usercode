@@ -1,9 +1,7 @@
 from FWCore.GuiBrowsers.ConfigToolBase import *
 
-#import FWCore.ParameterSet.Config as cms
-
-from PhysicsTools.PatAlgos.tools.coreToolsTest import *
-from PhysicsTools.PatAlgos.tools.jetToolsTest import *
+from PhysicsTools.PatAlgos.tools.coreTools import *
+from PhysicsTools.PatAlgos.tools.jetTools import *
 from PhysicsTools.PatAlgos.tools.tauToolsTest import *
 from FWCore.ParameterSet.Modules  import EDProducer
 from RecoTauTag.RecoTau.TauDiscriminatorTools import adaptTauDiscriminator, producerIsTauTypeMapper 
@@ -22,11 +20,11 @@ class AdaptPFMuons(ConfigToolBase):
         self.addParameter(self._defaultParameters,'module',self._defaultValue, '',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -42,11 +40,9 @@ class AdaptPFMuons(ConfigToolBase):
         self.setParameter('module',module)
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         module=self._parameters['module'].value
      
-
         print "Adapting PF Muons "
         print "***************** "
         warningIsolation()
@@ -89,6 +85,7 @@ class AdaptPFElectrons(ConfigToolBase):
         self.addParameter(self._defaultParameters,'l1Collection',cms.InputTag("patElectrons"), '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
@@ -99,7 +96,7 @@ class AdaptPFElectrons(ConfigToolBase):
         if self._comment!="":
             dumpPython = '#'+self._comment
         dumpPython += "\nadaptPFElectrons(process, "
-        dumpPython += str(self.getvalue('module'))+','
+        dumpPython += str(self.getvalue('module'))+', '
         dumpPython += str(self.getvalue('l1Collection'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
@@ -186,6 +183,7 @@ class AdaptPFPhotons(ConfigToolBase):
         self.addParameter(self._defaultParameters,'module',self._defaultValue,'',EDProducer)
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
@@ -205,8 +203,7 @@ class AdaptPFPhotons(ConfigToolBase):
         self.setParameter('module',module)
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         module=self._parameters['module'].value
    
         raise RuntimeError, "Photons are not supported yet"
@@ -221,7 +218,7 @@ class ReconfigureLayer0Taus(ConfigToolBase):
     _defaultParameters={}
     def __init__(self):
         ConfigToolBase.__init__(self)
-        self.addParameter(self._defaultParameters,'moduleL0',self._defaultValue, "", Type=cms._Module)
+        self.addParameter(self._defaultParameters,'moduleL0',self._defaultValue, "", Type=cms.EDProducer)
         self.addParameter(self._defaultParameters,'tauType','shrinkingConePFTau', "")
         self.addParameter(self._defaultParameters,'layer0Selection',["DiscriminationByIsolation", "DiscriminationByLeadingPionPtCut"], "")
         self.addParameter(self._defaultParameters,'selectionDependsOn',["DiscriminationByLeadingTrackFinding"], "")
@@ -229,18 +226,20 @@ class ReconfigureLayer0Taus(ConfigToolBase):
 
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
         dumpPython = "\nreconfigureLayer0Taus(process, "
-        dumpPython += str(self.getvalue('moduleL0'))+")"+","
-        dumpPython += "'"+str(self.getvalue('tauType'))+"'"+","
-        dumpPython += str(self.getvalue('layer0Selection'))+","
-        dumpPython += str(self.getvalue('selectionDependsOn'))+","
+        dumpPython += str(self.getvalue('moduleL0'))+")"+", "
+        dumpPython += "'"+str(self.getvalue('tauType'))+"'"+", "
+        dumpPython += str(self.getvalue('layer0Selection'))+", "
+        dumpPython += str(self.getvalue('selectionDependsOn'))+", "
         dumpPython += "'"+str(self.getvalue('producerFromType'))+"'"+")"+'\n'
                             
         return (dumpPythonImport,dumpPython) 
@@ -270,8 +269,7 @@ class ReconfigureLayer0Taus(ConfigToolBase):
                
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         moduleL0=self._parameters['moduleL0'].value
         tauType=self._parameters['tauType'].value
         layer0Selection=self._parameters['layer0Selection'].value
@@ -332,11 +330,11 @@ class AdaptPFTaus(ConfigToolBase):
         self.addParameter(self._defaultParameters,'l0tauColl',cms.InputTag("allLayer0Taus"), '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-       
+    def dumpPython(self):       
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -346,7 +344,9 @@ class AdaptPFTaus(ConfigToolBase):
         dumpPython += '"'+str(self.getvalue('l0tauColl'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
            
-    def __call__(self,process,tauType=None) :
+    def __call__(self,process,
+                 tauType   = None,
+                 l0tauColl = None) :
         if  tauType is None:
             tauType=self._defaultParameters['tauType'].value
         if  l0tauColl is None:
@@ -355,8 +355,7 @@ class AdaptPFTaus(ConfigToolBase):
         self.setParameter('l0tauColl',l0tauColl)
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         tauType=self._parameters['tauType'].value
         l0tauColl=self._parameters['l0tauColl'].value 
      
@@ -398,8 +397,10 @@ class TauTypeInPF2PAT(ConfigToolBase):
        
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
@@ -420,8 +421,7 @@ class TauTypeInPF2PAT(ConfigToolBase):
                        
         self.apply(process) 
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         tauType=self._parameters['tauType'].value
         
         process.load("PhysicsTools.PFCandProducer.pfTaus_cff")
@@ -446,8 +446,10 @@ class AddPFCandidates(ConfigToolBase):
         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
@@ -491,8 +493,7 @@ class AddPFCandidates(ConfigToolBase):
         self.setParameter('counted',counted)   
         self.apply(process) 
         
-    def toolCode(self, process):
-                
+    def toolCode(self, process):                
         src=self._parameters['src'].value
         patLabel =self._parameters['patLabel'].value
         cut=self._parameters['cut'].value
@@ -542,6 +543,7 @@ class SwitchToPFMET(ConfigToolBase):
         self.addParameter(self._defaultParameters,'metColl',cms.InputTag('patAK5CaloMETs'), '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
@@ -563,6 +565,7 @@ class SwitchToPFMET(ConfigToolBase):
         self.setParameter('input',input)
         self.setParameter('metColl',metColl)
         self.apply(process)
+
     def toolCode(self, process):         
         input=self._parameters['input'].value
         metColl=self._parameters['metColl'].value
@@ -591,6 +594,7 @@ class SwitchToPFJets(ConfigToolBase):
                         
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
@@ -604,6 +608,7 @@ class SwitchToPFJets(ConfigToolBase):
         dumpPython += str(self.getvalue('algo'))+','
         dumpPython += str(self.getvalue('l1jetColl'))+')'+'\n'
         return (dumpPythonImport,dumpPython)
+
     def __call__(self,process,input=None) :
         if input  is None:
             input=self._defaultParameters['input'].value
@@ -616,6 +621,7 @@ class SwitchToPFJets(ConfigToolBase):
         self.setParameter('algo',algo)
         self.setParameter('l1jetColl',l1jetColl)
         self.apply(process)
+
     def toolCode(self, process):         
         input=self._parameters['input'].value
         algo=self._parameters['algo'].value
@@ -673,21 +679,23 @@ class UsePF2PAT(ConfigToolBase):
         self.addParameter(self._defaultParameters,'jetAlgo','IC5', '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
         dumpPython += "\nusePF2PAT(process, "
         dumpPython += str(self.getvalue('runPF2PAT'))+','
-        dumpPython += str(self.getvalue('jetAlgo'))+')'+'\n'
+        dumpPython += '"'+str(self.getvalue('jetAlgo'))+ '"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
   
-    def __call__(self,process,runPF2PAT=None) :
+    def __call__(self,process,
+                 runPF2PAT = None,
+                 jetAlgo   = None) :
         if runPF2PAT  is None:
             runPF2PAT=self._defaultParameters['runPF2PAT'].value
         if jetAlgo  is None:
@@ -697,6 +705,7 @@ class UsePF2PAT(ConfigToolBase):
         self.setParameter('jetAlgo',jetAlgo)
         
         self.apply(process)
+
     def toolCode(self, process):         
         runPF2PAT=self._parameters['runPF2PAT'].value
         jetAlgo=self._parameters['jetAlgo'].value
@@ -754,18 +763,18 @@ class UsePATandPF2PAT(ConfigToolBase):
         self.addParameter(self._defaultParameters,'jetAlgo','IC5', '')
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
         if self._comment!="":
             dumpPython = '#'+self._comment
         dumpPython += "\nusePATandPF2PAT(process, "
         dumpPython += str(self.getvalue('runPATandPF2PAT'))+','
-        dumpPython += str(self.getvalue('jetAlgo'))+')'+'\n'
+        dumpPython += '"'+str(self.getvalue('jetAlgo'))+'"'+')'+'\n'
         return (dumpPythonImport,dumpPython)
   
     def __call__(self,process,
@@ -781,8 +790,7 @@ class UsePATandPF2PAT(ConfigToolBase):
         
         self.apply(process)
         
-    def toolCode(self, process):
-        
+    def toolCode(self, process):        
         runPATandPF2PAT=self._parameters['runPATandPF2PAT'].value
         jetAlgo=self._parameters['jetAlgo'].value
 
@@ -995,8 +1003,10 @@ class RemoveMCDependencedorPF(ConfigToolBase):
         ConfigToolBase.__init__(self)        
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
+
     def getDefaultParameters(self):
         return self._defaultParameters
+
     def dumpPython(self):
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.pfTools import *\n"
         dumpPython=''
@@ -1005,8 +1015,10 @@ class RemoveMCDependencedorPF(ConfigToolBase):
         dumpPython = "\nremoveMCDependencedorPF(process)\n "
                                                
         return (dumpPythonImport,dumpPython) 
+
     def __call__(self,process):
         self.apply(process) 
+
     def toolCode(self, process):
         #-- Remove MC dependence ------------------------------------------------------
         from PhysicsTools.PatAlgos.tools.coreTools import removeMCMatching

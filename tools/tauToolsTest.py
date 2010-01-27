@@ -19,8 +19,7 @@ class RedoPFTauDiscriminators(ConfigToolBase):
     def getDefaultParameters(self):
         return self._defaultParameters
 
-    def dumpPython(self):
-        
+    def dumpPython(self):        
         dumpPythonImport = "\nfrom PhysicsTools.PatAlgos.tools.tauTools import *\n"
         dumpPython=''
         if self._comment!="":
@@ -431,8 +430,8 @@ class SwitchToPFTauByType(ConfigToolBase):
         ConfigToolBase.__init__(self)
         self.addParameter(self._defaultParameters,'module',self._defaultValue, "", Type=cms.EDProducer)
         self.addParameter(self._defaultParameters,'pfTauType',None, "", Type=str)
-        self.addParameter(self._defaultParameters,'pfTauLabelNew',None, "", Type=str)
-        self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('shrinkingConePFTauProducer'), "", Type=str)
+        self.addParameter(self._defaultParameters,'pfTauLabelNew',None, "", Type=cms.InputTag)
+        self.addParameter(self._defaultParameters,'pfTauLabelOld',cms.InputTag('shrinkingConePFTauProducer'), "")
         self._parameters=copy.deepcopy(self._defaultParameters)
         self._comment = ""
 
@@ -447,8 +446,8 @@ class SwitchToPFTauByType(ConfigToolBase):
         dumpPython = "\nswitchToPFTauByType(process, "
         dumpPython += str(self.getvalue('module'))+", "
         dumpPython += '"'+str(self.getvalue('pfTauType'))+'"'+", "
-        dumpPython += '"'+str(self.getvalue('pfTauLabelNew'))+'"'+", "
-        dumpPython += '"'+str(self.getvalue('pfTauLabelOld'))+'"'+")"+'\n'
+        dumpPython += str(self.getvalue('pfTauLabelNew'))+", "
+        dumpPython += str(self.getvalue('pfTauLabelOld'))+")"+'\n'
               
         return (dumpPythonImport,dumpPython) 
 
