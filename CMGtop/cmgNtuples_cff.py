@@ -14,6 +14,50 @@ putGenMet = True
 putPV = True
 putBS = True
 
+isData = True
+
+
+
+### **** GENINFO **** ###
+
+CMGMicroTupleGenInfo = cms.EDProducer(
+    "CandViewNtpProducer",
+    src = cms.InputTag("generator"),
+    lazyParser = cms.untracked.bool(True),
+    prefix = cms.untracked.string(""),
+    eventInfo = cms.untracked.bool(True),
+    variables = cms.VPSet(
+    cms.PSet(
+    tag = cms.untracked.string("weight"),
+    quantity = cms.untracked.string("?size?weight:1.")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("x1"),
+    quantity = cms.untracked.string("?size?pdf.x.first:-1.")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("x2"),
+    quantity = cms.untracked.string("?size?pdf.x.second:-1.")
+    ),
+        cms.PSet(
+    tag = cms.untracked.string("PDFScale"),
+    quantity = cms.untracked.string("?size?pdf.scalePDF:-1.")
+    ),
+        cms.PSet(
+    tag = cms.untracked.string("processID"),
+    quantity = cms.untracked.string("?size?signalProcessID:-1.")
+    ),
+        cms.PSet(
+    tag = cms.untracked.string("pdg1"),
+    quantity = cms.untracked.string("?size?pdf.id.first:99")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("pdg2"),
+    quantity = cms.untracked.string("?size?pdf.id.second:99")
+    ),
+    )
+    )
+
 
 ### **** MUONS **** ###
 
@@ -789,9 +833,15 @@ out = cms.OutputModule(
     "PoolOutputModule"
     ,fileName = cms.untracked.string('CMGEDMMicroTupla.root')
      ,outputCommands = cms.untracked.vstring("drop *"
-                                             ,"keep *_CMGMicroTupleMuons_*_*"
-                                             ,"keep *_CMGMicroTupleElectrons_*_*"
-                                             ,"keep *_CMGMicroTupleCaloJets_*_*"
+                                             ,"keep *_CMGMicroTuple__*_*"
+##                                              ,"keep *_CMGMicroTupleMuons_*_*"
+##                                              ,"keep *_CMGMicroTupleElectrons_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
+##                                              ,"keep *_CMGMicroTupleCaloJets_*_*"
 #                                            ,"keep *_Eeta_*_*"
 #                                            ,"keep *_Ephi_*_*"
 #                                            ,"keep *_Eecaliso_*_*"
@@ -800,7 +850,7 @@ out = cms.OutputModule(
 
   
 #outp = cms.EndPath(out) = cms.Path(flavorHistoryFilter)
-CMGMicroTuple = cms.Path(out)
+CMGMicroTuple = cms.Sequence(CMGMicroTupleGenInfo)
 
 
 if(putMuon): 
@@ -812,7 +862,7 @@ if(putCaloJet):
     CMGMicroTuple.__iadd__(CMGMicroTupleCaloJets)
 if(putCaloMet):
     CMGMicroTuple.__iadd__(CMGMicroTupleCaloMets)
-if(putTQAF):
+if(putTQAF and not isData):
     CMGMicroTuple.__iadd__(CMGMicroTupleTQAF)
 if(putPFJet):
     CMGMicroTuple.__iadd__(CMGMicroTuplePFJets)
@@ -820,14 +870,16 @@ if(putPFMet):
     CMGMicroTuple.__iadd__(CMGMicroTuplePFMets)
 if(putTCMet):
     CMGMicroTuple.__iadd__(CMGMicroTupleTCMets)
-if(putGenJet):
+if(putGenJet and not isData):
     CMGMicroTuple.__iadd__(CMGMicroTupleGENJets)
-if(putGenMet):
+if(putGenMet and not isData):
     CMGMicroTuple.__iadd__(CMGMicroTupleGENMets)
 if(putPV):
     CMGMicroTuple.__iadd__(CMGMicroTuplePrimaryVertices)
 if(putBS):
     CMGMicroTuple.__iadd__(CMGMicroTupleBeamSpot)
+
+CMGMicroTuple.__iadd__(out)
 
 #CMGMicroTuple__iadd__(out)
 
