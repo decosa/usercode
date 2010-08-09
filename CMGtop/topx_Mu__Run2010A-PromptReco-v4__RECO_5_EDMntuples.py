@@ -1,7 +1,10 @@
+
+
 import FWCore.ParameterSet.Config as cms
 
 thisIsData = True
-goCombined = True
+goCombined = False
+#goCombined = True
 
 if goCombined:
     process = cms.Process("CMG")
@@ -49,7 +52,12 @@ process.source = cms.Source(
 
 # CMGEDMMicroTuple Stuff -------------------------------------------------------
 
-#####process.load('CMGEDMMicroTuple.CMGEDMMicroTuple.cmgedmmicrotuple_cfi')
+#process.load('CMGEDMMicroTuple.CMGEDMMicroTuple.cmgedmmicrotuple_cfi')
+
+
+### CandVieNtpProducer ###
+
+
 process.load('CMGEDMMicroTuple.CMGEDMMicroTuple.cmgNtuples_cff')
 # - Tune output filename
 process.out.fileName = cms.untracked.string('data.root')
@@ -208,16 +216,16 @@ if not goCombined:
 	process.out.outputCommands += patTriggerEventContent
 if not thisIsData:
     process.out.outputCommands += tqafEventContent
-if goCombined:
-    process.out = cms.OutputModule(
-	"PoolOutputModule"
-	,fileName = cms.untracked.string('data.root')
-	# - Save only events passing the full path
-	#SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
-	,outputCommands = cms.untracked.vstring("drop *"
-						,"keep *_CMGMicroTuple_*_*"
-						)
-	)
+## if goCombined:
+##     process.out = cms.OutputModule(
+## 	"PoolOutputModule"
+## 	,fileName = cms.untracked.string('data.root')
+## 	# - Save only events passing the full path
+## 	#SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+## 	,outputCommands = cms.untracked.vstring("drop *"
+## 						,"keep *_CMGMicroTuple_*_*"
+## 						)
+## 	)
 
 # path and outpath ------------------------------------------------------------
 
