@@ -3,6 +3,9 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("TRIM")
 
+
+process.load("HiggsAnalysis.Higgs2l2b.Higgs2l2bedmNtuples_cff")
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.TFileService = cms.Service("TFileService", fileName = cms.string('tree_h2l2b300.root') )
@@ -19,9 +22,25 @@ process.elChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
     higgsTag = cms.InputTag("hzzeejj"),
 )
 
+process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
+    higgsTag = cms.InputTag("hzzmmjj"),
+)
 
 #process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
 #    higgsTag = cms.InputTag("hzzmmjj"),
 #)
 
-process.analysisPath = cms.Path(process.elChannelAnalysis)#+process.muChannelAnalysis)
+
+
+
+process.analysisPath = cms.Path(
+    process.elChannelAnalysis+
+    process.muChannelAnalysis+
+    process.Higgs2e2bEdmNtuple)
+process.endPath = cms.EndPath(process.edmNtuplesOut)
+
+
+process.schedule = cms.Schedule(
+    process.analysisPath,
+    process.endPath
+)
