@@ -14,7 +14,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.EventContent.EventContent_cff')
 
 # Specify the Global Tag
-process.GlobalTag.globaltag = 'START3X_V26::All'
+process.GlobalTag.globaltag = 'START38_V13::All'
 
 # Events to process
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
@@ -22,34 +22,36 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 # Source file : To be run on a Full RECO sample
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-    'file:/scratch2/users/fabozzi/higgs/zz2l2c/ZZ2l2c_6.root'
-        
+        'file:/scratch2/users/fabozzi/higgs/h2l2b300/H300ZZ2l2b_7TeV_GEN_SIM_RECO_1.root',
+        'file:/scratch2/users/fabozzi/higgs/h2l2b300/H300ZZ2l2b_7TeV_GEN_SIM_RECO_2.root',
+        'file:/scratch2/users/fabozzi/higgs/h2l2b300/H300ZZ2l2b_7TeV_GEN_SIM_RECO_4.root',
+        'file:/scratch2/users/fabozzi/higgs/h2l2b300/H300ZZ2l2b_7TeV_GEN_SIM_RECO_6.root',
+        'file:/scratch2/users/fabozzi/higgs/h2l2b300/H300ZZ2l2b_7TeV_GEN_SIM_RECO_7.root',
     )
 )
 
 # Output Module : Hopefully we keep all we need
 process.out = cms.OutputModule("PoolOutputModule",
-    fileName = cms.untracked.string('zz2l2c.root'),
+    fileName = cms.untracked.string('h2l2b300New.root'),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath")
     ),
     outputCommands =  cms.untracked.vstring(
         'drop *_*_*_*',
-        'keep *_*higgs_*_PAT',
-        'keep *_selectedPatElectronsTriggerMatch_*_PAT',
-        'keep *_selectedPatMuonsTriggerMatch_*_PAT',
+        'keep *_selectedPatElectrons_*_PAT',
+        'keep *_selectedPatMuons_*_PAT',
         'keep *_cleanPatJets_*_PAT',
-        'keep *_patMETs_*_PAT',
+        'keep *_zee_*_PAT',
+        'keep *_zmm_*_PAT',
+        'keep *_zjj_*_PAT',
+        'keep *_hzzeejj_*_PAT',
+        'keep *_hzzmmjj_*_PAT',
+        'keep *_elhiggs_*_PAT',
+        'keep *_muhiggs_*_PAT',
         'keep *_flavorHistoryFilter_*_PAT',
     ),
     verbose = cms.untracked.bool(True)
 )
-
-# Modules to run the SSV Tagger - Required for 35X
-process.load("RecoBTag.Configuration.RecoBTag_cff")
-process.load("RecoBTag.SecondaryVertex.simpleSecondaryVertexHighEffBJetTags_cfi")
-process.load("RecoBTag.SecondaryVertex.simpleSecondaryVertexHighPurBJetTags_cfi")
-process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
 # Modules for the Cut-based Electron ID in the VBTF prescription
 import ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi as vbtfid
@@ -65,86 +67,45 @@ process.eidSequence = cms.Sequence(
     process.eidVBTFCom80 
 )
 
-# Keep a pruned collection of GenParticles to save space
-process.prunedGen = cms.EDProducer( "GenParticlePruner",
-    src = cms.InputTag("genParticles"),
-    select = cms.vstring(
-        "drop  *  ",
-        "keep++ pdgId = {Z0}",
-        "++keep pdgId = {Z0}",
-        "keep++ pdgId = {W+}",
-        "++keep pdgId = {W+}",
-        "keep++ pdgId = {W-}",
-        "++keep pdgId = {W-}",
-        "keep++ pdgId = {h0}",
-        "++keep pdgId = {h0}",
-        "keep++ pdgId = {e+}",
-        "++keep pdgId = {e+}",
-        "keep++ pdgId = {e-}",
-        "++keep pdgId = {e-}",
-        "keep++ pdgId = {mu+}",
-        "++keep pdgId = {mu+}",
-        "keep++ pdgId = {mu-}",
-        "++keep pdgId = {mu-}",
-        "keep++ pdgId = {tau+}",
-        "++keep pdgId = {tau+}",
-        "keep++ pdgId = {tau-}",
-        "++keep pdgId = {tau-}",
-        "keep++ pdgId = 4",
-        "++keep pdgId = 4",
-        "keep++ pdgId = -4",
-        "++keep pdgId = -4",
-        "keep++ pdgId = 5",
-        "++keep pdgId = 5",
-        "keep++ pdgId = -5",
-        "++keep pdgId = -5"
-    )
-)
-
-process.load("RecoJets.Configuration.GenJetParticles_cff")
-process.load("RecoJets.JetProducers.ak5GenJets_cfi")
 process.load("PhysicsTools.HepMCCandAlgos.flavorHistoryProducer_cfi")
 process.load("PhysicsTools.HepMCCandAlgos.flavorHistoryFilter_cfi")
 
 # Muon Selection
-process.selectedPatMuons.cut = ( "pt > 10 && isGlobalMuon && isTrackerMuon && globalTrack().normalizedChi2 < 10 &&" +
-                                 "innerTrack().hitPattern().numberOfValidTrackerHits > 10 && "                      +
-                                 "innerTrack().hitPattern().numberOfValidPixelHits > 0 && "                         +
-                                 "globalTrack().hitPattern().numberOfValidMuonHits > 0 && "                         +
-                                 "dB < 0.2 && "                                                                     +
-                                 "trackIso + caloIso < 0.15 * pt && "                                               +
-                                 "numberOfMatches > 1 && abs(eta) < 2.4" )
+process.selectedPatMuons.cut = ( 
+    "pt > 10 && isGlobalMuon && isTrackerMuon && globalTrack().normalizedChi2 < 10 &&" +
+    "innerTrack().hitPattern().numberOfValidTrackerHits > 10 && "                      +
+    "innerTrack().hitPattern().numberOfValidPixelHits > 0 && "                         +
+    "globalTrack().hitPattern().numberOfValidMuonHits > 0 && "                         +
+    "dB < 0.2 && "                                                                     +
+    "trackIso + caloIso < 0.15 * pt && "                                               +
+    "numberOfMatches > 1 && abs(eta) < 2.4" 
+)
 
 # Electron Selection
 process.patElectrons.electronIDSources = cms.PSet(
-    eidRobustLoose = cms.InputTag("eidRobustLoose"),
-    eidLoose = cms.InputTag("eidLoose"),
     eidVBTFRel95 = cms.InputTag("eidVBTFRel95"),
     eidVBTFRel80 = cms.InputTag("eidVBTFRel80"),
     eidVBTFCom95 = cms.InputTag("eidVBTFCom95"),
     eidVBTFCom80 = cms.InputTag("eidVBTFCom80")
 )
 
-process.selectedPatElectrons.cut = ( "pt > 10.0 && abs(eta) < 2.5 &&"                               +
-                                     "superCluster().energy / cosh(superCluster().eta) > 10.0 && "  +
-                                     "(isEE || isEB) && !isEBEEGap &&"                                           +
-                                     "electronID('eidVBTFCom95') == 7" )
+process.selectedPatElectrons.cut = ( 
+    "pt > 10.0 && abs(eta) < 2.5 &&"                               +
+    "(isEE || isEB) && !isEBEEGap &&"                              +
+    "electronID('eidVBTFCom95') == 7" 
+)
 
 
 # Switch to using PFJets 
-switchJetCollection(
-    process,
-    cms.InputTag('ak5PFJets'),
+switchJetCollection(process,cms.InputTag('ak5PFJets'),
     doJTA        = True,
     doBTagging   = True,
-    jetCorrLabel = ('AK5', 'PF'),
+    jetCorrLabel = ('AK5PF', cms.vstring(['L2Relative', 'L3Absolute', 'L2L3Residual'])),
     doType1MET   = True,
     genJetCollection=cms.InputTag("ak5GenJets"),
     doJetID      = True
 )
 
-process.patJetCorrFactors.corrLevels.L5Flavor = cms.string('none')
-process.patJetCorrFactors.corrLevels.L7Parton = cms.string('none')
 
 # Switch to using PFMET 
 switchToPFMET(
@@ -180,72 +141,52 @@ process.cleanPatJets = cms.EDProducer("PATJetCleaner",
     finalCut = cms.string('')
 )
 
-# Remove MC Matching
-removeMCMatching(process, ['Electrons', 'Muons', 'Jets', 'METs'])
-
-# Trigger Matching Setup
-process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff")
-
-process.electronsTriggerMatch = process.cleanElectronTriggerMatchHLTEle20SWL1R.clone()
-#process.electronsTriggerMatch = process.electronTriggerMatchHLTEle15LWL1R.clone()
-process.electronsTriggerMatch.src = "selectedPatElectrons"
-process.electronsTriggerMatch.pathNames = cms.vstring('HLT_Ele15_LW_L1R')
-process.electronsTriggerMatch.maxDeltaR = 0.2
-
-process.muonsTriggerMatch = process.cleanMuonTriggerMatchHLTMu9.clone()
-#process.muonsTriggerMatch = process.muonTriggerMatchHLTMu3.clone()
-process.muonsTriggerMatch.src = "selectedPatMuons"
-process.muonsTriggerMatch.pathNames = cms.vstring('HLT_Mu9')
-process.muonsTriggerMatch.maxDeltaR = 0.2
-
-
-process.selectedPatElectronsTriggerMatch = cms.EDProducer("PATTriggerMatchElectronEmbedder",
-    src = cms.InputTag("selectedPatElectrons"),
-    matches = cms.VInputTag(['electronsTriggerMatch'])
-)
-
-process.selectedPatMuonsTriggerMatch = cms.EDProducer("PATTriggerMatchMuonEmbedder",
-    src = cms.InputTag("selectedPatMuons"),
-    matches = cms.VInputTag(['muonsTriggerMatch'])
-)
-
-
-# Z Candidates : Z->emu can be used as a control sample for ttbar
-process.zee = cms.EDProducer("CandViewCombiner",
+# Z Candidates and Higgs Candidates
+process.zee = cms.EDProducer("CandViewShallowCloneCombiner",
     checkCharge = cms.bool(True),
     cut = cms.string('mass > 70 && mass < 110'),
-    decay = cms.string("selectedPatElectronsTriggerMatch@+ selectedPatElectronsTriggerMatch@-")
+    decay = cms.string("selectedPatElectrons@+ selectedPatElectrons@-")
 )
 
-process.zmm = cms.EDProducer("CandViewCombiner",
+process.zmm = cms.EDProducer("CandViewShallowCloneCombiner",
     checkCharge = cms.bool(True),
     cut = cms.string('mass > 70 && mass < 110 && min(abs(daughter(0).eta), abs(daughter(1).eta)) < 2.1'),
-    decay = cms.string("selectedPatMuonsTriggerMatch@+ selectedPatMuonsTriggerMatch@-")
+    decay = cms.string("selectedPatMuons@+ selectedPatMuons@-")
 )
 
-process.elhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
-    zllTag = cms.InputTag("zee"),
-    jetsTag = cms.InputTag("cleanPatJets"),
-    metTag = cms.InputTag("patMETs"),
-    isMuonChannel = cms.bool(False),
-)
+process.zjj = cms.EDProducer("CandViewShallowCloneCombiner",
+    checkCharge = cms.bool(False),
+    cut = cms.string(''),
+    decay = cms.string("cleanPatJets cleanPatJets")
+)   
 
-process.muhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
-    zllTag = cms.InputTag("zmm"),
-    jetsTag = cms.InputTag("cleanPatJets"),
-    metTag = cms.InputTag("patMETs"),
-    isMuonChannel = cms.bool(True),
-)
+process.hzzeejj = cms.EDProducer("CandViewShallowCloneCombiner",
+    checkCharge = cms.bool(False),
+    cut = cms.string(''),
+    decay = cms.string("zee zjj")
+)   
 
+process.hzzmmjj = cms.EDProducer("CandViewShallowCloneCombiner",
+    checkCharge = cms.bool(False),
+    cut = cms.string(''),
+    decay = cms.string("zmm zjj")
+)   
+
+## process.elhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
+##     higgsTag = cms.InputTag("hzzeejj"),
+##     gensTag = cms.InputTag("genParticles"),
+##     metTag = cms.InputTag("patMETs")
+## )
+
+## process.muhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
+##     higgsTag = cms.InputTag("hzzmmjj"),
+##     gensTag = cms.InputTag("genParticles"),
+##     metTag = cms.InputTag("patMETs")
+## )
 
 # Define the relevant paths and schedule them
 process.analysisPath = cms.Path(
-    process.simpleSecondaryVertexHighEffBJetTags + 
-    process.simpleSecondaryVertexHighPurBJetTags + 
-    process.eidSequence +
-    process.prunedGen + 
-    process.genParticlesForJets +
-    process.ak5GenJets +
+    process.eidSequence + 
     process.cFlavorHistoryProducer +
     process.bFlavorHistoryProducer +
     process.flavorHistoryFilter +
@@ -256,18 +197,16 @@ process.analysisPath = cms.Path(
     process.selectedPatElectrons + 
     process.selectedPatMuons + 
     process.cleanPatJets +
-    process.patTrigger +
-    process.electronsTriggerMatch +
-    process.muonsTriggerMatch +
-    process.selectedPatElectronsTriggerMatch +
-    process.selectedPatMuonsTriggerMatch +
     process.zee +
     process.zmm + 
-    process.elhiggs + 
-    process.muhiggs 
+    process.zjj + 
+    process.hzzeejj + 
+    process.hzzmmjj #+ 
+    #process.elhiggs + 
+    #process.muhiggs 
 )
 
-# Setup for a basic filtering  - 2 leptons with PT > 20 GeV/c
+# Setup for a basic filtering
 process.zll = cms.EDProducer("CandViewMerger",
     src = cms.VInputTag("zee", "zmm")
 ) 
