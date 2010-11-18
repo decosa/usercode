@@ -37,7 +37,7 @@ class Higgs2l2bAnalysis : public edm::EDAnalyzer {
         virtual void endJob(); 
 
         edm::InputTag higgsTag;
-        TH1D * l_theta, *l_cosTheta,* j_theta, *j_cosTheta, *h_phi;
+  TH1D * l_theta, *l_cosTheta,* j_theta, *j_cosTheta, *h_phi, *h_cosPhi;
 
         
 };
@@ -46,11 +46,12 @@ Higgs2l2bAnalysis::Higgs2l2bAnalysis(const edm::ParameterSet& iConfig):
     higgsTag(iConfig.getParameter<edm::InputTag>("higgsTag"))
 {
   edm::Service<TFileService> fs;
-  l_theta = fs->make<TH1D>( "Lepton_Theta", "Lepton_Theta", 50,  -3.4, 3.4 );
-  l_cosTheta = fs->make<TH1D>( "Lepton_CosTheta", "Lepton_CosTheta", 50,  -1.1, 1.1 );
-  j_theta = fs->make<TH1D>( "Jet_Theta", "Jet_Theta", 50,  -3.4, 3.4 );
-  j_cosTheta = fs->make<TH1D>( "Jet_CosTheta", "Jet_CosTheta", 50,  -1.1, 1.1 );
-  h_phi = fs->make<TH1D>( "AzimuthalAngle", "AzimuthalAngle", 50,  -3.4, 3.4 );
+  l_theta = fs->make<TH1D>( "Lepton_Theta", "Lepton_Theta", 50,  0, M_PI );
+  l_cosTheta = fs->make<TH1D>( "Lepton_CosTheta", "Lepton_CosTheta", 50,  0., 1. );
+  j_theta = fs->make<TH1D>( "Jet_Theta", "Jet_Theta", 50,  0, M_PI );
+  j_cosTheta = fs->make<TH1D>( "Jet_CosTheta", "Jet_CosTheta", 50,  0., 1. );
+  h_phi = fs->make<TH1D>( "AzimuthalAngle", "AzimuthalAngle", 50,  0, M_PI/2 );
+  h_cosPhi = fs->make<TH1D>( "Cos2AzimuthalAngle", "Cos2AzimuthalAngle", 50,  -1, 1. );
  
 }
 
@@ -83,28 +84,52 @@ void Higgs2l2bAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup&
     const Candidate* zjjptr = h.daughter(1);
     
     //create booster
-    CenterOfMassBooster boost_h(h);
+    ////CenterOfMassBooster boost_h(h);
     CenterOfMassBooster boost_ll(*zllptr);
     CenterOfMassBooster boost_jj(*zjjptr);
 
 	
     // Boost to Higgs rest frame
     
-    Candidate * hBoost = h.clone();
+    ////Candidate * hBoost = (h.hasMasterClone() ? &(*(h.masterClone())) : &h)->clone();
     Candidate * zllBoost = (zllptr->hasMasterClone() ? &(*(zllptr->masterClone())) : zllptr)->clone();
     Candidate * zjjBoost = (zjjptr->hasMasterClone() ? &(*(zjjptr->masterClone())) : zjjptr)->clone();
 
-    boost_ll.set(*hBoost);
+    ////boost_ll.set(*hBoost);
 
-    const Candidate * z0 = const_cast<const Candidate *>(hBoost)->daughter(0);
-    const Candidate * z1 = const_cast<const Candidate *>(hBoost)->daughter(1);
+    ////const Candidate * z0 = const_cast<const Candidate *>(hBoost)->daughter(0);
+    ////const Candidate * z1 = const_cast<const Candidate *>(hBoost)->daughter(1);
 
-    phi = ROOT::Math::VectorUtil::Angle( ( ((z0->daughter(0))->momentum()).Cross((z0->daughter(1))->momentum()) ),( ((z1->daughter(0))->momentum()).Cross((z1->daughter(1))->momentum()) ) );
+    /////phi = ROOT::Math::VectorUtil::Angle( ( ((z0->daughter(0))->momentum()).Cross((z0->daughter(1))->momentum()) ),( ((z1->daughter(0))->momentum()).Cross((z1->daughter(1))->momentum()) ) );
 
+    ////if (phi>M_PI/2) phi = M_PI -phi;
+    ///h_phi->Fill(phi);
+    ////h_cosPhi->Fill(cos(2*phi));
+    
+
+
+    Booster hFrameBoost( h.boostToCM() );
+    const Candidate * zDauRefl0 = h.daughter(0)->daughter(0);
+    Candidate * boostedL0_HFrame = zDauRefl0->clone();
+    hFrameBoost.set( *boostedL0_HFrame );
+    const Candidate * zDauRefl1 = h.daughter(0)->daughter(1);
+    Candidate * boostedL1_HFrame = zDauRefl1->clone();
+    hFrameBoost.set( *boostedL1_HFrame);
+    const Candidate * zDauRefj0 = h.daughter(1)->daughter(0);
+    Candidate * boostedJ0_HFrame = zDauRefj0->clone();
+    hFrameBoost.set( *boostedJ0_HFrame );
+    const Candidate * zDauRefj1 = h.daughter(1)->daughter(1);  
+    Candidate * boostedJ1_HFrame = zDauRefj1->clone();
+    hFrameBoost.set( *boostedJ1_HFrame );
+
+    phi =  ROOT::Math::VectorUtil::Angle( (boostedL0_HFrame->momentum()).Cross(boostedL1_HFrame->momentum()), (boostedJ0_HFrame->momentum()).Cross(boostedJ1_HFrame->momentum()) );
+
+
+    if (phi>M_PI/2) phi = M_PI -phi;
     h_phi->Fill(phi);
+    h_cosPhi->Fill(cos(2*phi));
 
     // Boost to Zs rest frame
-    
     boost_ll.set(*zllBoost);
     boost_jj.set(*zjjBoost);
     
