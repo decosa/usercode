@@ -17,7 +17,7 @@ process.load('Configuration.EventContent.EventContent_cff')
 process.GlobalTag.globaltag = 'START38_V13::All'
 
 # Events to process
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 # Source file : To be run on a Full RECO sample
 process.source = cms.Source("PoolSource",
@@ -32,7 +32,7 @@ process.source = cms.Source("PoolSource",
 
 # Output Module : Hopefully we keep all we need
 process.out = cms.OutputModule("PoolOutputModule",
-    fileName = cms.untracked.string('h2l2b300New.root'),
+    fileName = cms.untracked.string('h2l2b300Test.root'),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath")
     ),
@@ -160,17 +160,26 @@ process.zjj = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("cleanPatJets cleanPatJets")
 )   
 
-process.hzzeejj = cms.EDProducer("CandViewShallowCloneCombiner",
+process.hzzeejjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
     checkCharge = cms.bool(False),
     cut = cms.string(''),
     decay = cms.string("zee zjj")
 )   
 
-process.hzzmmjj = cms.EDProducer("CandViewShallowCloneCombiner",
+process.hzzmmjjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
     checkCharge = cms.bool(False),
     cut = cms.string(''),
     decay = cms.string("zmm zjj")
 )   
+
+
+process.hzzeejj = cms.EDProducer("Higgs2l2bUserData",
+    higgs = cms.InputTag("hzzeejjBaseColl")
+    )
+
+process.hzzmmjj = cms.EDProducer("Higgs2l2bUserData",
+    higgs = cms.InputTag("hzzmmjjBaseColl")
+    )
 
 ## process.elhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
 ##     higgsTag = cms.InputTag("hzzeejj"),
@@ -200,6 +209,8 @@ process.analysisPath = cms.Path(
     process.zee +
     process.zmm + 
     process.zjj + 
+    process.hzzeejjBaseColl + 
+    process.hzzmmjjBaseColl +
     process.hzzeejj + 
     process.hzzmmjj #+ 
     #process.elhiggs + 

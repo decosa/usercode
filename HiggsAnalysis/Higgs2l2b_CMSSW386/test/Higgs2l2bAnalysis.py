@@ -5,6 +5,7 @@ process = cms.Process("TRIM")
 
 
 process.load("HiggsAnalysis.Higgs2l2b.Higgs2l2bedmNtuples_cff")
+#process.load("HiggsAnalysis.Higgs2l2b.zjjEdmNtuples_cff")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -12,7 +13,7 @@ process.TFileService = cms.Service("TFileService", fileName = cms.string('tree_h
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:h2l2b300New.root',
+        'file:h2l2b300Test.root',
     )
 )
 
@@ -36,11 +37,16 @@ process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
 process.analysisPath = cms.Path(
     process.elChannelAnalysis+
     process.muChannelAnalysis+
-    process.Higgs2e2bEdmNtuple)
+    process.Higgs2e2bEdmNtuple+
+    process.zjjEdmNtuple+
+    process.zeeEdmNtuple+
+    process.zmmEdmNtuple
+    )
+
 process.endPath = cms.EndPath(process.edmNtuplesOut)
 
 
 process.schedule = cms.Schedule(
     process.analysisPath,
     process.endPath
-)
+    )
