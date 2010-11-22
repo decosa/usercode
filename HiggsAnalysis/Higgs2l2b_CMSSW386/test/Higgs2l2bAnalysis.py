@@ -38,6 +38,7 @@ process.analysisPath = cms.Path(
     process.elChannelAnalysis+
     process.muChannelAnalysis+
     process.Higgs2e2bEdmNtuple+
+    process.Higgs2mu2bEdmNtuple+
     process.zjjEdmNtuple+
     process.zeeEdmNtuple+
     process.zmmEdmNtuple

@@ -174,11 +174,15 @@ process.hzzmmjjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
 
 
 process.hzzeejj = cms.EDProducer("Higgs2l2bUserData",
-    higgs = cms.InputTag("hzzeejjBaseColl")
+    higgs = cms.InputTag("hzzeejjBaseColl"),
+    gensTag = cms.InputTag("genParticles"),
+    metTag = cms.InputTag("patMETs")                          
     )
 
 process.hzzmmjj = cms.EDProducer("Higgs2l2bUserData",
-    higgs = cms.InputTag("hzzmmjjBaseColl")
+    higgs = cms.InputTag("hzzmmjjBaseColl"),
+    gensTag = cms.InputTag("genParticles"),
+    metTag = cms.InputTag("patMETs")
     )
 
 ## process.elhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
