@@ -70,18 +70,6 @@ higgs = (
     quantity = cms.untracked.string("userFloat('azimuthalAngle')")
     ),
     cms.PSet(
-    tag = cms.untracked.string("met"),
-    quantity = cms.untracked.string("userFloat('met')")
-    ),
-    cms.PSet(
-    tag = cms.untracked.string("metsig"),
-    quantity = cms.untracked.string("userFloat('metsig')")
-    ),
-    cms.PSet(
-    tag = cms.untracked.string("metphi"),
-    quantity = cms.untracked.string("userFloat('metphi')")
-    ),
-    cms.PSet(
     tag = cms.untracked.string("jminbmatch"),
     quantity = cms.untracked.string("userFloat('jminbmatch')")
     ),
@@ -251,11 +239,11 @@ zllEdmNtuple.variables += baseKinematics
 
 Higgs2e2bEdmNtuple = copy.deepcopy(zllEdmNtuple)
 Higgs2e2bEdmNtuple.variables += higgs
-Higgs2e2bEdmNtuple.src = cms.InputTag("hzzeejj")
+Higgs2e2bEdmNtuple.src = cms.InputTag("hzzeejj:h")
 Higgs2e2bEdmNtuple.prefix = cms.untracked.string("elHiggs")
 
 Higgs2mu2bEdmNtuple = copy.deepcopy(Higgs2e2bEdmNtuple)
-Higgs2mu2bEdmNtuple.src = cms.InputTag("hzzmmjj")
+Higgs2mu2bEdmNtuple.src = cms.InputTag("hzzmmjj:h")
 Higgs2mu2bEdmNtuple.prefix = cms.untracked.string("muHiggs")
 
 
@@ -285,7 +273,9 @@ edmNtuplesOut = cms.OutputModule(
     "keep *_zmmEdmNtuple_*_*",
     "keep *_zeeEdmNtuple_*_*",
     "keep *_zjjEdmNtuple_*_*",
-
+    "keep *_hzzeejj_met_*",
+    "keep *_hzzeejj_metSig_*",
+    "keep *_hzzeejj_metPhi_*"
     
     )
     )

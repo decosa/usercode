@@ -172,6 +172,17 @@ process.hzzmmjjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("zmm zjj")
 )   
 
+## process.zee = cms.EDProducer("zffUserData",
+##                              zffTag = cms.InputTag("zeeBaseColl")
+##                              )
+
+## process.zmm = cms.EDProducer("zffUserData",
+##                              zffTag = cms.InputTag("zmmBaseColl")
+##                              )
+
+## process.zjj = cms.EDProducer("zffUserData",
+##                              zffTag = cms.InputTag("zjjBaseColl")
+##                              )
 
 process.hzzeejj = cms.EDProducer("Higgs2l2bUserData",
     higgs = cms.InputTag("hzzeejjBaseColl"),
@@ -184,6 +195,8 @@ process.hzzmmjj = cms.EDProducer("Higgs2l2bUserData",
     gensTag = cms.InputTag("genParticles"),
     metTag = cms.InputTag("patMETs")
     )
+
+
 
 ## process.elhiggs = cms.EDProducer("Higgs2l2bCandidateMaker",
 ##     higgsTag = cms.InputTag("hzzeejj"),
@@ -210,6 +223,9 @@ process.analysisPath = cms.Path(
     process.selectedPatElectrons + 
     process.selectedPatMuons + 
     process.cleanPatJets +
+    #process.zeeBaseColl +
+    #process.zmmBaseColl + 
+    #process.zjjBaseColl + 
     process.zee +
     process.zmm + 
     process.zjj + 

@@ -20,11 +20,11 @@ process.source = cms.Source("PoolSource",
 
 
 process.elChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
-    higgsTag = cms.InputTag("hzzeejj"),
+    higgsTag = cms.InputTag("hzzeejj:h"),
 )
 
 process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
-    higgsTag = cms.InputTag("hzzmmjj"),
+    higgsTag = cms.InputTag("hzzmmjj:h"),
 )
 
 #process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",

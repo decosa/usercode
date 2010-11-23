@@ -35,13 +35,11 @@
 using namespace edm;
 using namespace std;
 using namespace reco;
-//using namespace isodeposit;
-//using namespace pat;
 
 class Higgs2l2bUserData : public edm::EDProducer {
 public:
   Higgs2l2bUserData( const edm::ParameterSet & );   
-  //typedef math::XYZVector Vector;
+
 private:
   void produce( edm::Event &, const edm::EventSetup & );
   
@@ -58,7 +56,11 @@ Higgs2l2bUserData::Higgs2l2bUserData( const ParameterSet & cfg ):
   gensTag( cfg.getParameter<edm::InputTag>("gensTag")),
   metTag( cfg.getParameter<edm::InputTag>("metTag"))
 {
-  produces<vector<pat::CompositeCandidate> >();
+  produces<vector<pat::CompositeCandidate> >("h").setBranchAlias( "h" );
+  produces<float>( "met" ).setBranchAlias( "met" );  
+  produces<float>( "metPhi" ).setBranchAlias( "metPhi" );  
+  produces<float>( "metSig" ).setBranchAlias( "metSig" );  
+
 }
 
 void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
@@ -74,8 +76,13 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
   evt.getByLabel(metTag, metH);
   pat::METCollection met_h = *metH;
 
+  
 
   auto_ptr<vector<pat::CompositeCandidate> > higgsColl( new vector<pat::CompositeCandidate> () );
+  auto_ptr<float> met( new float );
+  auto_ptr<float> metPhi( new float );
+  auto_ptr<float> metSig( new float );
+
 
   float phi; 
   float zzdPhi, zzdEta, zzdr, lldPhi, lldEta,lldr, jjdPhi, jjdEta,jjdr; 
@@ -83,7 +90,7 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
   float jminid, jmaxid;
   bool  jminbmatch, jmincmatch, jmaxbmatch, jmaxcmatch;
   float  lminpt, lmineta, lminphi, lmaxpt, lmaxeta, lmaxphi, jminpt, jmineta, jminphi, jmaxpt,  jmaxeta,  jmaxphi;
-  float met, metsig, metphi;
+  
 
   for (unsigned int i = 0; i< higgsH->size();++i){
     const reco::CompositeCandidate & H = (*higgsH)[i];
@@ -95,16 +102,14 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
     Booster hFrameBoost( H.boostToCM() );
     const Candidate * zDauRefl0 = H.daughter(0)->daughter(0);
     Candidate * boostedL0_HFrame = zDauRefl0->clone();
-    Candidate * l0 = zDauRefl0->clone();
     const Candidate * zDauRefl1 = H.daughter(0)->daughter(1);
     Candidate * boostedL1_HFrame = zDauRefl1->clone();
-    Candidate * l1 = zDauRefl1->clone();
     const Candidate * zDauRefj0 = H.daughter(1)->daughter(0);
     Candidate * boostedJ0_HFrame = zDauRefj0->clone();
-    Candidate * j0 = zDauRefj0->clone();
+    const pat::Jet & j0 = dynamic_cast<const pat::Jet &>(*(zDauRefj0->masterClone()));
     const Candidate * zDauRefj1 = H.daughter(1)->daughter(1);  
+    const pat::Jet & j1 = dynamic_cast<const pat::Jet &>(*(zDauRefj1->masterClone()));
     Candidate * boostedJ1_HFrame = zDauRefj1->clone();
-    Candidate * j1 = zDauRefj1->clone();
 
     
     // dPhi, dEta, dr between H and Zs daughters
@@ -122,46 +127,37 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
     jjdr = deltaR(zDauRefj0->eta(), zDauRefj0->phi(), zDauRefj1->eta(), zDauRefj1->phi() );
 
    
-    /*
-    if(zDauRefj0->pt() < zDauRefj1->pt() ){
-
-      neutralEmEnergy = (dynamic_cast<pat::Jet*>(j0))->neutralEmEnergy();
-      chargedEmEnergy = (dynamic_cast<pat::Jet*>(j0))->chargedEmEnergy() ;
-      chargedHadronEnergy =(dynamic_cast<pat::Jet*>(j0))->chargedHadronEnergy() ;
-      energy = (dynamic_cast<pat::Jet*>(j0))->energy() ;
-
+    if(j0.pt() < j1.pt() ){      
+      neutralEmEnergy = j0.neutralEmEnergy();
+      chargedEmEnergy = j0.chargedEmEnergy() ;
+      chargedHadronEnergy =j0.chargedHadronEnergy() ;
+      energy = j0.energy() ;
       if (neutralEmEnergy/energy < 1.00 && chargedEmEnergy/energy < 1.00 && chargedHadronEnergy/energy > 0) jminid = true;
       else jminid = false;
   
-      neutralEmEnergy = (dynamic_cast<pat::Jet*>(j1))->neutralEmEnergy();
-      chargedEmEnergy = (dynamic_cast<pat::Jet*>(j1))->chargedEmEnergy() ;
-      chargedHadronEnergy =(dynamic_cast<pat::Jet*>(j1))->chargedHadronEnergy() ;
-      energy = (dynamic_cast<pat::Jet*>(j1))->energy() ;
-
+      neutralEmEnergy = j1.neutralEmEnergy();
+      chargedEmEnergy = j1.chargedEmEnergy() ;
+      chargedHadronEnergy =j1.chargedHadronEnergy() ;
+      energy = j1.energy() ;
       if (neutralEmEnergy/energy < 1.00 && chargedEmEnergy/energy < 1.00 && chargedHadronEnergy/energy > 0) jmaxid = true;
       else jmaxid = false;
-      
     }
     else{
-
-      neutralEmEnergy = (dynamic_cast<pat::Jet*>(j1))->neutralEmEnergy();
-      chargedEmEnergy = (dynamic_cast<pat::Jet*>(j1))->chargedEmEnergy() ;
-      chargedHadronEnergy =(dynamic_cast<pat::Jet*>(j1))->chargedHadronEnergy() ;
-      energy = (dynamic_cast<pat::Jet*>(j1))->energy() ;
-
+      neutralEmEnergy = j1.neutralEmEnergy();
+      chargedEmEnergy = j1.chargedEmEnergy() ;
+      chargedHadronEnergy = j1.chargedHadronEnergy() ;
+      energy = j1.energy() ;
       if (neutralEmEnergy/energy < 1.00 && chargedEmEnergy/energy < 1.00 && chargedHadronEnergy/energy > 0) jminid = true;
       else jminid = false;
 
-      neutralEmEnergy = (dynamic_cast<pat::Jet*>(j0))->neutralEmEnergy();
-      chargedEmEnergy = (dynamic_cast<pat::Jet*>(j0))->chargedEmEnergy() ;
-      chargedHadronEnergy =(dynamic_cast<pat::Jet*>(j0))->chargedHadronEnergy() ;
-      energy = (dynamic_cast<pat::Jet*>(j0))->energy() ;
-
+      neutralEmEnergy = j0.neutralEmEnergy();
+      chargedEmEnergy = j0.chargedEmEnergy() ;
+      chargedHadronEnergy = j0.chargedHadronEnergy() ;
+      energy = j0.energy() ;
       if (neutralEmEnergy/energy < 1.00 && chargedEmEnergy/energy < 1.00 && chargedHadronEnergy/energy > 0) jmaxid = true;
       else jmaxid = false;
-
     }
-    */
+
     
     // gen info
     
@@ -226,9 +222,9 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
        
     if (phi>M_PI/2) phi = M_PI -phi;
 
-    met = met_h.front().et();
-    metsig = met_h.front().mEtSig();
-    metphi = met_h.front().phi();
+    *met = met_h.front().et();
+    *metSig = met_h.front().mEtSig();
+    *metPhi = met_h.front().phi();
 
     h.addUserFloat("azimuthalAngle", phi);
      h.addUserFloat("zzdPhi", zzdPhi);
@@ -244,18 +240,18 @@ void Higgs2l2bUserData::produce( Event & evt, const EventSetup & ) {
     h.addUserFloat("jmincmatch",jmincmatch );
     h.addUserFloat("jmaxbmatch",jmaxbmatch );
     h.addUserFloat("jmaxcmatch",jmaxcmatch );
-    //h.addUserFloat("jminid",jminid);
-    //h.addUserFloat("jmaxid",jmaxid);
-    h.addUserFloat("met",met);
-    h.addUserFloat("metsig",metsig);
-    h.addUserFloat("metphi",metphi);
+    h.addUserFloat("jminid",jminid);
+    h.addUserFloat("jmaxid",jmaxid);
 
     
     higgsColl->push_back(h);
     
   }
   
-  evt.put( higgsColl);
+  evt.put( higgsColl, "h");
+  evt.put( met, "met");
+  evt.put( metSig, "metSig");
+  evt.put( metPhi, "metPhi");
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
