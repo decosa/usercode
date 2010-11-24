@@ -298,7 +298,7 @@ if(VBFGFdiscriminator == True):
                                    )
         )
 
-    process.outPath = cms.EndPath(process.out +
+    process.outPath = cms.EndPath(
                               process.VBFout +
                               process.GFout
                               )
