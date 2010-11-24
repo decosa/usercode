@@ -210,6 +210,16 @@ process.hzzmmjj = cms.EDProducer("Higgs2l2bUserData",
 ##     metTag = cms.InputTag("patMETs")
 ## )
 
+
+### Flavor History
+process.load("PhysicsTools.HepMCCandAlgos.flavorHistoryPaths_cfi")
+
+import PhysicsTools.HepMCCandAlgos.flavorHistoryPaths_cfi as flavortools
+
+
+
+
+
 # Define the relevant paths and schedule them
 process.analysisPath = cms.Path(
     process.eidSequence + 
@@ -252,12 +262,46 @@ process.jetFilter = cms.EDFilter("CandViewCountFilter",
     minNumber = cms.uint32(2),
 )
 
-process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter)
-
-process.outPath = cms.EndPath(process.out)
-
-process.schedule = cms.Schedule(
-    process.analysisPath,
-    process.filterPath,
-    process.outPath
+process.VBFFilter = cms.EDFilter("VBFFilter",
+    src = cms.InputTag("genParticles")
 )
+
+process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
+
+process.out.SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring("filterPath",
+                                   )
+        )
+
+
+VBFGFdiscriminator = True
+
+
+if(VBFGFdiscriminator == True):
+    process.VBFfilterPath = copy.deepcopy(process.filterPath)
+    process.VBFfilterPath.__iadd__(process.VBFFilter)
+    
+    process.GFfilterPath = copy.deepcopy(process.filterPath)
+    process.GFfilterPath.__iadd__(~process.VBFFilter)
+    
+    process.VBFout = copy.deepcopy(process.out)
+    process.VBFout.fileName = cms.untracked.string("h2l2b300TestVBF.root")
+    process.VBFout.SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring("VBFfilterPath"
+                                   )
+        )
+    
+    process.GFout = copy.deepcopy(process.out)
+    process.GFout.fileName = cms.untracked.string("h2l2b300TestGF.root")
+    process.GFout.SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring("GFfilterPath"
+                                   )
+        )
+
+    process.outPath = cms.EndPath(process.out +
+                              process.VBFout +
+                              process.GFout
+                              )
+
+else:
+    process.outPath = cms.EndPath(process.out)
