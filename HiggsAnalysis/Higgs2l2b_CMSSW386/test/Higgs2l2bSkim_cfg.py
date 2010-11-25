@@ -17,7 +17,7 @@ process.load('Configuration.EventContent.EventContent_cff')
 process.GlobalTag.globaltag = 'START38_V13::All'
 
 # Events to process
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 
 # Source file : To be run on a Full RECO sample
 process.source = cms.Source("PoolSource",
@@ -30,9 +30,11 @@ process.source = cms.Source("PoolSource",
     )
 )
 
+
+
 # Output Module : Hopefully we keep all we need
 process.out = cms.OutputModule("PoolOutputModule",
-    fileName = cms.untracked.string('h2l2b300Test.root'),
+    fileName = cms.untracked.string('h2l2b300.root'),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath")
     ),
@@ -277,22 +279,21 @@ process.out.SelectEvents = cms.untracked.PSet(
 VBFGFdiscriminator = True
 
 
+
 if(VBFGFdiscriminator == True):
-    process.VBFfilterPath = copy.deepcopy(process.filterPath)
-    process.VBFfilterPath.__iadd__(process.VBFFilter)
-    
-    process.GFfilterPath = copy.deepcopy(process.filterPath)
-    process.GFfilterPath.__iadd__(~process.VBFFilter)
-    
+
+    process.VBFfilterPath = cms.Path(process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
+    process.GFfilterPath = cms.Path(~process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
+
     process.VBFout = copy.deepcopy(process.out)
-    process.VBFout.fileName = cms.untracked.string("h2l2b300TestVBF.root")
+    process.VBFout.fileName = cms.untracked.string("h2l2b300VBF.root")
     process.VBFout.SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("VBFfilterPath"
                                    )
         )
     
     process.GFout = copy.deepcopy(process.out)
-    process.GFout.fileName = cms.untracked.string("h2l2b300TestGF.root")
+    process.GFout.fileName = cms.untracked.string("h2l2b300GF.root")
     process.GFout.SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("GFfilterPath"
                                    )
@@ -303,5 +304,4 @@ if(VBFGFdiscriminator == True):
                               process.GFout
                               )
 
-else:
-    process.outPath = cms.EndPath(process.out)
+else: process.outPath = cms.EndPath(process.out)
