@@ -9,11 +9,11 @@ process.load("HiggsAnalysis.Higgs2l2b.Higgs2l2bedmNtuples_cff")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('tree_h2l2b300.root') )
+process.TFileService = cms.Service("TFileService", fileName = cms.string('h2l2b300.root') )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:h2l2b300Test.root',
+        'rfio:/castor/cern.ch/user/d/decosa/Higgs/h300/h300/h2l2b300TestGF_1_1_NDL.root',
     )
 )
 
@@ -32,7 +32,7 @@ process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
 #)
 
 
-
+process.edmNtuplesOut.fileName = cms.untracked.string('H300GFFEdmNtuples.root')
 
 process.analysisPath = cms.Path(
     process.elChannelAnalysis+
