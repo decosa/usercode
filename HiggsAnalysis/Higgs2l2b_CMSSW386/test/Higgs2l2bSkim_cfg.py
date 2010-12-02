@@ -162,13 +162,13 @@ process.zjj = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("cleanPatJets cleanPatJets")
 )   
 
-process.hzzeejjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
+process.hzzeejjBaseColl = cms.EDProducer("CandViewCombiner",
     checkCharge = cms.bool(False),
     cut = cms.string(''),
     decay = cms.string("zee zjj")
 )   
 
-process.hzzmmjjBaseColl = cms.EDProducer("CandViewShallowCloneCombiner",
+process.hzzmmjjBaseColl = cms.EDProducer("CandViewCombiner",
     checkCharge = cms.bool(False),
     cut = cms.string(''),
     decay = cms.string("zmm zjj")
@@ -280,7 +280,7 @@ VBFGFdiscriminator = True
 
 
 
-if(VBFGFdiscriminator == True):
+if(VBFGFdiscriminator == False):
 
     process.VBFfilterPath = cms.Path(process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
     process.GFfilterPath = cms.Path(~process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
