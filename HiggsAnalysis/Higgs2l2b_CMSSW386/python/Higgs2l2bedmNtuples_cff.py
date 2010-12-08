@@ -1,3 +1,4 @@
+
 import FWCore.ParameterSet.Config as cms
 import copy
 
@@ -96,33 +97,149 @@ zll = (
     ),
     ## pt
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMinPt"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).pt <daughter(0).daughter(1).pt ?daughter(0).daughter(0).pt :daughter(0).daughter(1).pt ")
+    tag = cms.untracked.string("LeptDau1Pt"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).pt ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMaxPt"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).pt >daughter(0).daughter(1).pt ?daughter(0).daughter(0).pt :daughter(0).daughter(1).pt ")
+    tag = cms.untracked.string("LeptDau2Pt"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).pt")
     ),
     ## eta
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMinEta"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).eta <daughter(0).daughter(1).eta ?daughter(0).daughter(0).eta :daughter(0).daughter(1).eta ")
+    tag = cms.untracked.string("LeptDau1Eta"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).eta ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMaxEta"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).eta >daughter(0).daughter(1).eta ?daughter(0).daughter(0).eta :daughter(0).daughter(1).eta ")
+    tag = cms.untracked.string("LeptDau2Eta"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).eta ")
     ),
     ## phi
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMinPhi"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).phi <daughter(0).daughter(1).phi ?daughter(0).daughter(0).phi :daughter(1).phi ")
+    tag = cms.untracked.string("LeptDau1Phi"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).phi ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("LeptDauMaxPhi"),
-    quantity = cms.untracked.string("?daughter(0).daughter(0).phi >daughter(0).daughter(1).phi ?daughter(0).daughter(0).phi :daughter(1).phi ")
-    )
+    tag = cms.untracked.string("LeptDau2Phi"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).phi ")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1GlobalMuonBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).isGlobalMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2GlobalMuonBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).isGlobalMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1StandAloneBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).isStandAloneMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2StandAloneBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).isStandAloneMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1TrackerMuonBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).isTrackerMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2TrackerMuonBit"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).isTrackerMuon")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1NofMuonHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(0).isGlobalMuon?daughter(0).daughter(0).masterClone.globalTrack.hitPattern.numberOfValidMuonHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2NofMuonHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(1).isGlobalMuon?daughter(0).daughter(1).masterClone.globalTrack.hitPattern.numberOfValidMuonHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1NofStripHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(0).isGlobalMuon?daughter(0).daughter(0).masterClone.globalTrack.hitPattern.numberOfValidStripHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2NofStripHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(1).isGlobalMuon?daughter(0).daughter(1).masterClone.globalTrack.hitPattern.numberOfValidStripHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1NofPixelHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(0).isGlobalMuon?daughter(0).daughter(0).masterClone.globalTrack.hitPattern.numberOfValidPixelHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2NofPixelHits"),
+    quantity = cms.untracked.string("?daughter(0).daughter(1).isGlobalMuon?daughter(0).daughter(1).masterClone.globalTrack.hitPattern.numberOfValidPixelHits: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1NormChi2"),
+    quantity = cms.untracked.string("?daughter(0).daughter(0).isGlobalMuon?daughter(0).daughter(0).masterClone.globalTrack.normalizedChi2: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2NormChi2"),
+    quantity = cms.untracked.string("?daughter(0).daughter(1).isGlobalMuon?daughter(0).daughter(1).masterClone.globalTrack.normalizedChi2: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1NofChambers"),
+    quantity = cms.untracked.string("?daughter(0).daughter(0).isGlobalMuon?daughter(0).daughter(0).masterClone.numberOfChambers: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2NofChambers"),
+    quantity = cms.untracked.string("?daughter(0).daughter(1).isGlobalMuon?daughter(0).daughter(1).masterClone.numberOfChambers: -1")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1dB"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).masterClone.dB")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2dB"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).masterClone.dB")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1TrkIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).masterClone.trackIso")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2TrkIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).masterClone.trackIso")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau1EcalIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).masterClone.ecalIso")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2EcalIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).masterClone.ecalIso")
+    ),
+      cms.PSet(
+    tag = cms.untracked.string("LeptDau1HcalIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).masterClone.hcalIso")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2HcalIso"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).masterClone.hcalIso")
+    ),
+     cms.PSet(
+    tag = cms.untracked.string("LeptDau1CombRelIso"),
+    quantity = cms.untracked.string("(daughter(0).daughter(0).masterClone.hcalIso + daughter(0).daughter(0).masterClone.ecalIso + daughter(0).daughter(0).masterClone.trackIso )/ daughter(0).daughter(0).pt")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("LeptDau2CombrelIso"),
+    quantity = cms.untracked.string("(daughter(0).daughter(1).masterClone.hcalIso + daughter(0).daughter(1).masterClone.ecalIso + daughter(0).daughter(1).masterClone.trackIso )/ daughter(0).daughter(1).pt")
+    ),
+
     )
 
+zee =(
+
+    cms.PSet(
+    tag = cms.untracked.string("EleDau1VBTF80CombID"),
+    quantity = cms.untracked.string("daughter(0).daughter(0).masterClone.electronID(\"eidVBTFCom80\")")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("EleDau2VBTF80CombID"),
+    quantity = cms.untracked.string("daughter(0).daughter(1).masterClone.electronID(\"eidVBTFCom80\")")
+    )
+    )
 
 ###  zjj standard and bDiscriminator variables
 
@@ -144,6 +261,29 @@ zjj = (
     tag = cms.untracked.string("zjjPhi"),
     quantity = cms.untracked.string("daughter(1).phi")
     ),
+cms.PSet(
+    tag = cms.untracked.string("JetDau1Pt"),
+    quantity = cms.untracked.string("daughter(1).daughter(0).pt ")
+    ),
+cms.PSet(
+    tag = cms.untracked.string("JetDau2Pt"),
+    quantity = cms.untracked.string("daughter(1).daughter(1).pt")
+    ),
+cms.PSet(
+    tag = cms.untracked.string("JetDau1Eta"),
+    quantity = cms.untracked.string("daughter(1).daughter(0).eta ")
+    ),
+cms.PSet(
+    tag = cms.untracked.string("JetDau2Eta"),
+    quantity = cms.untracked.string("daughter(1).daughter(1).eta ")
+    ),cms.PSet(
+    tag = cms.untracked.string("JetDau1Phi"),
+    quantity = cms.untracked.string("daughter(1).daughter(0).phi ")
+    ),
+cms.PSet(
+    tag = cms.untracked.string("JetDau2Phi"),
+    quantity = cms.untracked.string("daughter(1).daughter(1).phi ")
+    ),
     cms.PSet(
     tag = cms.untracked.string("JetMinCSV"),
     quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexBJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"combinedSecondaryVertexBJetTags\") ")
@@ -162,19 +302,19 @@ zjj = (
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMinJProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
+    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMaxJProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
+    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMinJbProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
+    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMaxJbProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
+    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMinSSVHE"),
@@ -267,16 +407,18 @@ zjj = (
 
 ## zll.variables += baseKinematics
 
-Higgs2e2bEdmNtuple = copy.deepcopy(higgs)
-Higgs2e2bEdmNtuple.variables += zll
-Higgs2e2bEdmNtuple.variables += zjj
-Higgs2e2bEdmNtuple.src = cms.InputTag("hzzeejj:h")
-Higgs2e2bEdmNtuple.prefix = cms.untracked.string("elHiggs")
 
-
-Higgs2mu2bEdmNtuple = copy.deepcopy(Higgs2e2bEdmNtuple)
+Higgs2mu2bEdmNtuple = copy.deepcopy(higgs)
+Higgs2mu2bEdmNtuple.variables += zll
+Higgs2mu2bEdmNtuple.variables += zjj
 Higgs2mu2bEdmNtuple.src = cms.InputTag("hzzmmjj:h")
 Higgs2mu2bEdmNtuple.prefix = cms.untracked.string("muHiggs")
+
+
+Higgs2e2bEdmNtuple = copy.deepcopy(Higgs2mu2bEdmNtuple)
+Higgs2e2bEdmNtuple.variables += zee
+Higgs2e2bEdmNtuple.src = cms.InputTag("hzzeejj:h")
+Higgs2e2bEdmNtuple.prefix = cms.untracked.string("elHiggs")
 
 
 edmNtuplesOut = cms.OutputModule(
