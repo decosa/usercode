@@ -31,6 +31,9 @@ process.source = cms.Source("PoolSource",
 )
 
 
+### set to True if you wish to separate VBF and GF signal events
+
+VBFGFdiscriminator = True
 
 # Output Module : Hopefully we keep all we need
 process.out = cms.OutputModule("PoolOutputModule",
@@ -48,8 +51,6 @@ process.out = cms.OutputModule("PoolOutputModule",
         'keep *_zjj_*_PAT',
         'keep *_hzzeejj_*_PAT',
         'keep *_hzzmmjj_*_PAT',
-        'keep *_elhiggs_*_PAT',
-        'keep *_muhiggs_*_PAT',
         'keep *_flavorHistoryFilter_*_PAT',
     ),
     verbose = cms.untracked.bool(True)
@@ -213,12 +214,6 @@ process.hzzmmjj = cms.EDProducer("Higgs2l2bUserData",
 ## )
 
 
-### Flavor History
-process.load("PhysicsTools.HepMCCandAlgos.flavorHistoryPaths_cfi")
-
-import PhysicsTools.HepMCCandAlgos.flavorHistoryPaths_cfi as flavortools
-
-
 
 
 
@@ -227,7 +222,7 @@ process.analysisPath = cms.Path(
     process.eidSequence + 
     process.cFlavorHistoryProducer +
     process.bFlavorHistoryProducer +
-    process.flavorHistoryFilter +
+    #process.flavorHistoryFilter +
     process.makePatElectrons +
     process.makePatMuons +
     process.makePatJets +
@@ -268,7 +263,7 @@ process.VBFFilter = cms.EDFilter("VBFFilter",
     src = cms.InputTag("genParticles")
 )
 
-process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
+process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer)
 
 process.out.SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath",
@@ -276,14 +271,14 @@ process.out.SelectEvents = cms.untracked.PSet(
         )
 
 
-VBFGFdiscriminator = True
 
 
+### VBF - GF discrimination
 
 if(VBFGFdiscriminator == False):
 
-    process.VBFfilterPath = cms.Path(process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
-    process.GFfilterPath = cms.Path(~process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + flavortools.flavorHistorySeq)
+    process.VBFfilterPath = cms.Path(process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer)
+    process.GFfilterPath = cms.Path(~process.VBFFilter + process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer)
 
     process.VBFout = copy.deepcopy(process.out)
     process.VBFout.fileName = cms.untracked.string("h2l2b300VBF.root")
