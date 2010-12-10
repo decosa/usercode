@@ -1,0 +1,9 @@
+<use   name=rootgraphics>
+<use   name=rootminuit>
+<use   name=rootminuit2>
+<use   name=Utilities/General>
+<bin   file=h2l2bAnalysis.cpp name=h2l2b>
+  <use   name=PhysicsTools/Utilities>
+  <use   name=boost_program_options>
+  <use   name=boost>
+</bin>
