@@ -72,6 +72,19 @@ higgs =  cms.EDProducer(
     tag = cms.untracked.string("lldr"),
     quantity = cms.untracked.string("userFloat('lldr')")
     ),
+    cms.PSet(
+    tag = cms.untracked.string("jjdPhi"),
+    quantity = cms.untracked.string("userFloat('jjdPhi')")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("jjdEta"),
+    quantity = cms.untracked.string("userFloat('jjdEta')")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("jjdr"),
+    quantity = cms.untracked.string("userFloat('jjdr')")
+    ),
+
     )
     )
 
@@ -293,28 +306,28 @@ cms.PSet(
     quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"combinedSecondaryVertexBJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexBJetTags\") ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMinCSVMVA"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") ")
+    tag = cms.untracked.string("Jet1CSVMVA"),
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMaxCSVMVA"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") ")
+    tag = cms.untracked.string("Jet2CSVMVA"),
+    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"combinedSecondaryVertexMVABJetTags\") ")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMinJProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
+    tag = cms.untracked.string("Jet1JProb"),
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMaxJProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") ")
+    tag = cms.untracked.string("Jet2JProb"),
+    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMinJbProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
+    tag = cms.untracked.string("Jet1JbProb"),
+    quantity = cms.untracked.string(" daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
     ),
     cms.PSet(
-    tag = cms.untracked.string("JetMaxJbProb"),
-    quantity = cms.untracked.string("? daughter(1).daughter(0).masterClone.pt < daughter(1).daughter(1).masterClone.pt ? daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\") :daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\") ")
+    tag = cms.untracked.string("Jet2JbProb"),
+    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("JetMinSSVHE"),
