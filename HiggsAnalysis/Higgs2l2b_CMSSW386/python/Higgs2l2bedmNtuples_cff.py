@@ -297,6 +297,9 @@ cms.PSet(
     tag = cms.untracked.string("JetDau2Phi"),
     quantity = cms.untracked.string("daughter(1).daughter(1).phi ")
     ),
+
+    ### b tagging ###
+
     cms.PSet(
     tag = cms.untracked.string("Jet1CSV"),
     quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"combinedSecondaryVertexBJetTags\") ")
@@ -315,19 +318,19 @@ cms.PSet(
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1JProb"),
-    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"jetProbabilityBJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet2JProb"),
-    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetTags\")")
+    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetProbabilityBJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1JbProb"),
-    quantity = cms.untracked.string(" daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityJetBTags\")")
+    quantity = cms.untracked.string(" daughter(1).daughter(0).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet2JbProb"),
-    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityJetBTags\")")
+    quantity = cms.untracked.string(" daughter(1).daughter(1).masterClone.bDiscriminator(\"jetBProbabilityBJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1SSVHE"),
@@ -355,11 +358,11 @@ cms.PSet(
     ),
         cms.PSet(
     tag = cms.untracked.string("Jet1ElIp"),
-    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softElectronByIP3BJetTags\")")
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softElectronByIP3dBJetTags\")")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet2ElIp"),
-    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softElectronByIP3BJetTags\") ")
+    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softElectronByIP3dBJetTags\") ")
     ),
         cms.PSet(
     tag = cms.untracked.string("Jet1Mu"),
@@ -371,19 +374,19 @@ cms.PSet(
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1MuPt"),
-    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softMuonPtBJetTags\") ")
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softMuonByPtBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet2MuPt"),
-    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softMuonPtBJetTags\") ")
+    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softMuonByPtBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1MuIp"),
-    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softMuonIP3BJetTags\") ")
+    quantity = cms.untracked.string("daughter(1).daughter(0).masterClone.bDiscriminator(\"softMuonByIP3dBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet2MuIp"),
-    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softMuonIP3BJetTags\") ")
+    quantity = cms.untracked.string("daughter(1).daughter(1).masterClone.bDiscriminator(\"softMuonByIP3dBJetTags\") ")
     ),
     cms.PSet(
     tag = cms.untracked.string("Jet1TKHE"),
