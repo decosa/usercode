@@ -31,30 +31,36 @@ void H2l2b(){
 
 
  TChain Events("Events"); 
-//   // one need 130 events... each file has 1000 ev
- Events.Add("H300EdmNtuples.root", 65);
-//   //  Events.Add("zmmNtuple/NtupleLooseTestNew_oneshot_all_Test_1_None.root", 65);
 
-  
+ Events.Add("H300VBFEdmNtuples.root", 65);
+
  TFile * output_file = TFile::Open("higgsHisto.root", "RECREATE");
-//   // TFile * output_file = TFile::Open("histo_test.root", "RECREATE");
-  
- // TCut cut_muons("muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1)");
-//  TCut cut_electrons("elHiggsLeptDau1Pt>20 && elHiggsLeptDau2Pt>20");
-//  TCut cut_mujets("muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 ");
-//  TCut cut_eljets("elHiggsJetDau1Pt>30 && elHiggsJetDau2Pt>30 && (elHiggsEleDau1VBTF80CombID || elHiggsEleDau1VBTF80CombID");
 
+ 
 
- TCut selection("muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) &&  elHiggsLeptDau1Pt>20 && elHiggsLeptDau2Pt>20 && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 && elHiggsJetDau1Pt>30 && elHiggsJetDau2Pt>30 && (elHiggsEleDau1VBTF80CombID || elHiggsEleDau1VBTF80CombID)");
+ TCut selection_el(" elHiggsLeptDau1Pt>20 && elHiggsLeptDau2Pt>20 && elHiggsJetDau1Pt>30 && elHiggsJetDau2Pt>30 && (elHiggsEleDau1VBTF80CombID || elHiggsEleDau1VBTF80CombID) && elHiggsjjdr < 1.8 && ((elHiggsJet1CSVMVA>0.5 && elHiggsJet2JbProb>0.9 )||(elHiggsJet2CSVMVA>0.5 && elHiggsJet1JbProb>0.9)) && met < 35");
+
 
  TDirectory * dir = output_file->mkdir("muHiggsPlots");
  dir->cd();
+
+
+ int zMassCut = Events.GetEntries("muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 && abs(muHiggszllMass - 91)< 10 && abs(muHiggszjjMass - 91)< 15");
+
+ cout<<"Number of higgs candidate (zMass cut): "<<zMassCut<<endl;
+
+ int bTaggingCut = Events.GetEntries("muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 && abs(muHiggszllMass - 91)< 10 && abs(muHiggszjjMass - 91)< 15 && ((muHiggsJet1CSVMVA>0.5 && muHiggsJet2JbProb>0.9 )||(muHiggsJet2CSVMVA>0.5 && muHiggsJet1JbProb>0.9)) && met < 35");
+
+ cout<<"Number of higgs candidate (btagging cut): "<<bTaggingCut<<endl;
+
+
  TH1F * hMass = new TH1F("hMass", "hMass", 200, 200, 500);
- Events.Project("hMass", "muHiggsMass", selection );
- // Events.Project("hMass", "muHiggsMass");
+
+ TCut selection_mu("muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 && muHiggsjjdr < 1.8 && ((muHiggsJet1CSVMVA>0.5 && muHiggsJet2JbProb>0.9 )||(muHiggsJet2CSVMVA>0.5 && muHiggsJet1JbProb>0.9)) && met < 35");
+ Events.Project("hMass", "muHiggsMass", selection_mu );
+
  cout<<"Number of higgs candidate : "<<hMass->GetEntries()<<endl;
-//   hMass->SetFillColor(kAzure+7);
-//   hMass->SetLineColor(kBlue+1);
+
  setGraphics(hMass);
  hMass->Draw(); 
  hMass->Write();
