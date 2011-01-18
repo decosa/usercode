@@ -33,11 +33,11 @@ process.source = cms.Source("PoolSource",
 
 ### set to True if you wish to separate VBF and GF signal events
 
-VBFGFdiscriminator = True
+VBFGFdiscriminator = False
 
 # Output Module : Hopefully we keep all we need
 process.out = cms.OutputModule("PoolOutputModule",
-    fileName = cms.untracked.string('h2l2b300.root'),
+    fileName = cms.untracked.string('h2l2bZjet.root'),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath")
     ),
@@ -263,10 +263,19 @@ process.VBFFilter = cms.EDFilter("VBFFilter",
     src = cms.InputTag("genParticles")
 )
 
-process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer)
+
+
+from PhysicsTools.HepMCCandAlgos.flavorHistoryPaths_cfi import *
+
+process.flavorHistoryFilter1 = copy.deepcopy(process.flavorHistoryFilter)
+process.flavorHistoryFilter.pathToSelect = cms.int32(10)
+process.flavorHistoryFilter1.pathToSelect = cms.int32(11)
+
+process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer + process.flavorHistoryFilter)
+process.filterPath1 = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer + process.flavorHistoryFilter1)
 
 process.out.SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring("filterPath",
+        SelectEvents = cms.vstring("filterPath","filterPath1"
                                    )
         )
 
