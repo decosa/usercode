@@ -263,7 +263,7 @@ process.VBFFilter = cms.EDFilter("VBFFilter",
     src = cms.InputTag("genParticles")
 )
 
-process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer)
+process.filterPath = cms.Path(process.zll+process.zllFilter+process.jetFilter + process.bFlavorHistoryProducer + process.cFlavorHistoryProducer + process.flavorHistoryFilter)
 
 process.out.SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring("filterPath",
