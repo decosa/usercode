@@ -9,15 +9,11 @@ process.load("HiggsAnalysis.Higgs2l2b.Higgs2l2bedmNtuples_cff")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('h2l2b300Analysis.root') )
+process.TFileService = cms.Service("TFileService", fileName = cms.string('h2l2b300GF.root') )
 
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-        'file:h2l2b300.root',
-    )
-)
+process.source = cms.Source("PoolSource")
 
-
+process.source.fileNames=cms.untracked.vstring('file:filename.root')
 ###
 process.elChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
     higgsTag = cms.InputTag("hzzeejj:h"),
@@ -32,7 +28,7 @@ process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
 #)
 
 
-process.edmNtuplesOut.fileName = cms.untracked.string('H300EdmNtuples.root')
+process.edmNtuplesOut.fileName = cms.untracked.string('H300GFEdmNtuples.root')
 
 process.analysisPath = cms.Path(
     process.elChannelAnalysis+
