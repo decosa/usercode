@@ -132,25 +132,25 @@ void createHistos(string variable, string title, int nBins, float min, float max
       cout<<"number of Higgs Candidate after mass cut: "<<endl;
       f<<"number of Higgs Candidate after mass cut: \n";
     }
-    histo(variable,(title+"MassSel").c_str() , nBins, min, max, Events, massSelMu, massSelEl, f, scale, b);
+    histo(variable,(title+"MassSel").c_str() , nBins, min, max, Events, massSelMu, massSelEl, f, scale, b, true);
 
     if(b==true){
       cout<<"number of Higgs Candidate after btag cut: "<<endl;
       f<<"number of Higgs Candidate after btag cut: \n";
     }
-    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, Events,  btagSelMu, btagSelEl, f, scale, b);
+    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, Events,  btagSelMu, btagSelEl, f, scale, b, true);
 
     if(b==true){
       cout<<"number of Higgs Candidate after dilepton pt cut: "<<endl;
       f<<"number of Higgs Candidate after dilepton pt cut: \n";
     }
-    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, Events,  ptllSelMu, ptllSelEl, f,scale, b);
+    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, Events,  ptllSelMu, ptllSelEl, f,scale, b, true);
     
     if(b==true){
       cout<<"number of Higgs Candidate after met cut: "<<endl;
       f<<"number of Higgs Candidate after met cut: \n";
     }
-    histo(variable,(title+"metSel").c_str() , nBins, min, max, Events,  metSelMu, metSelEl, f,scale, b );
+    histo(variable,(title+"metSel").c_str() , nBins, min, max, Events,  metSelMu, metSelEl, f,scale, b, true);
     
     if(b==true){
       cout<<"number of Higgs Candidate after deltaR jj cut: "<<endl;
@@ -162,13 +162,13 @@ void createHistos(string variable, string title, int nBins, float min, float max
       cout<<"number of Higgs Candidate after higgs mass cut: "<<endl;
       f<<"number of Higgs Candidate after higgs mass cut: \n";
     }
-    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, Events, hmassSelMu, hmassSelEl, f,scale, b);
+    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, Events, hmassSelMu, hmassSelEl, f,scale, b, true);
 }
 
 
 
 
-void bkgPlots(string s, float sigma, float nevtin) {
+void bkgPlots(string s, TChain & Events, float sigma, float nevtin) {
 
   TFile * output_file = TFile::Open( (s+".root").c_str(), "RECREATE");
   ofstream outFile( (s+"Selection.txt").c_str() );
@@ -178,9 +178,7 @@ void bkgPlots(string s, float sigma, float nevtin) {
   float L= 1000;
   float scaleFact = L*sigma/nevtin ;
  
-  TChain Events("Events"); 
 
-  Events.Add( ("rfio:/castor/cern.ch/user/d/decosa/Higgs/"+s+"/edmntp/H"+s+"EdmNtuples.root").c_str());
   
   cout<<s<<endl;
   outFile<<s<<endl;
@@ -232,11 +230,78 @@ int main() {
   gSystem->Load("libFWCoreFWLite.so");
   AutoLibraryLoader::enable();
   gROOT->SetStyle("Plain");
-  
+  TChain EventsTT("Events"); 
+  EventsTT.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/TT/edmntp/HTTEdmNtuples.root");
+  TChain EventsWZ("Events"); 
+  EventsWZ.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/WZ/edmntp/HWZEdmNtuples.root");
+  TChain EventsZZ("Events"); 
+  EventsZZ.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZZ/edmntp/HZZEdmNtuples.root");
 
-  bkgPlots("TT", 16.5,940000);
-  bkgPlots("ZZ", 7.76,1000000);
-  bkgPlots("WZ", 18.2,2194752);
+  TChain EventsZ0Jet("Events"); 
+  EventsZ0Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z0jet/edmntp/HZ0jetEdmNtuples.root");
+  TChain EventsZ1Jet("Events"); 
+  EventsZ1Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z1jet/edmntp/HZ1jetEdmNtuples.root");
+  TChain EventsZ2Jet("Events"); 
+  EventsZ2Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z2jet/edmntp/HZ2jetEdmNtuples.root");
+  TChain EventsZ3Jet("Events"); 
+  EventsZ3Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z3jet/edmntp/HZ3jetEdmNtuples.root");
+  TChain EventsZ4Jet("Events"); 
+  EventsZ4Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z4jet/edmntp/HZ4jetEdmNtuples.root");
+  TChain EventsZ5Jet("Events"); 
+  EventsZ5Jet.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z5jet/edmntp/HZ5jetEdmNtuples.root");
+
+  TChain EventsZ1Jet100_300("Events"); 
+  EventsZ1Jet100_300.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z1jet100_300/edmntp/HZ1jet100_300EdmNtuples.root");
+  TChain EventsZ2Jet100_300("Events"); 
+  EventsZ2Jet100_300.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z2jet100_300/edmntp/HZ2jet100_300EdmNtuples.root");
+  TChain EventsZ3Jet100_300("Events"); 
+  EventsZ3Jet100_300.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z3jet100_300/edmntp/HZ3jet100_300EdmNtuples.root");
+  TChain EventsZ4Jet100_300("Events"); 
+  EventsZ4Jet100_300.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z4jet100_300/edmntp/HZ4jet100_300EdmNtuples.root");
+  TChain EventsZ5Jet100_300("Events"); 
+  EventsZ5Jet100_300.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z5jet100_300/edmntp/HZ5jet100_300EdmNtuples.root");
+
+
+  TChain EventsZ1Jet300_800("Events"); 
+  EventsZ1Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z1jet300_800/edmntp/HZ1jet300_800EdmNtuples.root");
+  TChain EventsZ2Jet300_800("Events"); 
+  EventsZ2Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z2jet300_800/edmntp/HZ2jet300_800EdmNtuples.root");
+  TChain EventsZ3Jet300_800("Events"); 
+  EventsZ3Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z3jet300_800/edmntp/HZ3jet300_800EdmNtuples.root");
+  TChain EventsZ4Jet300_800("Events"); 
+  EventsZ4Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z4jet300_800/edmntp/HZ4jet300_800EdmNtuples.root");
+  TChain EventsZ5Jet300_800("Events"); 
+  EventsZ5Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z5jet300_800/edmntp/HZ5jet300_800EdmNtuples.root");
+
+  TChain EventsZBB0("Events"); 
+  EventsZBB0.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZBB0/edmntp/HZBB0EdmNtuples.root");
+  TChain EventsZBB1("Events"); 
+  EventsZBB1.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZBB1/edmntp/HZBB1EdmNtuples.root");
+  TChain EventsZBB2("Events"); 
+  EventsZBB2.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZBB2/edmntp/HZBB2EdmNtuples.root");
+  TChain EventsZBB3("Events"); 
+  EventsZBB3.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZBB3/edmntp/HZBB3EdmNtuples.root");
+  TChain EventsZCC0("Events"); 
+  EventsZCC0.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZCC0/edmntp/HZCC0EdmNtuples.root");
+  TChain EventsZCC1("Events"); 
+  EventsZCC1.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZCC1/edmntp/HZCC1EdmNtuples.root");
+  TChain EventsZCC2("Events"); 
+  EventsZCC2.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZCC2/edmntp/HZCC2EdmNtuples.root");
+  TChain EventsZCC3("Events"); 
+  EventsZCC3.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZCC3/edmntp/HZCC3EdmNtuples.root");
+
+  //bkgPlots("TT", EventsTT, 16.5,940000);
+  //bkgPlots("ZZ", EventsZZ, 7.76,1000000);
+  //bkgPlots("WZ", EventsWZ, 18.2,2194752);
+
   //bkgPlots("ZBB3", 0.0353,10898);
+
+  bkgPlots("Z0Jet", EventsZ0Jet, 2006.411, 1411019 );
+  bkgPlots("Z1Jet", EventsZ1Jet, 211.824, 37567);
+  bkgPlots("Z2Jet", EventsZ2Jet, 36.5417, 118361);
+  bkgPlots("Z3Jet", EventsZ3Jet, 4.7675, 55037);
+  bkgPlots("Z4Jet", EventsZ4Jet, 0.5866, 44432);
+  bkgPlots("Z5Jet", EventsZ5Jet, 0.1182, 10934);
+
 
 }
