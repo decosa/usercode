@@ -151,15 +151,26 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
 
-      const pat::Electron * lept0 = dynamic_cast<const pat::Electron *>(zDauRefl0->masterClone().get());
-      const pat::Electron * lept1 = dynamic_cast<const pat::Electron *>(zDauRefl1->masterClone().get());
+      const pat::Electron * lept0el = dynamic_cast<const pat::Electron *>(zDauRefl0->masterClone().get());
+      const pat::Electron * lept1el = dynamic_cast<const pat::Electron *>(zDauRefl1->masterClone().get());
+      const pat::Muon * lept0mu;
+      const pat::Muon * lept1mu;
 
-      if(lept0 != 0){
+      float dB0, dB1;
+      bool VBTF80CombID;
+      bool dB;
+      if(lept0el != 0){
 	channel = "Electron";
+	VBTF80CombID = lept0el->electronID("eidVBTFCom80") || lept1el->electronID("eidVBTFCom80");
+	dB = true; 
       }else{
-	const pat::Muon * lept0 = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());
-	const pat::Muon * lept1 = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());      
+	lept0mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());
+	lept1mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());      
 	channel = "Muon";
+	dB0 = TMath::Abs(lept0mu->dB());
+	dB1 = TMath::Abs(lept1mu->dB());
+	VBTF80CombID = true;
+	dB = dB0< 0.02 && dB1<0.02;
       }
 
       const pat::Jet & j0 = dynamic_cast<const pat::Jet &>(*zDauRefj0->masterClone());
@@ -167,39 +178,38 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       jjdr = deltaR(zDauRefj0->eta(), zDauRefj0->phi(), zDauRefj1->eta(), zDauRefj1->phi() );
 
-
       /* base selection and progressive cuts -> put selection on VBTFCombID for electrons */ 
       
-      if(TMath::Abs(zDauRefl0->pt()>20 && zDauRefl1->pt()>20 && zDauRefj0->pt()>30 && zDauRefj1->pt()>30 
-		    && TMath::Abs(lept0->dB())<0.02 && TMath::Abs(lept1->dB())<0.02
-		    )){
+      if( zDauRefl0->pt()>20 && zDauRefl1->pt()>20 && zDauRefj0->pt()>30 && zDauRefj1->pt()>30 	&& dB  && VBTF80CombID){             
 
-	   if(TMath::Abs(zll->mass() - zNominalMass)< zLepMassCut_ && TMath::Abs(zjj->mass() - zNominalMass)< zJetMassCut_){
-	     massSelected=true ;
-	     std::cout<<"zll mass: "<< zll->mass()<<" zjj mass: "<< zjj->mass()<<std::endl;
-	     
-	     if(  ((j0.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_ && j1.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_)||(j0.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_ && j1.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_) ) ) {
-	       btagSelected=true ;
-       
-	       if( zll->pt()>zllPtCut_ ) {
-		 zllptSelected=true ;
-    
-		 if( met < metCut_ ) {
-		   metSelected=true ;
+	if(TMath::Abs(zll->mass() - zNominalMass)< zLepMassCut_ && TMath::Abs(zjj->mass() - zNominalMass)< zJetMassCut_){
+	  massSelected=true ;
+	  std::cout<<"zll mass: "<< zll->mass()<<" zjj mass: "<< zjj->mass()<<std::endl;
+	  
+	  if(  ((j0.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_ && j1.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_)||(j0.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_ && j1.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_) ) ) {
+	    btagSelected=true ;
+	    
+	    if( zll->pt()>zllPtCut_ ) {
+	      zllptSelected=true ;
+	      
+	      if( met < metCut_ ) {
+		metSelected=true ;
+		
+		if( jjdr < jjdrCut_ ){ 
+		  jjdrSelected=true ;
+		  
+		  if( h.mass()<hMassMaxCut_ && h.mass()>hMassMinCut_ ){
+		    hmassSelected=true ;
+		  }	       
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      
+    }
 
-		   if( jjdr < jjdrCut_ ){ 
-		     jjdrSelected=true ;
-
-		     if( h.mass()<hMassMaxCut_ && h.mass()>hMassMinCut_ ){
-		       hmassSelected=true ;
-		     }	       
-		   }
-		 }
-	       }
-	     }
-	   }
-	 }
-	 }	 
 
 
 
