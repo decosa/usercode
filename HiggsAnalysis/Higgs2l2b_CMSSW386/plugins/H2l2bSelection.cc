@@ -161,7 +161,7 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       bool dB;
       if(lept0el != 0){
 	channel = "Electron";
-	VBTF80CombID = lept0el->electronID("eidVBTFCom80") || lept1el->electronID("eidVBTFCom80");
+	VBTF80CombID = lept0el->electronID("eidVBTFCom80")==7 || lept1el->electronID("eidVBTFCom80")==7;
 	dB = true; 
       }else{
 	lept0mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());

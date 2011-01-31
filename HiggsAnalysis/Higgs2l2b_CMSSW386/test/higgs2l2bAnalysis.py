@@ -18,11 +18,55 @@ process.source.fileNames=cms.untracked.vstring('rfio:/castor/cern.ch/user/d/deco
 process.elChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
     higgsTag = cms.InputTag("hzzeejj:h"),
 )
-process.elChannelEvtCounter = cms.EDAnalyzer("EventCounter",
-    higgsTag = cms.InputTag("hzzeejj:h"),
-    metTag = cms.InputTag("hzzeejj:met")
 
+#process.elChannelSelection = cms.EDAnalyzer("EventCounter",
+#    higgsTag = cms.InputTag("hzzeejj:h"),
+#    metTag = cms.InputTag("hzzeejj:met")
+#)
+
+#process.muChannelSelection = cms.EDAnalyzer("EventCounter",
+#    higgsTag = cms.InputTag("hzzmmjj:h"),
+#    zLepMassCut = cms.double(10),
+#    zJetMassCut = cms.double(15),
+#    bTagCSVCut = cms.double(0.5),
+#    bTagJProbCut = cms.double(0.9),
+#    zllPtCut = cms.double(90),
+#    metCut = cms.double(35),
+#    jjdrCut = cms.double(1.7),
+#    hMassMinCut = cms.double(315),
+#    hMassMaxCut = cms.double(385)
+                                            
+#)
+
+process.elChannelSelection = cms.EDAnalyzer("H2l2bSelection",
+    higgsTag = cms.InputTag("hzzeejj:h"),
+    zLepMassCut = cms.double(10),
+    zJetMassCut = cms.double(15),
+    bTagCSVCut = cms.double(0.5),
+    bTagJProbCut = cms.double(0.9),
+    zllPtCut = cms.double(90),
+    metCut = cms.double(35),
+    jjdrCut = cms.double(1.7),
+    hMassMinCut = cms.double(315),
+    hMassMaxCut = cms.double(385)
+                                            
 )
+
+
+process.muChannelSelection = cms.EDAnalyzer("H2l2bSelection",
+    higgsTag = cms.InputTag("hzzmmjj:h"),
+    zLepMassCut = cms.double(10),
+    zJetMassCut = cms.double(15),
+    bTagCSVCut = cms.double(0.5),
+    bTagJProbCut = cms.double(0.9),
+    zllPtCut = cms.double(90),
+    metCut = cms.double(35),
+    jjdrCut = cms.double(1.7),
+    hMassMinCut = cms.double(315),
+    hMassMaxCut = cms.double(385)
+                                            
+)
+
 process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
     higgsTag = cms.InputTag("hzzmmjj:h"),
 )
@@ -36,8 +80,11 @@ process.edmNtuplesOut.fileName = cms.untracked.string('H300GFEdmNtuples.root')
 
 process.analysisPath = cms.Path(
     process.elChannelAnalysis+
-    process.elChannelEvtCounter+
+    #process.elChannelEvtCounter+
+    process.elChannelSelection+
     process.muChannelAnalysis+
+    process.muChannelSelection+
+    #process.muChannelSelection+
     process.Higgs2e2bEdmNtuple+
     process.Higgs2mu2bEdmNtuple#+
 ##    process.zjjEdmNtuple+
