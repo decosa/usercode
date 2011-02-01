@@ -1,7 +1,9 @@
 import os, commands
 import string
 
-mass = ['300','400']
+mass = ['350']
+lumiNorm = [0,00115]
+
 print "mass values: "
 print mass
 for a in mass:
@@ -46,7 +48,12 @@ for a in mass:
         if riga.startswith("process.source.fileNames=cms.untracked.vstring('file:filename.root')"):
             rigaGF = string.replace(rigaGF, 'file:filename.root', gf2 );
             rigaVBF = string.replace(rigaVBF, 'file:filename.root', vbf2 );
-
+        if riga.startswith("    lumiNormalization"):
+            rigaGF = string.replace(rigaGF,'0.00115', str(lumiNorm[mass.index(a)] ) );
+            rigaVBF = string.replace(rigaVBF,'0.00115', str(lumiNorm[mass.index(a)] ) );
+        if riga.startswith("    output_name"):
+            rigaGF = string.replace(rigaGF,'\"h350GF\"','\"h'+a+'GF\"' );
+            rigaVBF = string.replace(rigaVBF,'\"h350GF\"','\"h'+a+'VBF\"' );
         newfileGF.write(rigaGF)
         newfileVBF.write(rigaVBF)
 
