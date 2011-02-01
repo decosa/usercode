@@ -63,7 +63,7 @@ void singleChannel(string channel, string variable1,string variable2, string tit
 
 }
 
-void histo(string variable, string title, int nBins, float min, float max, TChain & Events,  TCut & cutMu, TCut & cutEl, ofstream & f, float scale, bool b=false, bool w=false){
+void histo(string variable, string title, int nBins, float min, float max, TChain & Events,  TCut & cutMu, TCut & cutEl, float scale,  bool w=false){
 
   TH1F * hmu = new TH1F((title+"mu").c_str(),(title+"mu").c_str(), nBins, min, max);
   TH1F * hel = new TH1F((title+"el").c_str(),(title+"el").c_str() , nBins, min, max);
@@ -74,16 +74,10 @@ void histo(string variable, string title, int nBins, float min, float max, TChai
   Events.Project((title+"el").c_str(), ("elHiggs"+variable).c_str(), cutEl);
   hmu->Sumw2();
   hmu->Add(hel);
-  //cout<<"events number: "<<hmu->Integral(0,nBins)<<endl;
   hmu->Scale(scale);
   hmu->SetTitle(title.c_str());
 
   float error = sqrt(hmu->GetEntries())*scale;
-
-  if(b==true){
-    cout<<hmu->GetEntries()*scale<<" +/- "<<error<<endl;
-    f<<cout<<hmu->GetEntries()*scale<<" +/- "<<error<<endl;
-  }
   setGraphics(hmu);
   if (w==true) hmu->Write();
   
@@ -92,13 +86,11 @@ void histo(string variable, string title, int nBins, float min, float max, TChai
 
 }
 
-void createHistos(string variable, string title, int nBins, float min, float max, TChain & Events, ofstream & f, float scale, bool b = false ){
-
+void createHistos(string variable, string title, int nBins, float min, float max, TChain & Events, float scale, bool b = false ){
 
   /* ****************** */
   /* SELECTION FOR H350 */
   /* ****************** */
-
 
     TCut baseSelMu = "(muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && TMath::Abs(muHiggsLeptDau1dB)<0.02 && TMath::Abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 )"; 
     TCut baseSelEl = "elHiggsLeptDau1Pt>20 && elHiggsLeptDau2Pt>20 && elHiggsJetDau1Pt>30 && elHiggsJetDau2Pt>30 && (elHiggsEleDau1VBTF80CombID==7 || elHiggsEleDau2VBTF80CombID==7)";
@@ -122,85 +114,42 @@ void createHistos(string variable, string title, int nBins, float min, float max
     TCut hmassSelEl = drjjSelEl && " elHiggsMass < 385 &&  elHiggsMass > 315 ";
 
 
-    if(b==true){
-      cout<<"number of Higgs Candidate after base Selection: "<<endl;
-      f<<"number of Higgs Candidate after base Selection: \n";
-    }
-    histo(variable,(title+"BaseSel").c_str(), nBins, min, max, Events, baseSelMu, baseSelEl, f, scale, b, true);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after mass cut: "<<endl;
-      f<<"number of Higgs Candidate after mass cut: \n";
-    }
-    histo(variable,(title+"MassSel").c_str() , nBins, min, max, Events, massSelMu, massSelEl, f, scale, b, true);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after btag cut: "<<endl;
-      f<<"number of Higgs Candidate after btag cut: \n";
-    }
-    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, Events,  btagSelMu, btagSelEl, f, scale, b, true);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after dilepton pt cut: "<<endl;
-      f<<"number of Higgs Candidate after dilepton pt cut: \n";
-    }
-    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, Events,  ptllSelMu, ptllSelEl, f,scale, b, true);
-    
-    if(b==true){
-      cout<<"number of Higgs Candidate after met cut: "<<endl;
-      f<<"number of Higgs Candidate after met cut: \n";
-    }
-    histo(variable,(title+"metSel").c_str() , nBins, min, max, Events,  metSelMu, metSelEl, f,scale, b, true);
-    
-    if(b==true){
-      cout<<"number of Higgs Candidate after deltaR jj cut: "<<endl;
-      f<<"number of Higgs Candidate after deltaR jj cut: \n";
-    }
-    histo(variable,(title+"drjjSel").c_str() , nBins, min, max, Events,  drjjSelMu, drjjSelEl, f, scale, b, true);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after higgs mass cut: "<<endl;
-      f<<"number of Higgs Candidate after higgs mass cut: \n";
-    }
-    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, Events, hmassSelMu, hmassSelEl, f,scale, b, true);
+    histo(variable,(title+"BaseSel").c_str(), nBins, min, max, Events, baseSelMu, baseSelEl,  scale, true);
+    histo(variable,(title+"MassSel").c_str() , nBins, min, max, Events, massSelMu, massSelEl,  scale);
+    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, Events,  btagSelMu, btagSelEl,  scale);
+    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, Events,  ptllSelMu, ptllSelEl, scale);
+    histo(variable,(title+"metSel").c_str() , nBins, min, max, Events,  metSelMu, metSelEl, scale );
+    histo(variable,(title+"drjjSel").c_str() , nBins, min, max, Events,  drjjSelMu, drjjSelEl,  scale, true);
+    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, Events, hmassSelMu, hmassSelEl, scale);
 }
 
 
 
 
-void bkgPlots(string s, TChain & Events, float sigma, float nevtin) {
+void bkgPlots(string s, TChain & Events, float sigma=1., float nevtin=1000.) {
 
   TFile * output_file = TFile::Open( (s+".root").c_str(), "RECREATE");
-  ofstream outFile( (s+"Selection.txt").c_str() );
-  if(!outFile) {
-    cout<<"Error in file creation!";
-  }
+
   float L= 1000;
   float scaleFact = L*sigma/nevtin ;
- 
 
-  
-  cout<<s<<endl;
-  outFile<<s<<endl;
-
-  //createHistos("Eta", "Eta", 10, -3,3, EventsVBF, EventsGF, VBF, GF);
-  createHistos("Mass", "HMass", 200, 0,1000, Events, outFile,scaleFact, true);
-  createHistos("Pt", "HPt", 200, 0,1000, Events, outFile, scaleFact);
-  createHistos("Eta", "HEta", 13, -6.5,6.5, Events, outFile, scaleFact);
-  createHistos("Phi", "HPhi", 7, -3.5,3.5, Events, outFile, scaleFact);
-  createHistos("zllMass", "ZllMass", 200, 0,200, Events, outFile, scaleFact);
-  createHistos("zjjMass", "ZjjMass", 200, 0,200, Events, outFile, scaleFact);
-  createHistos("zllPt", "ZllPt", 200, 0,200, Events, outFile, scaleFact);
-  createHistos("zjjPt", "ZjjPt", 200, 0,200, Events, outFile, scaleFact);
-  createHistos("zllEta", "ZllEta", 13, -6.5,6.5, Events, outFile, scaleFact);
-  createHistos("zjjEta", "ZjjEta", 13, -6-5,6.5, Events, outFile, scaleFact);
-  createHistos("zllPhi", "ZllPhi", 13, -6.5,6.5, Events, outFile, scaleFact);
-  createHistos("zjjPhi", "ZjjPhi", 13, -6-5,6.5, Events, outFile, scaleFact);
-  createHistos("Jet1CSVMVA", "Jet1CSVMVA", 100, -100,100, Events, outFile, scaleFact);
-  createHistos("Jet2CSVMVA", "Jet2CSVMVA", 100, -100,100, Events, outFile, scaleFact);
-  createHistos("Jet1JbProb", "Jet1JbProb", 100, -100,100, Events, outFile, scaleFact);
-  createHistos("Jet2JbProb", "Jet2JbProb", 100, -100,100, Events, outFile, scaleFact);
-  createHistos("jjdr", "jjdr", 100, -100,100, Events, outFile, scaleFact);
+  createHistos("Mass", "HMass", 200, 0,1000, Events, scaleFact, true);
+  createHistos("Pt", "HPt", 200, 0,1000, Events,  scaleFact);
+  createHistos("Eta", "HEta", 13, -6.5,6.5, Events,  scaleFact);
+  createHistos("Phi", "HPhi", 7, -3.5,3.5, Events,  scaleFact);
+  createHistos("zllMass", "ZllMass", 200, 0,200, Events,  scaleFact);
+  createHistos("zjjMass", "ZjjMass", 200, 0,200, Events,  scaleFact);
+  createHistos("zllPt", "ZllPt", 200, 0,200, Events,  scaleFact);
+  createHistos("zjjPt", "ZjjPt", 200, 0,200, Events,  scaleFact);
+  createHistos("zllEta", "ZllEta", 13, -6.5,6.5, Events,  scaleFact);
+  createHistos("zjjEta", "ZjjEta", 13, -6-5,6.5, Events,  scaleFact);
+  createHistos("zllPhi", "ZllPhi", 13, -6.5,6.5, Events,  scaleFact);
+  createHistos("zjjPhi", "ZjjPhi", 13, -6-5,6.5, Events,  scaleFact);
+  createHistos("Jet1CSVMVA", "Jet1CSVMVA", 100, -100,100, Events,  scaleFact);
+  createHistos("Jet2CSVMVA", "Jet2CSVMVA", 100, -100,100, Events,  scaleFact);
+  createHistos("Jet1JbProb", "Jet1JbProb", 100, -100,100, Events,  scaleFact);
+  createHistos("Jet2JbProb", "Jet2JbProb", 100, -100,100, Events,  scaleFact);
+  createHistos("jjdr", "jjdr", 100, -100,100, Events,  scaleFact);
     
   TH1F * h = makeHist("met", "met", 100, -100,100, Events, scaleFact);
   h->Write();
@@ -219,7 +168,6 @@ void bkgPlots(string s, TChain & Events, float sigma, float nevtin) {
   singleChannel("el", "JetDau1Phi","JetDau2Phi", "elChanJetPhi", 100, -3., 3.,  Events, scaleFact);
   */
 
-  outFile.close();
   output_file->Close();
  }
 
@@ -273,6 +221,17 @@ int main() {
   TChain EventsZ5Jet300_800("Events"); 
   EventsZ5Jet300_800.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z5jet300_800/edmntp/HZ5jet300_800EdmNtuples.root");
 
+  TChain EventsZ1Jet800_1600("Events"); 
+  EventsZ1Jet800_1600.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z1jet800_1600/edmntp/HZ1jet800_1600EdmNtuples.root");
+  TChain EventsZ2Jet800_1600("Events"); 
+  EventsZ2Jet800_1600.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z2jet800_1600/edmntp/HZ2jet800_1600EdmNtuples.root");
+  TChain EventsZ3Jet800_1600("Events"); 
+  EventsZ3Jet800_1600.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z3jet800_1600/edmntp/HZ3jet800_1600EdmNtuples.root");
+  TChain EventsZ4Jet800_1600("Events"); 
+  EventsZ4Jet800_1600.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z4jet800_1600/edmntp/HZ4jet800_1600EdmNtuples.root");
+  TChain EventsZ5Jet800_1600("Events"); 
+  EventsZ5Jet800_1600.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/Z5jet800_1600/edmntp/HZ5jet800_1600EdmNtuples.root");
+
   TChain EventsZBB0("Events"); 
   EventsZBB0.Add( "rfio:/castor/cern.ch/user/d/decosa/Higgs/ZBB0/edmntp/HZBB0EdmNtuples.root");
   TChain EventsZBB1("Events"); 
@@ -296,12 +255,38 @@ int main() {
 
   //bkgPlots("ZBB3", 0.0353,10898);
 
-  bkgPlots("Z0Jet", EventsZ0Jet, 2006.411, 1411019 );
-  bkgPlots("Z1Jet", EventsZ1Jet, 211.824, 37567);
-  bkgPlots("Z2Jet", EventsZ2Jet, 36.5417, 118361);
-  bkgPlots("Z3Jet", EventsZ3Jet, 4.7675, 55037);
-  bkgPlots("Z4Jet", EventsZ4Jet, 0.5866, 44432);
-  bkgPlots("Z5Jet", EventsZ5Jet, 0.1182, 10934);
+  bkgPlots("Z0Jet", EventsZ0Jet);
+  bkgPlots("Z1Jet", EventsZ1Jet);
+  bkgPlots("Z2Jet", EventsZ2Jet);
+  bkgPlots("Z3Jet", EventsZ3Jet);
+  bkgPlots("Z4Jet", EventsZ4Jet);
+  bkgPlots("Z5Jet", EventsZ5Jet);
 
+  bkgPlots("Z1Jet100_300", EventsZ1Jet100_300);
+  bkgPlots("Z2Jet100_300", EventsZ2Jet100_300);
+  bkgPlots("Z3Jet100_300", EventsZ3Jet100_300);
+  bkgPlots("Z4Jet100_300", EventsZ4Jet100_300);
+  bkgPlots("Z5Jet100_300", EventsZ5Jet100_300);
+
+  bkgPlots("Z1Jet300_800", EventsZ1Jet300_800);
+  bkgPlots("Z2Jet300_800", EventsZ2Jet300_800);
+  bkgPlots("Z3Jet300_800", EventsZ3Jet300_800);
+  bkgPlots("Z4Jet300_800", EventsZ4Jet300_800);
+  bkgPlots("Z5Jet300_800", EventsZ5Jet300_800);
+
+  bkgPlots("Z1Jet800_1600", EventsZ1Jet800_1600);
+  bkgPlots("Z2Jet800_1600", EventsZ2Jet800_1600);
+  bkgPlots("Z3Jet800_1600", EventsZ3Jet800_1600);
+  bkgPlots("Z4Jet800_1600", EventsZ4Jet800_1600);
+  bkgPlots("Z5Jet800_1600", EventsZ5Jet800_1600);
+
+  bkgPlots("ZBB0", EventsZBB0);
+  bkgPlots("ZBB1", EventsZBB1);
+  bkgPlots("ZBB2", EventsZBB2);
+  bkgPlots("ZBB3", EventsZBB3);
+  bkgPlots("ZCC0", EventsZCC0);
+  bkgPlots("ZCC1", EventsZCC1);
+  bkgPlots("ZCC2", EventsZCC2);
+  bkgPlots("ZCC3", EventsZCC3);
 
 }

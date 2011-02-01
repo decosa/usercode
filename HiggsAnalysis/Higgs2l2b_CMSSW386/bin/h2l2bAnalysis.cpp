@@ -18,6 +18,20 @@
 #include <cmath>
 #include<boost/tokenizer.hpp>
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
+#include "DataFormats/FWLite/interface/Handle.h"
+#include "DataFormats/FWLite/interface/Event.h"
+
+
+#if defined(__CINT__) && !defined(__MAKECINT__)
+namespace edm {
+    typedef
+    edm::Wrapper<vector<double> >
+    Wrapper<vector<double,allocator<double> > >;
+}
+#endif
+
+
+
 
 using namespace std;
 
@@ -94,7 +108,7 @@ TH1F * combHistos(string variable, string title, int nBins, float min, float max
 
 }
 
-void histo(string variable, string title, int nBins, float min, float max, TChain & EventsVBF, TChain & EventsGF,float VBF, float GF, TCut & cutMu, TCut & cutEl, ofstream & f, bool b=false, bool w=false){
+void histo(string variable, string title, int nBins, float min, float max, TChain & EventsVBF, TChain & EventsGF,float VBF, float GF, TCut & cutMu, TCut & cutEl,  bool w=false){
 
   TH1F * h = new TH1F((title).c_str(),title.c_str(), nBins, min, max);
   TH1F * hVBFmu = new TH1F((title+"VBFmu").c_str(),(title+"VBFmu").c_str(), nBins, min, max);
@@ -105,29 +119,19 @@ void histo(string variable, string title, int nBins, float min, float max, TChai
   EventsVBF.Project((title+"VBFmu").c_str(), ("muHiggs"+variable).c_str(), cutMu);
   EventsVBF.Project((title+"VBFel").c_str(), ("elHiggs"+variable).c_str(), cutEl);
   hVBFmu->Sumw2();
-
   hVBFmu->Add(hVBFel);
-
   
   EventsGF.Project((title+"GFmu").c_str(), ("muHiggs"+variable).c_str(),cutMu);
   EventsGF.Project((title+"GFel").c_str(), ("elHiggs"+variable).c_str(),cutEl );
   hGFmu->Sumw2();
   hGFmu->Add(hGFel);
   
-
   float VBFerror = sqrt(hVBFmu->GetEntries())*VBF;
   float GFerror = sqrt(hGFmu->GetEntries())*GF;
   hVBFmu->Scale(VBF);
-  //  cout<<" VBF after Scale "<<hVBFmu->Integral(min, max)<<endl;
   hGFmu->Scale(GF);
-  //  cout<<" GF after Scale "<<hGFmu->Integral(min, max)<<endl;
-  //h->Sumw2();
   h->Add(hVBFmu,hGFmu);
   float error = sqrt(pow(VBFerror,2)+pow(GFerror,2));
-  if(b==true){
-    cout<<hVBFmu->GetEntries()*VBF + hGFmu->GetEntries()*GF<<" +/- "<<error<<endl;
-    f<<cout<<hVBFmu->GetEntries()*VBF + hGFmu->GetEntries()*GF<<" +/- "<<error<<endl;
-  }
   setGraphics(h);
   if(w==true)h->Write();
   
@@ -138,16 +142,11 @@ void histo(string variable, string title, int nBins, float min, float max, TChai
   delete h;
 }
 
-void createHistos(string variable, string title, int nBins, float min, float max, TChain & EventsVBF, TChain & EventsGF,float VBF, float GF, ofstream & f, bool b = false ){
-
-
+void createHistos(string variable, string title, int nBins, float min, float max, TChain & EventsVBF, TChain & EventsGF,float VBF, float GF ){
 
   /* ****************** */
   /* SELECTION FOR H350 */
   /* ****************** */
-
-
-
 
     TCut baseSelMu = "(muHiggsLeptDau1Pt>20 && muHiggsLeptDau2Pt>20  && abs(muHiggsLeptDau1dB)<0.02 && abs(muHiggsLeptDau2dB)<0.02 && (muHiggsLeptDau1Eta < 2.1 || muHiggsLeptDau2Eta < 2.1) && muHiggsJetDau1Pt>30 && muHiggsJetDau2Pt>30 )"; 
     TCut baseSelEl = "elHiggsLeptDau1Pt>20 && elHiggsLeptDau2Pt>20 && elHiggsJetDau1Pt>30 && elHiggsJetDau2Pt>30 && (elHiggsEleDau1VBTF80CombID==7 || elHiggsEleDau2VBTF80CombID==7)";
@@ -170,45 +169,15 @@ void createHistos(string variable, string title, int nBins, float min, float max
     TCut hmassSelMu = drjjSelMu && " muHiggsMass < 385 &&  muHiggsMass > 315 ";
     TCut hmassSelEl = drjjSelEl && " elHiggsMass < 385 &&  elHiggsMass > 315 ";
 
-    if(b==true){
-      cout<<"number of Higgs Candidate after base Selection: "<<endl;
-      f<<"number of Higgs Candidate after base Selection: \n";
-    }
-    histo(variable,(title+"BaseSel").c_str(), nBins, min, max, EventsVBF, EventsGF, VBF,GF, baseSelMu, baseSelEl, f, b, true);
-    if(b==true){
-      cout<<"number of Higgs Candidate after mass cut: "<<endl;
-      f<<"number of Higgs Candidate after mass cut: \n";
-    }
-    histo(variable,(title+"MassSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF, massSelMu, massSelEl, f, b);
-    if(b==true){
-      cout<<"number of Higgs Candidate after btag cut: "<<endl;
-      f<<"number of Higgs Candidate after btag cut: \n";
-    }
-    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  btagSelMu, btagSelEl, f, b);
 
-    if(b==true){
-      cout<<"number of Higgs Candidate after dilepton pt cut: "<<endl;
-      f<<"number of Higgs Candidate after dilepton pt cut: \n";
-    }
-    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  ptllSelMu, ptllSelEl, f, b);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after met cut: "<<endl;
-      f<<"number of Higgs Candidate after met cut: \n";
-    }
-    histo(variable,(title+"metSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  metSelMu, metSelEl, f, b);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after deltaR jj cut: "<<endl;
-      f<<"number of Higgs Candidate after deltaR jj cut: \n";
-    }
-    histo(variable,(title+"drjjSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  drjjSelMu, drjjSelEl, f, b, true);
-
-    if(b==true){
-      cout<<"number of Higgs Candidate after higgs mass cut: "<<endl;
-      f<<"number of Higgs Candidate after higgs mass cut: \n";
-    }
-    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF, hmassSelMu, hmassSelEl, f, b);}
+    histo(variable,(title+"BaseSel").c_str(), nBins, min, max, EventsVBF, EventsGF, VBF,GF, baseSelMu, baseSelEl, true);
+    histo(variable,(title+"MassSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF, massSelMu, massSelEl);
+    histo(variable,(title+"BtagSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  btagSelMu, btagSelEl);
+    histo(variable,(title+"ptllSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  ptllSelMu, ptllSelEl);
+    histo(variable,(title+"metSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  metSelMu, metSelEl);
+    histo(variable,(title+"drjjSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF,  drjjSelMu, drjjSelEl, true);
+    histo(variable,(title+"hmassSel").c_str() , nBins, min, max, EventsVBF, EventsGF, VBF,GF, hmassSelMu, hmassSelEl );
+}
 
 
 
@@ -217,17 +186,15 @@ void createHistos(string variable, string title, int nBins, float min, float max
 
 int main() {
 
+  //#include "DataFormats/FWLite/interface/Handle.h"
 
   gSystem->Load("libFWCoreFWLite.so");
   AutoLibraryLoader::enable();
+  gSystem->Load("libDataFormatsFWLite.so");
+  gSystem->Load("libDataFormatsPatCandidates.so");
+
 
   TFile * output_file = TFile::Open("h350.root", "RECREATE");
-  ofstream outFile("h350Selection.txt");
-  outFile<<"hello \n";
-  if(!outFile) {
-    cout<<"Error in file creation!";
-    return -1;
-  }
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
   boost::char_separator<char> sep(" ");
@@ -240,6 +207,7 @@ int main() {
   bool hFlag = true;
   map<string,vector<double> > data;
 
+  
   while ( inFile ) {
     inFile.getline(str, max_line_len);
     //cout << str << endl;
@@ -268,6 +236,8 @@ int main() {
   }
 
 
+  
+
   cout<<"vbf events"<<data["VBFevents"][0]<<endl;
   TChain EventsVBF("Events"); 
   TChain EventsGF("Events"); 
@@ -277,49 +247,47 @@ int main() {
 
   //TDirectory * dir = output_file->mkdir("hmassPlots");
 
-  cout<<"size "<<data["hMass"].size()<<endl; 
+  //cout<<"size "<<data["hMass"].size()<<endl; 
 
   for(unsigned int k = 2; k <3; ++k){
     //  for(unsigned int k = 0; k < data["hMass"].size(); ++k){
   
-    cout<< "MASS " << data["hMass"][k]<< endl;
+    //cout<< "MASS " << data["hMass"][k]<< endl;
   //    cout<<"mass"<<mass<<endl;
     
     EventsVBF.Add("rfio:/castor/cern.ch/user/d/decosa/Higgs/h350/edmntp/H350VBFEdmNtuples.root");
     EventsGF.Add("rfio:/castor/cern.ch/user/d/decosa/Higgs/h350/edmntp/H350GFEdmNtuples.root");
 
-
     float VBF = data["VBFxsec"][k]*1000/data["VBFevents"][k] ;
     float GF = data["GFxsec"][k]*1000/data["GFevents"][k];
 
-    
     cout<<"VBF "<<VBF <<endl;
     cout<<"GF "<<GF <<endl;
 
-    
 
-    //createHistos("Eta", "Eta", 10, -3,3, EventsVBF, EventsGF, VBF, GF);
-    createHistos("Mass", "HMass", 200, 0,1000, EventsVBF, EventsGF, VBF, GF, outFile, true);
-    createHistos("Pt", "HPt", 200, 0,1000, EventsVBF, EventsGF, VBF,GF, outFile);
-    createHistos("Eta", "HEta", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("Phi", "HPhi", 7, -3.5,3.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zllMass", "ZllMass", 200, 0,200, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zjjMass", "ZjjMass", 200, 0,200, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zllPt", "ZllPt", 200, 0,200, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zjjPt", "ZjjPt", 200, 0,200, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zllEta", "ZllEta", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zjjEta", "ZjjEta", 13, -6-5,6.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zllPhi", "ZllPhi", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("zjjPhi", "ZjjPhi", 13, -6-5,6.5, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("Jet1CSVMVA", "Jet1CSVMVA", 100, -100,100, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("Jet2CSVMVA", "Jet2CSVMVA", 100, -100,100, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("Jet1JbProb", "Jet1JbProb", 100, -100,100, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("Jet2JbProb", "Jet2JbProb", 100, -100,100, EventsVBF, EventsGF, VBF, GF, outFile);
-    createHistos("jjdr", "jjdr", 100, -100,100, EventsVBF, EventsGF, VBF, GF, outFile);
-    
+    createHistos("Mass", "HMass", 200, 0,1000, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Pt", "HPt", 200, 0,1000, EventsVBF, EventsGF, VBF,GF);
+    createHistos("Eta", "HEta", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Phi", "HPhi", 7, -3.5,3.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zllMass", "ZllMass", 200, 0,200, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zjjMass", "ZjjMass", 200, 0,200, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zllPt", "ZllPt", 200, 0,200, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zjjPt", "ZjjPt", 200, 0,200, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zllEta", "ZllEta", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zjjEta", "ZjjEta", 13, -6-5,6.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zllPhi", "ZllPhi", 13, -6.5,6.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("zjjPhi", "ZjjPhi", 13, -6-5,6.5, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Jet1CSVMVA", "Jet1CSVMVA", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Jet2CSVMVA", "Jet2CSVMVA", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Jet1JbProb", "Jet1JbProb", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
+    createHistos("Jet2JbProb", "Jet2JbProb", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
+    createHistos("jjdr", "jjdr", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
+       
     TH1F * h = combHistos("met", "met", 100, -100,100, EventsVBF, EventsGF, VBF, GF);
     h->Write();
     delete h;
+    
+
     /*    singleChannel("mu", "LeptDau1Pt","LeptDau2Pt", "muPt", 100, 0, 200,  EventsVBF, EventsGF, VBF, GF);
     singleChannel("mu", "LeptDau1Eta","LeptDau2Eta", "muEta", 100, -6., 6.,  EventsVBF, EventsGF, VBF, GF);
     singleChannel("mu", "LeptDau1Phi","LeptDau2Phi", "muPhi", 100, -3., 3.,  EventsVBF, EventsGF, VBF, GF);
@@ -347,6 +315,6 @@ int main() {
   cout << endl;
   }
   */
-  outFile.close();
+
   output_file->Close();
  }
