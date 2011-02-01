@@ -52,7 +52,8 @@ private:
   double jjdrCut_;
   double hMassMinCut_;
   double hMassMaxCut_;
-  std::string channel;
+  double lumiNormalization_;
+  std::string channel,output_name_;
   ofstream outFile;
 
         
@@ -68,7 +69,9 @@ H2l2bSelection::H2l2bSelection(const edm::ParameterSet& iConfig):
   metCut_(iConfig.getParameter<double>("metCut")),
   jjdrCut_(iConfig.getParameter<double>("jjdrCut")),
   hMassMinCut_(iConfig.getParameter<double>("hMassMinCut")),
-  hMassMaxCut_(iConfig.getParameter<double>("hMassMaxCut"))
+  hMassMaxCut_(iConfig.getParameter<double>("hMassMaxCut")),
+  lumiNormalization_(iConfig.getParameter<double>("lumiNormalization")),
+  output_name_(iConfig.getParameter<std::string>("output_name"))
 
 {
   edm::Service<TFileService> fs;
@@ -85,7 +88,7 @@ H2l2bSelection::H2l2bSelection(const edm::ParameterSet& iConfig):
   hmassSel=0;
   hmassSelected=false;
   channel = "";
-  outFile.open("ProgressiveCuts");
+  std::cout<<"normalization "<<lumiNormalization_<<std::endl;
   std::cout<< " THIS IS constructor"<<std::endl;
 }
 
@@ -160,18 +163,26 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       bool VBTF80CombID;
       bool dB;
       if(lept0el != 0){
-	channel = "Electron";
+	if(channel == ""){
+	  channel = "Electron";
+	  outFile.open((output_name_+channel+"Selection.txt").c_str());	  
+	}	
 	VBTF80CombID = lept0el->electronID("eidVBTFCom80")==7 || lept1el->electronID("eidVBTFCom80")==7;
 	dB = true; 
       }else{
+	if(channel == ""){
+	  channel = "Muon";
+	  outFile.open((output_name_+channel+"Selection.txt").c_str());	  
+	}	
 	lept0mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());
 	lept1mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());      
-	channel = "Muon";
 	dB0 = TMath::Abs(lept0mu->dB());
 	dB1 = TMath::Abs(lept1mu->dB());
 	VBTF80CombID = true;
 	dB = dB0< 0.02 && dB1<0.02;
       }
+
+	
 
       const pat::Jet & j0 = dynamic_cast<const pat::Jet &>(*zDauRefj0->masterClone());
       const pat::Jet & j1 = dynamic_cast<const pat::Jet &>(*zDauRefj1->masterClone());
@@ -214,22 +225,22 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     if(massSelected == true) ++massSel;
-    std::cout<<" event has been selected? "<<massSelected<<std::endl;
+    std::cout<<" event has been selected "<<massSelected*lumiNormalization_<<std::endl;
 
     if(btagSelected == true) ++btagSel;
-    std::cout<<" event has been selected after btag selection? "<<btagSelected<<std::endl;
+    std::cout<<" event has been selected after btag selection "<<btagSelected*lumiNormalization_<<std::endl;
 
     if(zllptSelected == true) ++zllptSel;
-    std::cout<<" event has been selected after zll ptselection? "<<btagSelected<<std::endl;
+    std::cout<<" event has been selected after zll ptselection "<<btagSelected*lumiNormalization_<<std::endl;
 
     if(metSelected == true) ++metSel;
-    std::cout<<" event has been selected after met selection? "<<metSelected<<std::endl;
+    std::cout<<" event has been selected after met selection "<<metSelected*lumiNormalization_<<std::endl;
 
     if(jjdrSelected == true) ++jjdrSel;
-    std::cout<<" event has been selected after jjdr selection? "<<jjdrSelected<<std::endl;
+    std::cout<<" event has been selected after jjdr selection "<<jjdrSelected*lumiNormalization_<<std::endl;
 
     if(hmassSelected == true) ++hmassSel;
-    std::cout<<" event has been selected after higgs mass selection? "<<hmassSelected<<std::endl;
+    std::cout<<" event has been selected after higgs mass selection "<<hmassSelected*lumiNormalization_<<std::endl;
 
 }
 
@@ -237,22 +248,22 @@ void H2l2bSelection::endJob() {
   // insert counter and write in a txt file
   std::cout<<std::endl;
   std::cout<<" Selection yields for H2b2l in the "+ channel +" channel: "<< std::endl;
-  std::cout<<" events after skimming: "<<skimEvents<<std::endl;
-  std::cout<<" events after mass selection: "<<massSel<<std::endl;
-  std::cout<<" events after btag selection: "<<btagSel<<std::endl;
-  std::cout<<" events after zllpt selection: "<<zllptSel<<std::endl;
-  std::cout<<" events after met selection: "<<metSel<<std::endl;
-  std::cout<<" events after jjdr selection: "<<jjdrSel<<std::endl;
-  std::cout<<" events after hmass selection: "<<hmassSel<<std::endl;
+  std::cout<<" events after skimming: "<<skimEvents*lumiNormalization_<<std::endl;
+  std::cout<<" events after mass selection: "<<massSel*lumiNormalization_<<std::endl;
+  std::cout<<" events after btag selection: "<<btagSel*lumiNormalization_<<std::endl;
+  std::cout<<" events after zllpt selection: "<<zllptSel*lumiNormalization_<<std::endl;
+  std::cout<<" events after met selection: "<<metSel*lumiNormalization_<<std::endl;
+  std::cout<<" events after jjdr selection: "<<jjdrSel*lumiNormalization_<<std::endl;
+  std::cout<<" events after hmass selection: "<<hmassSel*lumiNormalization_<<std::endl;
 
   outFile<<" Selection yields for H2b2l in the "+channel+" channel: "<< std::endl;
-  outFile<<" events after skimming: "<<skimEvents<<std::endl;
-  outFile<<" events after mass selection: "<<massSel<<std::endl;
-  outFile<<" events after btag selection: "<<btagSel<<std::endl;
-  outFile<<" events after zllpt selection: "<<zllptSel<<std::endl;
-  outFile<<" events after met selection: "<<metSel<<std::endl;
-  outFile<<" events after jjdr selection: "<<jjdrSel<<std::endl;
-  outFile<<" events after hmass selection: "<<hmassSel<<std::endl;
+  outFile<<" events after skimming: "<<skimEvents*lumiNormalization_<<std::endl;
+  outFile<<" events after mass selection: "<<massSel*lumiNormalization_<<std::endl;
+  outFile<<" events after btag selection: "<<btagSel*lumiNormalization_<<std::endl;
+  outFile<<" events after zllpt selection: "<<zllptSel*lumiNormalization_<<std::endl;
+  outFile<<" events after met selection: "<<metSel*lumiNormalization_<<std::endl;
+  outFile<<" events after jjdr selection: "<<jjdrSel*lumiNormalization_<<std::endl;
+  outFile<<" events after hmass selection: "<<hmassSel*lumiNormalization_<<std::endl;
 
   outFile.close();
 
