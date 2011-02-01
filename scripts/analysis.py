@@ -79,6 +79,7 @@ for a in mass:
         rigaGF = string.replace(rigaGF, "300", a)
         rigaVBF = string.replace(riga, "300GF", a+"VBF")
         rigaVBF = string.replace(rigaVBF, "300", a)
+        rigaVBF = string.replace(rigaVBF, "GF", "VBF")
         print rigaVBF
         print rigaGF
         if riga.startswith("cmsRun "):
