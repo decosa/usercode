@@ -25,6 +25,10 @@ higgs =  cms.EDProducer(
     quantity = cms.untracked.string("eta")
     ),
     cms.PSet(
+    tag = cms.untracked.string("Y"),
+    quantity = cms.untracked.string("y")
+    ),
+    cms.PSet(
     tag = cms.untracked.string("Phi"),
     quantity = cms.untracked.string("phi")
     ),
@@ -103,6 +107,10 @@ zll = (
     cms.PSet(
     tag = cms.untracked.string("zllEta"),
     quantity = cms.untracked.string("daughter(0).eta")
+    ),
+    cms.PSet(
+    tag = cms.untracked.string("zllY"),
+    quantity = cms.untracked.string("daughter(0).y")
     ),
     cms.PSet(
     tag = cms.untracked.string("zllPhi"),
@@ -271,6 +279,10 @@ zjj = (
     quantity = cms.untracked.string("daughter(1).eta")
     ),
     cms.PSet(
+    tag = cms.untracked.string("zjjY"),
+    quantity = cms.untracked.string("daughter(1).y")
+    ),
+cms.PSet(
     tag = cms.untracked.string("zjjPhi"),
     quantity = cms.untracked.string("daughter(1).phi")
     ),
