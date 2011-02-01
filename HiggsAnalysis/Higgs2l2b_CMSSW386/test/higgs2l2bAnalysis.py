@@ -48,7 +48,9 @@ process.elChannelSelection = cms.EDAnalyzer("H2l2bSelection",
     metCut = cms.double(35),
     jjdrCut = cms.double(1.7),
     hMassMinCut = cms.double(315),
-    hMassMaxCut = cms.double(385)
+    hMassMaxCut = cms.double(385),
+    lumiNormalization = cms.double(0.00115),
+    output_name = cms.string("h350GF")                                            
                                             
 )
 
@@ -63,8 +65,9 @@ process.muChannelSelection = cms.EDAnalyzer("H2l2bSelection",
     metCut = cms.double(35),
     jjdrCut = cms.double(1.7),
     hMassMinCut = cms.double(315),
-    hMassMaxCut = cms.double(385)
-                                            
+    hMassMaxCut = cms.double(385),
+    lumiNormalization = cms.double(0.00115),
+    output_name = cms.string("h350GF")                                            
 )
 
 process.muChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
