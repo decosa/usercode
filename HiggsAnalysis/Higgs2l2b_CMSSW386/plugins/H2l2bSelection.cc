@@ -225,22 +225,22 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     if(massSelected == true) ++massSel;
-    std::cout<<" event has been selected "<<massSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected "<<massSelected*lumiNormalization_<<std::endl;
 
     if(btagSelected == true) ++btagSel;
-    std::cout<<" event has been selected after btag selection "<<btagSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected after btag selection "<<btagSelected*lumiNormalization_<<std::endl;
 
     if(zllptSelected == true) ++zllptSel;
-    std::cout<<" event has been selected after zll ptselection "<<btagSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected after zll ptselection "<<btagSelected*lumiNormalization_<<std::endl;
 
     if(metSelected == true) ++metSel;
-    std::cout<<" event has been selected after met selection "<<metSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected after met selection "<<metSelected*lumiNormalization_<<std::endl;
 
     if(jjdrSelected == true) ++jjdrSel;
-    std::cout<<" event has been selected after jjdr selection "<<jjdrSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected after jjdr selection "<<jjdrSelected*lumiNormalization_<<std::endl;
 
     if(hmassSelected == true) ++hmassSel;
-    std::cout<<" event has been selected after higgs mass selection "<<hmassSelected*lumiNormalization_<<std::endl;
+    //std::cout<<" event has been selected after higgs mass selection "<<hmassSelected*lumiNormalization_<<std::endl;
 
 }
 

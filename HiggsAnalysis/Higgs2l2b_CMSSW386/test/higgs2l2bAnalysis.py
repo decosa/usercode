@@ -7,14 +7,15 @@ process = cms.Process("TRIM")
 process.load("HiggsAnalysis.Higgs2l2b.Higgs2l2bedmNtuples_cff")
 #process.load("HiggsAnalysis.Higgs2l2b.zjjEdmNtuples_cff")
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.TFileService = cms.Service("TFileService", fileName = cms.string('h2l2b300GF.root') )
 
 process.source = cms.Source("PoolSource")
 
-process.source.fileNames=cms.untracked.vstring('rfio:/castor/cern.ch/user/d/decosa/Higgs/h350/skim/h2l2b300GF_1_1_Ukh.root')
-###
+#process.source.fileNames=cms.untracked.vstring('rfio:/castor/cern.ch/user/d/decosa/Higgs/h350/skim/h2l2b300GF_1_1_Ukh.root')
+process.source.fileNames=cms.untracked.vstring('file:filename.root')
+####
 process.elChannelAnalysis = cms.EDAnalyzer("Higgs2l2bAnalysis",
     higgsTag = cms.InputTag("hzzeejj:h"),
 )
