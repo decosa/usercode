@@ -2,7 +2,7 @@ import os, commands
 import string
 
 mass = ['350']
-lumiNorm = [0,00115]
+lumiNorm = [0.00115,0.00034]
 
 print "mass values: "
 print mass
@@ -49,8 +49,10 @@ for a in mass:
             rigaGF = string.replace(rigaGF, 'file:filename.root', gf2 );
             rigaVBF = string.replace(rigaVBF, 'file:filename.root', vbf2 );
         if riga.startswith("    lumiNormalization"):
-            rigaGF = string.replace(rigaGF,'0.00115', str(lumiNorm[mass.index(a)] ) );
-            rigaVBF = string.replace(rigaVBF,'0.00115', str(lumiNorm[mass.index(a)] ) );
+            rigaGF = string.replace(rigaGF,'0.00115', str(lumiNorm[0]) );
+            print rigaGF
+            rigaVBF = string.replace(rigaVBF,'0.00115', str(lumiNorm[1]) );
+            print rigaVBF
         if riga.startswith("    output_name"):
             rigaGF = string.replace(rigaGF,'\"h350GF\"','\"h'+a+'GF\"' );
             rigaVBF = string.replace(rigaVBF,'\"h350GF\"','\"h'+a+'VBF\"' );
