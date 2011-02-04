@@ -37,8 +37,9 @@ private:
   virtual void beginJob();
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   virtual void endJob(); 
-  int massSel, btagSel, zllptSel, metSel, jjdrSel, hmassSel;
-  bool skimEvents, massSelected, btagSelected, zllptSelected, metSelected, jjdrSelected, hmassSelected;
+  float massSel, btagSel, zllptSel, metSel, jjdrSel, hmassSel;
+  float skimEvents;
+  bool massSelected, btagSelected, zllptSelected, metSelected, jjdrSelected, hmassSelected;
   float met;
   float zNominalMass;
   edm::InputTag higgsTag_;
@@ -88,8 +89,8 @@ H2l2bSelection::H2l2bSelection(const edm::ParameterSet& iConfig):
   hmassSel=0;
   hmassSelected=false;
   channel = "";
-  std::cout<<"normalization "<<lumiNormalization_<<std::endl;
-  std::cout<< " THIS IS constructor"<<std::endl;
+  //std::cout<<"normalization "<<lumiNormalization_<<std::endl;
+  
 }
 
 
@@ -101,7 +102,7 @@ H2l2bSelection::~H2l2bSelection() {
 void H2l2bSelection::beginJob() {
   zNominalMass = 91;
   skimEvents = 0;
-  std::cout<< " THIS IS BEGIN JOB"<<std::endl;
+  
 }
 
 
@@ -143,7 +144,6 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     
       const Candidate &  h = (*higgsH)[i];
       const float &  met = (*metH);
-      std::cout<<" MET "<<met<<std::endl;
       const Candidate * zll = h.daughter(0);    
       const Candidate * zjj = h.daughter(1);
       const Candidate * zDauRefl0 = h.daughter(0)->daughter(0);
@@ -175,7 +175,7 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	  outFile.open((output_name_+channel+"Selection.txt").c_str());	  
 	}	
 	lept0mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());
-	lept1mu = dynamic_cast<const pat::Muon *>(zDauRefl0->masterClone().get());      
+	lept1mu = dynamic_cast<const pat::Muon *>(zDauRefl1->masterClone().get());      
 	dB0 = TMath::Abs(lept0mu->dB());
 	dB1 = TMath::Abs(lept1mu->dB());
 	VBTF80CombID = true;
@@ -195,9 +195,9 @@ void H2l2bSelection::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if(TMath::Abs(zll->mass() - zNominalMass)< zLepMassCut_ && TMath::Abs(zjj->mass() - zNominalMass)< zJetMassCut_){
 	  massSelected=true ;
-	  std::cout<<"zll mass: "<< zll->mass()<<" zjj mass: "<< zjj->mass()<<std::endl;
+	  //std::cout<<"zll mass: "<< zll->mass()<<" zjj mass: "<< zjj->mass()<<std::endl;
 	  
-	  if(  ((j0.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_ && j1.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_)||(j0.bDiscriminator("jetProbabilityBJetTags")>bTagJProbCut_ && j1.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_) ) ) {
+	  if(  ((j0.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_ && j1.bDiscriminator("jetBProbabilityBJetTags")>bTagJProbCut_)||(j0.bDiscriminator("jetBProbabilityBJetTags")>bTagJProbCut_ && j1.bDiscriminator("combinedSecondaryVertexMVABJetTags")>bTagCSVCut_) ) ) {
 	    btagSelected=true ;
 	    
 	    if( zll->pt()>zllPtCut_ ) {
