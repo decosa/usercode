@@ -1,8 +1,8 @@
 import os, commands
 import string
 
-#bkg = ['Z0jet', 'Z1jet', 'Z2jet', 'Z3jet', 'Z4jet', 'Z5jet']
-#lumiNorm = [1.755,1.5229,1.1105,0.528,0.1039,0.1318]
+bkg = ['Z0jet', 'Z1jet', 'Z2jet', 'Z3jet', 'Z4jet', 'Z5jet']
+lumiNorm = [1.755,1.5229,1.1105,0.528,0.13202,0.1318]
 #bkg = [ 'Z1jet100_300', 'Z2jet100_300', 'Z3jet100_300', 'Z4jet100_300', 'Z5jet100_300']
 #lumiNorm = [0.04173,0.08395,0.09114,0.03723,0.057206]
 #bkg = [ 'Z1jet300_800', 'Z2jet300_800', 'Z3jet300_800', 'Z4jet300_800', 'Z5jet300_800']
@@ -11,8 +11,12 @@ import string
 #lumiNorm = [0.000005, 0.00003, 0.00003, 0.00002, 0.000008]
 #bkg = [ 'ZBB0', 'ZBB1', 'ZBB2', 'ZBB3', 'ZCC0', 'ZCC1', 'ZCC2', 'ZCC3']
 #lumiNorm = [0.0062, 0.0060, 0.426, 0.0186, 0.0049, 0.0066, 0.0433, 0.0205]
-bkg = ['TT', 'ZZ','WZ']
-lumiNorm = [0.01755, 0.00767, 0.00829]
+#bkg = ['TT', 'ZZ','WZ']
+
+#lumiNorm = [0.01755, 0.00767, 0.00829]
+
+#bkg = ['TT', 'ZZ']
+#lumiNorm = [0.01755, 0.00767]
 
 def filesource(dirname, dir):
         castor_path = "/castor/cern.ch/user/d/decosa/Higgs/"+ dirname + "/skim/"
