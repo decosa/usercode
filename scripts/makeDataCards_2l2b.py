@@ -13,7 +13,7 @@ import os, commands
 def makeDatacards(category):
 
 
-    filename = "lljjmass"+category+".txt"
+    filename = "lljjmass_"+category+".txt"
     if(category=="2btag"):
         filename = "lljjmass.txt"
     name = "_"+category+"_datacard.txt"
