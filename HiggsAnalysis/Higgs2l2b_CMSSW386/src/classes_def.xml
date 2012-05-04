@@ -1,7 +1,0 @@
-<lcgdict>
-    <class name="Higgs2l2bCandidate"/>
-    <class name="std::vector<Higgs2l2bCandidate>"/>
-    <class name="edm::Wrapper<Higgs2l2bCandidate>"/>
-    <class name="edm::Wrapper<std::vector<Higgs2l2bCandidate> >"/>
-</lcgdict>
-
