@@ -38,9 +38,7 @@ process.badEventFilter = cms.EDFilter(
 
 
 
-process.cleaningPath = cms.Path(
-    process.badEventFilter 
-    )
+
 
 process.edmNtuplesOut = cms.OutputModule(
     "PoolOutputModule",
@@ -53,7 +51,7 @@ process.edmNtuplesOut = cms.OutputModule(
     )
 
 process.edmNtuplesOut.SelectEvents = cms.untracked.PSet(
-    SelectEvents = cms.vstring('cleaningPath')
+    SelectEvents = cms.vstring()
     )
 
 process.edmNtuplesOut.dropMetaData = cms.untracked.string('ALL')

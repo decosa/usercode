@@ -37,29 +37,18 @@ process.badEventFilter = cms.EDFilter(
 
 import HLTrigger.HLTfilters.hltHighLevel_cfi
 process.HLTFilter = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-process.HLTFilter_2 = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
 
-process.HLTFilter.HLTPaths  = ["HLT_Mu17_Mu8_v16",  "HLT_Mu17_TkMu8_v9" ]
-process.HLTFilter_2.HLTPaths  = [ "HLT_Mu17_Mu8_v17", "HLT_Mu17_TkMu8_v10"]
+process.HLTFilter.HLTPaths  = ["HLT_Mu17_Mu8_v*",  "HLT_Mu17_TkMu8_v*" ]
 process.HLTFilter.throw = cms.bool(False) 
-process.HLTFilter_2.throw = cms.bool(False)
 
 
-process.runFilter = cms.EDFilter(
-        "FilterByRun",
-        run = cms.int32(193834),
-        selMode = cms.string("ge"),
-        )
-
+#process.cleaningPath = cms.Path(
+#    process.badEventFilter * ~process.runFilter*process.HLTFilter 
+#    )
 
 
 process.cleaningPath = cms.Path(
-    process.badEventFilter * ~process.runFilter*process.HLTFilter 
-    )
-
-
-process.cleaningPath_2 = cms.Path(
-    process.badEventFilter * process.runFilter*process.HLTFilter_2
+    process.HLTFilter 
     )
 
 
@@ -74,7 +63,7 @@ process.edmNtuplesOut = cms.OutputModule(
     )
 
 process.edmNtuplesOut.SelectEvents = cms.untracked.PSet(
-    SelectEvents = cms.vstring('cleaningPath','cleaningPath_2')
+    SelectEvents = cms.vstring('cleaningPath')
     )
 
 process.edmNtuplesOut.dropMetaData = cms.untracked.string('ALL')

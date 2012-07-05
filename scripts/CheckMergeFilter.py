@@ -7,10 +7,11 @@ import string
 ### indirnames is the list of directories to which copying files
 
 
-inputpath = '/data3/scratch/users/decosa/Higgs/Summer12/'
+inputpath = '/data3/scratch/users/fabozzi/Higgs/Summer12/'
+ntpdir = '/edmntp26Jun12/'
 
-ntpdir = '/edmntp22Jun12/'
-ntpdirout = '/edmntp22Jun12Cleaned/'
+outputpath = '/data3/scratch/users/decosa/Higgs/Summer12/'
+ntpdirout = '/edmntp05Jul12Cleaned/'
 
 #ntpdir = '/edmntpTest/'
 #ntpdirout = '/edmntpCleanedTest/'
@@ -20,8 +21,9 @@ ntpdirout = '/edmntp22Jun12Cleaned/'
 #dirnames =  [ 'TT', 'WZ', 'ZZ']
 #dirnames =  [ 'TEST']
 #dirnames =  ['ElRun2012A', 'ElRun2012B']
-dirnames = ['GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
-#dirnames =  ['ElRun2012A']
+dirnames = ['ElRun2012A','ElRun2012A_23May2012', 'ElRun2012B', 'ElRun2012B_Ext', 'MuRun2012A','MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext' ]
+#dirnames = ['GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
+#dirnames =  ['MuRun2012A']
 #dirnames =  ['DYJetsToLL_M-50', 'TT', 'WZ', 'ZZ']
 
 #####dirnames =  ['DYJetsToLL_M-50']
@@ -59,9 +61,11 @@ for a in dirnames:
 
     cfgfilename = "higgs2l2qNtupleFilter.py"    
     if(a.startswith("MuRun")): cfgfilename = "higgs2l2qNtupleFilter_Muons.py"
-    if(a.startswith("ElRun")): cfgfilename = "higgs2l2qNtupleFilter_Electrons.py"
+    elif(a.startswith("ElRun")): cfgfilename = "higgs2l2qNtupleFilter_Electrons.py"
     else : cfgfilename = "higgs2l2qNtupleFilter_MC.py"
-    
+
+    print "cfgTocopy"
+    print  cfgfilename
     n = 20
     numfiles = len(files)/n + 1
     if(len(files)%n == 0 ): numfiles = len(files)/n
@@ -69,7 +73,7 @@ for a in dirnames:
     print len(files)
     print n
     print numfiles
-    outpath = inputpath + a
+    outpath = outputpath + a
     outdir = outpath + ntpdirout
 
     cmdLocalDisk = "mkdir "+ outpath 
@@ -86,6 +90,7 @@ for a in dirnames:
         num = str(i)
         file = open(cfgfilename, "r")
         newfile = open('higgs2l2qNtupleFilter_'+a+'_'+num+'.py', "w")
+        print "new file: ", 'higgs2l2qNtupleFilter_'+a+'_'+num+'.py'
         selectedfiles = files[i*n:(n+i*n)]
         if (numfiles == 1):  selectedfiles = files[:]
         if ( (numfiles > 1) and  (i == (numfiles -1)) and (len(files)%n != 0)): selectedfiles = files[i*n:]
@@ -98,11 +103,11 @@ for a in dirnames:
             if line.startswith("process.source.fileNames=cms.untracked.vstring('file:h2l2q_ntuple.root')"):
                 sources = [('file:'+inputpath + a +ntpdir + c) for c in selectedfiles]
                 poolsource = '\' , \''.join(sources)
-                print poolsource
+                #print poolsource
                 newLine = string.replace(line, 'file:h2l2q_ntuple.root', poolsource );
             if (('h2l2q_ntuple_clean.root') in line):
-                newLine = string.replace(line, 'h2l2q_ntuple_clean.root', inputpath + a +ntpdirout +'h2l2q_ntuple_clean_'+num+'.root' );
-                print newLine
+                newLine = string.replace(line, 'h2l2q_ntuple_clean.root', outputpath + a +ntpdirout +'h2l2q_ntuple_clean_'+num+'.root' );
+                #print newLine
             newfile.write(newLine)
 
     
