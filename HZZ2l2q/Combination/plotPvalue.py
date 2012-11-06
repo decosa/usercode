@@ -1,22 +1,5 @@
-
-# **************************************************************************************** #
-#   Author: Annapaola de Cosa
-#     CERN, 06 November 2012
-#
-# python plotPvalue.py --help
-# Usage: plotPvalue.py [options]
-#
-# Options:
-#    -h, --help               show this help message and exit
-#    -v, --verbose            Visualize details (for debugging purposes)
-#    -e CM, --cm=CM           Indicate centre of mass energy: 7, 8 or 0 for 7+8
-#    -l LOWER, --lower=LOWER  Indicate the lower edge of the mass range (default 200 GeV)
-#                                              
-#    -u UPPER, --upper=UPPER  Indicate the upper edge of the mass range (default 600 GeV)
-# **************************************************************************************** #
-
 import sys
-sys.argv.append('-b')
+#sys.argv.append('-b')
 import ROOT
 import numpy
 
@@ -40,7 +23,7 @@ ROOT.gROOT.LoadMacro('tdrstyle.C')
 debug = options.verbose
 debug_v2 = False
 cm = str(options.cm)
-if(option.cm == 0):cm=""
+if(options.cm == 0):cm=""
 low = options.lower
 up = options.upper
 dcName = "comb"+cm+"_hzz"
@@ -72,11 +55,24 @@ for m in masses:
 ### DO THE TGRAPH (FILLING AND STYLE SETTING)
 massList = [float(m) for m in masses]
 ### DRAW 1,2,3,4,5 SIGMAS LINES
-oneSigma_line = ROOT.TLine(massList[0],0.1587, massList[-1],0.1587)
-twoSigma_line = ROOT.TLine(massList[0],0.02275, massList[-1],0.02275)
-threeSigma_line = ROOT.TLine(massList[0],0.0013499, massList[-1],0.0013499) 
-fourSigma_line = ROOT.TLine(massList[0], 0.000031671, massList[-1], 0.000031671)
-fiveSigma_line = ROOT.TLine(massList[0], 0.000000287, massList[-1], 0.000000287)
+def z(n):
+    return  0.5*(1 - ROOT.TMath.Erf(n/(ROOT.TMath.Sqrt(2))))
+one = z(1)
+two = z(2)
+three = z(3)
+four = z(4)
+five = z(5)
+six = z(6)
+seven = z(7)
+
+print one
+oneSigma_line = ROOT.TLine(massList[0],one, massList[-1],one)
+twoSigma_line = ROOT.TLine(massList[0],two, massList[-1],two)
+threeSigma_line = ROOT.TLine(massList[0], three, massList[-1],three) 
+fourSigma_line = ROOT.TLine(massList[0], four, massList[-1], four)
+fiveSigma_line = ROOT.TLine(massList[0], five, massList[-1], five)
+sixSigma_line = ROOT.TLine(massList[0],six, massList[-1], six)
+sevenSigma_line = ROOT.TLine(massList[0],seven, massList[-1], seven)
 
 ### NEED TO USE NUMPY ARRAYS
 numpyMasses = numpy.array( massList, dtype=numpy.float )
@@ -95,8 +91,11 @@ pvalue_graph.GetYaxis().SetTitle("Local p-value");
 pvalue_graph.GetXaxis().SetTitle("Higgs boson mass [GeV]");
 pvalue_graph.GetXaxis().SetRangeUser(low, up); 
 pvalue_graph.SetMaximum(1.);
-#pvalue_graph.SetMinimum(0.0);
-#pvalue_graph.SetMinimum(0.000001);
+min_ = min(pValues)
+print max(pValues)
+print numpyPValues.min()
+pvalue_graph.SetMinimum(0.1 * numpyPValues.min());
+#pvalue_graph.SetMinimum(0.00000000000001);
 
 c1 = ROOT.TCanvas()
      
@@ -117,27 +116,38 @@ fourSigma_line.Draw("SAME");
 fiveSigma_line.SetLineColor(ROOT.kRed);
 fiveSigma_line.Draw("SAME");
 
+sixSigma_line.SetLineColor(ROOT.kRed);
+sixSigma_line.Draw("SAME");
+
+sevenSigma_line.SetLineColor(ROOT.kRed);
+sevenSigma_line.Draw("SAME");
+
 latex = ROOT.TLatex()
 latex.SetNDC()
 latex.SetTextSize(0.04)
 latex.SetTextAlign(11)
-
+intLumi = 0.
 if(cm=="7"):intLumi = 4.9
 elif(cm=="8"):intLumi = 5.1
 else: intlumi = 4.9 + 5.1
 latex.DrawLatex(0.1, 0.93, "CMS preliminary 2012");
 
-latex.DrawLatex(0.63,0.93, str(intLumi) + " fb^{-1} at #sqrt{s} = "+cm+" TeV");
-if(cm ==""):latex.DrawLatex(0.63,0.93, "4.9 fb^{-1} at #sqrt{s} = 7 TeV + 5.1 fb^{-1} at #sqrt{s} = 8 TeV"); 
+
+if(cm ==""):latex.DrawLatex(0.40,0.93, "4.9 fb^{-1} at #sqrt{s} = 7 TeV + 5.1 fb^{-1} at #sqrt{s} = 8 TeV")
+else: latex.DrawLatex(0.63,0.93, str(intLumi) + " fb^{-1} at #sqrt{s} = "+cm+" TeV")
 
 latex2 = ROOT.TLatex()
 latex2.SetNDC(False)
 latex2.SetTextSize(0.04)
 latex2.SetTextAlign(11)
 latex2.SetTextColor(ROOT.kRed);
-latex2.DrawLatex(200,0.15870,"1#sigma");
-latex2.DrawLatex(200,0.02275,"2#sigma");
-latex2.DrawLatex(200,0.0013499,"3#sigma");
+latex2.DrawLatex(220,one,"1#sigma");
+latex2.DrawLatex(220,two,"2#sigma");
+latex2.DrawLatex(220,three,"3#sigma");
+latex2.DrawLatex(220,four,"4#sigma");
+latex2.DrawLatex(220,five,"5#sigma");
+latex2.DrawLatex(220,six,"6#sigma");
+latex2.DrawLatex(220,seven,"7#sigma");
 
 c1.SetLogy();
 c1.Print("pValue_"+cm+".png")
